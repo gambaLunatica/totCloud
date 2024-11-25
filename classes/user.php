@@ -11,12 +11,14 @@ class User{
 
 
 
-    public function __construct($userName, $email, $password, $idUserGroup, $idCompany=null ){
+    public function __construct(String $userName, String $realName, String $realSurname, String $email, String $password, int $idUserGroup, $idCompany=null){
         $this->userName = $userName;
         $this->email = $email;
         $this->password = password_hash($password, PASSWORD_BCRYPT);
         $this->idUserGroup = $idUserGroup;
         $this->idCompany = $idCompany;
+        $this->realSurname = $realSurname;
+        $this->realName = $realName;
     }
 
     public function getName():String{
@@ -31,12 +33,20 @@ class User{
         return $this->password;
     }
 
-    public function getUserGroup():int{
+    public function getIdUserGroup():int{
         return $this->idUserGroup;
     }
 
     public function getIdCompany():int{
         return $this->idCompany;
+    }
+
+    public function getRealName():String{
+        return $this->realName;
+    }
+
+    public function getRealSurname():String{
+        return $this->realSurname;
     }
 
 

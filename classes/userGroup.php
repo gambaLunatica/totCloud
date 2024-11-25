@@ -6,8 +6,7 @@ class UserGroup{
     private $creationDate;
     private $name;
 
-    public function __construct(int $id, int $idCompany, DateTime $creationDate, String $name){
-        $this->id = $id;
+    public function __construct(int $idCompany, DateTime $creationDate, String $name){
         $this->idCompany = $idCompany;
         $this->creationDate = $creationDate;
         $this->name = $name;
@@ -24,5 +23,9 @@ class UserGroup{
     }
     public function getName(): String{
         return $this->name;
+    }
+
+    public function setId(int $id){
+        $this->id = $id;
     }
 }

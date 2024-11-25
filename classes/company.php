@@ -4,8 +4,7 @@ class Company{
     private $nameRegion;
     private $name;
 
-    public function __construct(int $id, String $nameRegion, String $name){
-        $this->id = $id;
+    public function __construct(String $nameRegion, String $name){
         $this->nameRegion = $nameRegion;
         $this->name = $name;
     }
@@ -19,5 +18,9 @@ class Company{
     }
     public function getName(): String{
         return $this->name;
+    }
+
+    public function setId(int $id){
+        $this->id = $id;
     }
 }
