@@ -19,4 +19,10 @@ class UserGroup{
     public function getIdCompany():int{
         return $this->idCompany;
     }
+    public function getCreationDate(): DateTime{
+        return $this->creationDate;
+    }
+    public function getName(): String{
+        return $this->name;
+    }
 }

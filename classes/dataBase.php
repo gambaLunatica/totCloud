@@ -34,6 +34,50 @@ class MyDataBase{
         return false;
     }
 
+    function insertCompany(Company $company):bool {
+        try {
+            $sql = "INSERT INTO Company (idCompany, nameRegion, nameCompany)
+                    VALUES (:idCompany, :nameRegion, :nameCompany)";
+            
+            $stmt = $this->db->prepare($sql);
+            
+            // Bind parameters from the Company object
+            $stmt->bindValue(':idCompany', $company->getId(), PDO::PARAM_INT);
+            $stmt->bindValue(':nameRegion', $company->getNameRegion());
+            $stmt->bindValue(':nameCompany', $company->getName());
+    
+            // Execute the statement
+            return $stmt->execute();
+    
+        } catch (PDOException $e) {
+            echo "Error adding company: " . $e->getMessage();
+        }
+        return false;
+    }
+
+    function addUserGroupToDatabase(UserGroup $userGroup):bool {
+        try {
+            $sql = "INSERT INTO UserGroup (idUserGroup, idCompany, creationDate, nameUserGroup)
+                    VALUES (:idUserGroup, :idCompany, :creationDate, :nameUserGroup)";
+            
+            $stmt = $this->db->prepare($sql);
+            
+            // Bind parameters from the UserGroup object
+            $stmt->bindValue(':idUserGroup', $userGroup->getId(), PDO::PARAM_INT);
+            $stmt->bindValue(':idCompany', $userGroup->getIdCompany(), PDO::PARAM_INT);
+            $stmt->bindValue(':creationDate', $userGroup->getCreationDate()->format('Y-m-d H:i:s'));
+            $stmt->bindValue(':nameUserGroup', $userGroup->getName());
+    
+            // Execute the statement
+            return $stmt->execute();
+    
+        } catch (PDOException $e) {
+            echo "Error adding UserGroup: " . $e->getMessage();
+        }
+
+        return false;
+    }
+
     
 }
 ?>
