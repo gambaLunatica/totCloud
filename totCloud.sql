@@ -1,4 +1,4 @@
-create table TotColud;
+create Data base TotColud;
 
 create table Privilege(
     idPrivilege INT UNSIGNED NOT NULL AUTO_INCREMENT,
