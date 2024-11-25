@@ -1,20 +1,10 @@
-create Data base TotColud;
+CREATE DATABASE totCloud;
 
 create table Privilege(
     idPrivilege INT UNSIGNED NOT NULL AUTO_INCREMENT,
     namePrivilege VARCHAR(32) NOT NULL,
 
-    PRIMARY KEY(idPrivilegie)
-);
-
-create table User(
-    name VARCHAR(32) NOT NULL,
-    email VARCHAR(64) NOT NULL,
-    password VARCHAR(256) NOT NULL,
-    idUserGroup INT NOT NULL
-
-    PRIMARY KEY(name),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
+    PRIMARY KEY(idPrivilege)
 );
 
 create table Status(
@@ -34,7 +24,6 @@ create table Mask(
 
     PRIMARY KEY (cidr)
 );
-
 create table Company(
     idCompany INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nameRegion VARCHAR(32) NOT NULL,
@@ -43,13 +32,17 @@ create table Company(
     PRIMARY KEY(idCompany),
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion)
 );
+create table PaymentMethod(
+    nameMethod VARCHAR(32) NOT NULL,
 
+    PRIMARY KEY(nameMethod)
+);
 create table VCN(
     cidr TINYINT UNSIGNED NOT NULL,
     idVCN INT UNSIGNED NOT NULL AUTO_INCREMENT,
     idCompany INT UNSIGNED NOT NULL,
     privateIP BINARY(4) NOT NULL,
-    creationDate DATETIME NOT NULL CURRENT_TIMESTAMP,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     nameRegion VARCHAR(32) NOT NULL,
     name VARCHAR(32) NOT NULL,
 
@@ -58,13 +51,6 @@ create table VCN(
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion),
     FOREIGN KEY(cidr) REFERENCES Mask(cidr)
 );
-
-create table PaymentMethod(
-    nameMethod VARCHAR(32) NOT NULL,
-
-    PRIMARY KEY(nameMethod)
-);
-
 create table Subnet(
     cidr TINYINT UNSIGNED NOT NULL,
     idSubnet INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -75,7 +61,6 @@ create table Subnet(
     PRIMARY KEY(idSubnet),
     FOREIGN KEY(idVCN) REFERENCES VCN(idVCN)
 );
-
 create table Public(
     idSubnet INT UNSIGNED NOT NULL AUTO_INCREMENT,
     privateIP BINARY(4) NOT NULL UNIQUE,
@@ -83,29 +68,26 @@ create table Public(
     PRIMARY KEY(idSubnet),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet)
 );
-
 create table Payment(
     idPayment INT UNSIGNED NOT NULL AUTO_INCREMENT,
     idCompany INT UNSIGNED NOT NULL,
     nameMethod VARCHAR(32) NOT NULL,
     quantity FLOAT NOT NULL,
-    paymentDate DATETIME NOT NULL CURRENT_TIMESTAMP,
+    paymentDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(idPayment),
     FOREIGN KEY(idCompany) REFERENCES Company(idCompany),
     FOREIGN KEY(nameMethod) REFERENCES PaymentMethod(nameMethod)
 );
-
 create table UserGroup(
     idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
     idCompany INT UNSIGNED NOT NULL,
-    creationDate DATETIME NOT NULL CURRENT_TIMESTAMP,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     nameUserGroup VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idUserGroup),
     FOREIGN KEY(idCompany) REFERENCES Company(idCompany)
 );
-
 create table PrivilegeConfiguration(
     idUserGroup INT UNSIGNED NOT NULL,
     idPrivilege INT UNSIGNED NOT NULL,
@@ -116,10 +98,20 @@ create table PrivilegeConfiguration(
     FOREIGN KEY(idPrivilege) REFERENCES Privilege (idPrivilege)
 );
 
+create table MyUser(
+    name VARCHAR(32) NOT NULL,
+    email VARCHAR(64) NOT NULL,
+    password VARCHAR(256) NOT NULL,
+    idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    PRIMARY KEY(name),
+    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
+);
+
 create table Generation(
     generation VARCHAR(32) NOT NULL,
     PRIMARY KEY(generation)
-)
+);
 
 create table Speed(
     IOSpeed FLOAT UNSIGNED NOT NULL,
@@ -127,14 +119,14 @@ create table Speed(
 );
 
 create table Type(
-    typeName VARCHAR(16) UNSIGNED NOT NULL,
+    typeName VARCHAR(16) NOT NULL,
     PRIMARY KEY(typeName)
 );
 
 create table Size(
     totalCapacity FLOAT UNSIGNED NOT NULL,
     PRIMARY KEY(totalCapacity)
-)
+);
 
 create table Memory(
     idMemory INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -142,7 +134,7 @@ create table Memory(
     totalCapacity FLOAT UNSIGNED NOT NULL,
     IOSpeed FLOAT UNSIGNED NOT NULL,
     cost FLOAT UNSIGNED NOT NULL,
-    typeName VARCHAR(16) UNSIGNED NOT NULL,
+    typeName VARCHAR(16) NOT NULL,
     generation VARCHAR(32) NOT NULL,
 
     PRIMARY KEY (idMemory),
@@ -209,10 +201,10 @@ create table ComputeInstance(
     idCompany INT UNSIGNED NOT NULL,
     idMemory INT UNSIGNED NOT NULL,
     idImage INT UNSIGNED NOT NULL,
-    creationDate DATETIME NOT NULL CURRENT_TIMESTAMP,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     model VARCHAR(32) NOT NULL,
     name VARCHAR(32) NOT NULL,
-    sshKey BINARY(512) NULL,
+    sshKey BLOB(512) NULL,
 
     PRIMARY KEY(idComputeInstance),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet),
@@ -241,8 +233,8 @@ create table Storage(
     usedSpace FLOAT UNSIGNED NOT NULL,
     totalCapacity FLOAT UNSIGNED NOT NULL,
     IOSpeed FLOAT UNSIGNED NOT NULL,
-    creationDate DATETIME NOT NULL CURRENT_TIMESTAMP,
-    typeName VARCHAR(16) UNSIGNED NOT NULL,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    typeName VARCHAR(16) NOT NULL,
     name VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idStorage),
@@ -257,7 +249,7 @@ create table Storage(
 
 create table CompatibilitySpeedType(
     IOSpeed FLOAT UNSIGNED NOT NULL,
-    typeName VARCHAR(16) UNSIGNED NOT NULL,
+    typeName VARCHAR(16) NOT NULL,
 
     PRIMARY KEY(IOSpeed, typeName),
     FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
@@ -266,7 +258,7 @@ create table CompatibilitySpeedType(
 
 create table CompatibilityTypeSize(
     totalCapacity FLOAT UNSIGNED NOT NULL,
-    typeName VARCHAR(16) UNSIGNED NOT NULL,
+    typeName VARCHAR(16) NOT NULL,
 
     PRIMARY KEY(totalCapacity, typeName),
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity),
@@ -301,7 +293,7 @@ create table MyDataBase(
     idSubnet INT UNSIGNED NOT NULL,
     idComputeInstance INT UNSIGNED NOT NULL,
     idDBType INT UNSIGNED NOT NULL,
-    creationDate DATETIME NOT NULL CURRENT_TIMESTAMP,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     nameDataBase VARCHAR(32) NOT NULL,
     description VARCHAR(512) NULL,
 
@@ -320,7 +312,7 @@ create table MyTable(
 
     PRIMARY KEY(idTable),
     FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase)
-)
+);
 
 create table PermissionGroupDB(
     idUserGroup INT UNSIGNED NOT NULL,
@@ -362,28 +354,44 @@ create table Instruction(
     idInstruction INT UNSIGNED NOT NULL AUTO_INCREMENT,
     idTable INT UNSIGNED NOT NULL,
     nameInstruction VARCHAR(1024) NOT NULL,
-    inputDate DATETIME NOT NULL CURRENT_TIMESTAMP,
+    inputDate DATETIME NOT NULL  DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(idInstruction),
     FOREIGN KEY(idTable) REFERENCES MyTable(idTable)
 );
+create table Setting(
+    nameSetting VARCHAR(32) NOT NULL,
 
+    PRIMARY KEY(nameSetting)
+);
+create table DBConfiguration(
+    idDataBase INT UNSIGNED NOT NULL,
+    nameSetting VARCHAR(32) NOT NULL,
+    bolleanValue BOOLEAN NOT NULL,
+    decimalValue DECIMAL NOT NULL,
+    stringValue VARCHAR(36) NOT NULL,
+
+    PRIMARY KEY(idDataBase, nameSetting),
+    FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase),
+    FOREIGN KEY(nameSetting) REFERENCES Setting(nameSetting)
+);
 create table MySQLSetting(
     idMySQL INT UNSIGNED NOT NULL,
-    idSetting INT UNSIGNED NOT NULL,
+    nameSetting VARCHAR(32) NOT NULL,
 
-    PRIMARY KEY(idMySQL, idSetting),
+    PRIMARY KEY(idMySQL, nameSetting),
     FOREIGN KEY(idMySQL) REFERENCES DBTypeMySql(idDBType),
-    FOREIGN KEY(idSetting) REFERENCES Setting(idSetting)
+    FOREIGN KEY(nameSetting) REFERENCES Setting(nameSetting)
 );
+
 
 create table PostgradeSetting(
     idPostgrade INT UNSIGNED NOT NULL,
-    idSetting INT UNSIGNED NOT NULL,
+    nameSetting VARCHAR(32) NOT NULL,
 
-    PRIMARY KEY(idPostgrade, idSetting),
-    FOREIGN KEY(idMySQL) REFERENCES DBTypePostgrade(idDBType),
-    FOREIGN KEY(idSetting) REFERENCES Setting(idSetting)
+    PRIMARY KEY(idPostgrade, nameSetting),
+    FOREIGN KEY(idPostgrade) REFERENCES DBTypePostgrade(idDBType),
+    FOREIGN KEY(nameSetting) REFERENCES Setting(nameSetting)
 );
 
 create table MYUsage(
@@ -391,12 +399,13 @@ create table MYUsage(
     idComputeMEM INT UNSIGNED NOT NULL,
     idStorage INT UNSIGNED NOT NULL,
     idVCN INT UNSIGNED NOT NULL,
+    idDataBase INT UNSIGNED NOT NULL,
     value FLOAT,
-    creationDate DATETIME NOT NULL CURRENT_TIMESTAMP,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(idComputeCPU, idComputeMEM, idStorage, idVCN, creationDate),
     FOREIGN KEY(idComputeCPU) REFERENCES ComputeInstance(idComputeInstance),
-    FOREIGN KEY(idComputeMem) REFERENCES ComputeInstance(idComputeInstance)
+    FOREIGN KEY(idComputeMem) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(idVCN) REFERENCES VCN(idVCN),
     FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase),
     FOREIGN KEY(idStorage) REFERENCES Storage(idStorage)
@@ -407,7 +416,7 @@ create table StorageCost(
     IOSpeed FLOAT UNSIGNED NOT NULL,
     totalCapacity FLOAT UNSIGNED NOT NULL,
     cost FLOAT UNSIGNED NOT NULL,
-    typeName VARCHAR(16) UNSIGNED NOT NULL,
+    typeName VARCHAR(16) NOT NULL,
 
     PRIMARY KEY(idStorageCost),
     FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
