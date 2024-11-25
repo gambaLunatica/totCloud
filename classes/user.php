@@ -1,22 +1,26 @@
 
 <?php
 class User{
-    private $name;
+    private $userName;
+    private $realName;
+    private $realSurname;
     private $email;
     private $password;
-    private $userGroup;
+    private $idUserGroup;
+    private $idCompany;//Indicates the company of which this user is MASTER
 
 
 
-    public function __construct($name, $email, $password, $userGroup){
-        $this->name = $name;
+    public function __construct($userName, $email, $password, $idUserGroup, $idCompany=null ){
+        $this->userName = $userName;
         $this->email = $email;
         $this->password = password_hash($password, PASSWORD_BCRYPT);
-        $this->userGroup = $userGroup;
+        $this->idUserGroup = $idUserGroup;
+        $this->idCompany = $idCompany;
     }
 
     public function getName():String{
-        return $this->name;
+        return $this->userName;
     }
 
     public function getEmail():String{
@@ -28,7 +32,11 @@ class User{
     }
 
     public function getUserGroup():int{
-        return $this->userGroup;
+        return $this->idUserGroup;
+    }
+
+    public function getIdCompany():int{
+        return $this->idCompany;
     }
 
 

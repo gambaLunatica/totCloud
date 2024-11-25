@@ -26,12 +26,11 @@ create table Mask(
 );
 create table Company(
     idCompany INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    userName VARCHAR(32) NOT NULL,
     nameRegion VARCHAR(32) NOT NULL,
     nameCompany VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idCompany),
-    FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion),
+    FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion)
 );
 create table UserGroup(
     idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
