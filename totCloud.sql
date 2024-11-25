@@ -32,8 +32,31 @@ create table Company(
 
     PRIMARY KEY(idCompany),
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion),
-    FOREIGN KEY(userName) REFERENCES MyUser(userName)
 );
+create table UserGroup(
+    idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    idCompany INT UNSIGNED NOT NULL,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    nameUserGroup VARCHAR(32) NOT NULL,
+
+    PRIMARY KEY(idUserGroup),
+    FOREIGN KEY(idCompany) REFERENCES Company(idCompany)
+);
+
+create table MyUser(
+    userName VARCHAR(32) NOT NULL,
+    realName VARCHAR(32) NOT NULL,
+    realSurname VARCHAR(32) NOT NULL,
+    email VARCHAR(64) NOT NULL UNIQUE,
+    password VARCHAR(256) NOT NULL,
+    idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    idCompany INT UNSIGNED NULL UNIQUE,
+
+    PRIMARY KEY(userName),
+    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
+    FOREIGN KEY(idCompany) REFERENCES Company(idCompany)
+);
+
 create table PaymentMethod(
     nameMethod VARCHAR(32) NOT NULL,
 
@@ -81,15 +104,8 @@ create table Payment(
     FOREIGN KEY(idCompany) REFERENCES Company(idCompany),
     FOREIGN KEY(nameMethod) REFERENCES PaymentMethod(nameMethod)
 );
-create table UserGroup(
-    idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    idCompany INT UNSIGNED NOT NULL,
-    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    nameUserGroup VARCHAR(32) NOT NULL,
+#pueden haber muchos user group con el mismo nombre
 
-    PRIMARY KEY(idUserGroup),
-    FOREIGN KEY(idCompany) REFERENCES Company(idCompany)
-);
 create table PrivilegeConfiguration(
     idUserGroup INT UNSIGNED NOT NULL,
     idPrivilege INT UNSIGNED NOT NULL,
@@ -100,17 +116,7 @@ create table PrivilegeConfiguration(
     FOREIGN KEY(idPrivilege) REFERENCES Privilege (idPrivilege)
 );
 
-create table MyUser(
-    userName VARCHAR(32) NOT NULL,
-    realName VARCHAR(32) NOT NULL,
-    realSurname VARCHAR(32) NOT NULL,
-    email VARCHAR(64) NOT NULL UNIQUE,
-    password VARCHAR(256) NOT NULL,
-    idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
 
-    PRIMARY KEY(userName),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
-);
 
 create table Generation(
     generation VARCHAR(32) NOT NULL,
@@ -427,5 +433,3 @@ create table StorageCost(
     FOREIGN KEY(typeName) REFERENCES Type(typeName),
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
 );
-
-hola
