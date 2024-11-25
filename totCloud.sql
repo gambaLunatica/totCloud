@@ -427,3 +427,5 @@ create table StorageCost(
     FOREIGN KEY(typeName) REFERENCES Type(typeName),
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
 );
+
+hola
