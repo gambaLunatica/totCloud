@@ -26,13 +26,13 @@ create table Mask(
 );
 create table Company(
     idCompany INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(32) NOT NULL,
+    userName VARCHAR(32) NOT NULL,
     nameRegion VARCHAR(32) NOT NULL,
     nameCompany VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idCompany),
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion),
-    FOREIGN KEY(name) REFERENCES MyUser(name)
+    FOREIGN KEY(userName) REFERENCES MyUser(userName)
 );
 create table PaymentMethod(
     nameMethod VARCHAR(32) NOT NULL,
@@ -101,12 +101,14 @@ create table PrivilegeConfiguration(
 );
 
 create table MyUser(
-    name VARCHAR(32) NOT NULL,
-    email VARCHAR(64) NOT NULL,
+    userName VARCHAR(32) NOT NULL,
+    realName VARCHAR(32) NOT NULL,
+    realSurname VARCHAR(32) NOT NULL,
+    email VARCHAR(64) NOT NULL UNIQUE,
     password VARCHAR(256) NOT NULL,
     idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
 
-    PRIMARY KEY(name),
+    PRIMARY KEY(userName),
     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
 );
 
