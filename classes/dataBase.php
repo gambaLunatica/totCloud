@@ -110,7 +110,21 @@ class MyDataBase{
         return false;
     }
     
+    public function selectRegions():array{
+        $sql = "SELECT nameRegion FROM Region";
+        $result = $this->db->query($sql);
 
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["nameRegion"]); // Sanitize the value
+            }
+        }
+        return $values;
+    }
     
 }
+
+$dataBase = new MyDataBase($con);
 ?>

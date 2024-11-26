@@ -36,6 +36,63 @@ body {
     text-align: center;
   }
 
-  .topnav ul li a:hover{
+  .navuser div{
+    font-size:0.75rem;
+  }
+
+  .navbutton:hover{
     background-color: #36393e;
+  }
+
+  h1{
+    color:white;
+  }
+
+  h2{
+    color:white
+  }
+
+  label{
+    color:white;
+  }
+
+  .loginBody {
+    background: #282b30;
+    position: relative;
+    display: flex;
+    flex-direction: row; /* Align items in a row */
+    justify-content: space-evenly; /* Even spacing between children */
+    align-items: center; /* Vertically center items */
+    width: 66vw; /* Two-thirds of the viewport width */
+    margin: 0 auto; /* Center the focusBody horizontally */
+    padding: 20px; /* Add padding for internal spacing */
+    box-sizing: border-box; /* Ensure padding doesn't add to the width */
+  }
+  
+  .vl {
+    border-left: 6px solid #424549;
+    height: 75%; /* Match percentage height relative to parent */
+    position: absolute;
+    left: 50%;
+    margin-left: -3px; /* Center the line */
+    top: 12.5%; /* Center vertically */
+  }
+  
+  input {
+    background: #424549;
+    border: 2px solid #36393e;
+    border-radius: 6px;
+    color: white;
+    width: 125%; /* Input adapts to available space */
+    max-width: 300px; /* Optional: Limit the input's max width */
+    height: 40px; /* Fixed height for consistency */
+    margin: 0 10px; /* Add spacing between inputs */
+    box-sizing: border-box; /* Include padding and borders in size */
+  }
+
+  button{
+    background: #424549;
+    border: 2px solid #36393e;
+    border-radius: 6px;
+    color: white;
   }
