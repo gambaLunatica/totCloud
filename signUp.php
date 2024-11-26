@@ -7,21 +7,21 @@ include "classes/dataBase.php";
     <?php include "navbar.php" ?>
 
     <main>
-        <div style="padding: 0% 20%;">
+        <div>
             <h1>Hello again!</h1>
             <div class="loginBody">
                 <div>
-                    <h2>Log In</h2>
-                    <form action="" method="post">
+                    <h2>Log in</h2>
+                    <form action="classes/loginAction.php" method="post">
                         <label for="username">Username</label>
                         <br>
                         <input type="text" id="username" name="username" required>
-                        <br><br>
+                        <br>
                         <label for="password">Password</label>
                         <br>
                         <input type="password" id="password" name="password" required>
                         <br><br>
-                        <button type="submit">Go</button>
+                        <button class="goButton" type="submit">Go</button>
                     </form>
                 </div>
 
@@ -29,13 +29,13 @@ include "classes/dataBase.php";
 
                 <div>
                     <h2>... or create a Company</h2>
-                    <form action="" method="post">
+                    <form action="classes/signupAction.php" method="post">
                         <h3>Company</h3>
-                        <br>
                         <label for="companyName">Company Name</label>
                         <input type="text" id="companyName" name="companyName" required>
-
-                        <select name="dropdown" required>
+                        <br>
+                        <label for="region">Region</label>
+                        <select id="region" name="region" required>
                             <option value="">Select an option</option>
                             <?php
                             $regions = $dataBase->selectRegions(); // Ensure this returns an array
@@ -44,16 +44,29 @@ include "classes/dataBase.php";
                             }
                             ?>
                         </select>
-
+                        <br>
                         <br>
                         <h3>Master User</h3>
+                        <label for="realName">Name</label>
+                        <input type="text" id="realName" name="realName" required>
                         <br>
+                        <label for="realSurname">Surname</label>
+                        <br>
+                        <input type="text" id="realSurname" name="realSurname" required>
+                        <br><br>
+                        <label for="username">Username</label>
+                        <br>
+                        <input type="text" id="username" name="username" required>
+                        <br>
+                        <label for="email">Email</label>
+                        <br>
+                        <input type="email" id="email" name="email" required>
                         <br><br>
                         <label for="password">Password</label>
                         <br>
                         <input type="password" id="password" name="password" required>
                         <br><br>
-                        <button type="submit">Go</button>
+                        <button class="goButton" type="submit">Go</button>
                     </form>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 <div class="topnav">
     <ul>
+        <li><a class="navbutton" href="index.php"><i class="fa-solid fa-house"></i></a></li>
         <li><a class="navbutton" href="#">Virtual Machines</a></li>
         <li><a class="navbutton" href="#">Storages</a></li>
         <li><a class="navbutton" href="#">Data Bases</a></li>

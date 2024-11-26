@@ -4,95 +4,132 @@ body {
 }
 
 .topnav {
-    overflow: hidden;
-    background-color: #282b30;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
+  overflow: hidden;
+  background-color: #282b30;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 
-  .topnav ul{
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 10px;
-    display:flex;
-    align-items: center;
-  }
+.topnav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  display: flex;
+  align-items: center;
+}
 
-  .navbutton{
-    color:white;
-    padding: 15px 20px;
-    display:inline-block;
-    font-weight: bold;
-    text-decoration: none;
-  }
+.navbutton {
+  color: white;
+  padding: 15px 20px;
+  display: inline-block;
+  font-weight: bold;
+  text-decoration: none;
+}
 
-  .navuser{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-  }
+.navuser {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
 
-  .navuser div{
-    font-size:0.75rem;
-  }
+.navuser div {
+  font-size: 0.75rem;
+}
 
-  .navbutton:hover{
-    background-color: #36393e;
-  }
+.navbutton:hover {
+  background-color: #36393e;
+}
 
-  h1{
-    color:white;
-  }
+h1 {
+  color: white;
+}
 
-  h2{
-    color:white
-  }
+h2 {
+  color: white
+}
+h3{
+  color: white
+}
 
-  label{
-    color:white;
-  }
+label {
+  color: white;
+}
 
-  .loginBody {
-    background: #282b30;
-    position: relative;
-    display: flex;
-    flex-direction: row; /* Align items in a row */
-    justify-content: space-evenly; /* Even spacing between children */
-    align-items: center; /* Vertically center items */
-    width: 66vw; /* Two-thirds of the viewport width */
-    margin: 0 auto; /* Center the focusBody horizontally */
-    padding: 20px; /* Add padding for internal spacing */
-    box-sizing: border-box; /* Ensure padding doesn't add to the width */
-  }
-  
-  .vl {
-    border-left: 6px solid #424549;
-    height: 75%; /* Match percentage height relative to parent */
-    position: absolute;
-    left: 50%;
-    margin-left: -3px; /* Center the line */
-    top: 12.5%; /* Center vertically */
-  }
-  
-  input {
-    background: #424549;
-    border: 2px solid #36393e;
-    border-radius: 6px;
-    color: white;
-    width: 125%; /* Input adapts to available space */
-    max-width: 300px; /* Optional: Limit the input's max width */
-    height: 40px; /* Fixed height for consistency */
-    margin: 0 10px; /* Add spacing between inputs */
-    box-sizing: border-box; /* Include padding and borders in size */
-  }
+.loginBody {
+  background: #282b30;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  /* Align items in a row */
+  justify-content: space-evenly;
+  /* Even spacing between children */
+  align-items: flex-start;
+  /* Align items at the top */
+  width: 66vw;
+  /* Two-thirds of the viewport width */
+  margin: 0 auto;
+  /* Center the focusBody horizontally */
+  padding: 20px;
+  /* Add padding for internal spacing */
+  box-sizing: border-box;
+  /* Ensure padding doesn't add to the width */
+}
 
-  button{
-    background: #424549;
-    border: 2px solid #36393e;
-    border-radius: 6px;
-    color: white;
-  }
+.loginBody>div {
+  display: block;
+  /* Ensure the direct children divs inside loginBody behave as block elements */
+}
+
+.vl {
+  border-left: 6px solid #424549;
+  height: 75%;
+  /* Match percentage height relative to parent */
+  position: absolute;
+  left: 50%;
+  margin-left: -3px;
+  /* Center the line */
+  top: 12.5%;
+  /* Center vertically */
+  border-radius: 6px;
+}
+
+form {
+  display: block;
+  /* Ensure forms and their contents are not affected by flex */
+}
+
+input, select {
+  background: #424549;
+  border: 2px solid #36393e;
+  border-radius: 6px;
+  color: white;
+  width: 125%;
+  /* Input adapts to available space */
+  max-width: 300px;
+  /* Optional: Limit the input's max width */
+  height: 40px;
+  /* Fixed height for consistency */
+  margin: 0 10px;
+  /* Add spacing between inputs */
+  box-sizing: border-box;
+  /* Include padding and borders in size */
+}
+
+.goButton{
+  background: #424549;
+  border: 2px solid #36393e;
+  border-radius: 6px;
+  color: white;
+  height: 30px;
+  width:50px;
+}
+
+.errorBox{
+  background: rgb(255, 152, 152);
+  border: 3px solid #ff0000;
+  color: black;
+}

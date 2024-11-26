@@ -21,7 +21,7 @@ class User{
         $this->realName = $realName;
     }
 
-    public function getName():String{
+    public function getUsername():String{
         return $this->userName;
     }
 

@@ -6,9 +6,8 @@ class UserGroup{
     private $creationDate;
     private $name;
 
-    public function __construct(int $idCompany, DateTime $creationDate, String $name){
+    public function __construct(int $idCompany, String $name){
         $this->idCompany = $idCompany;
-        $this->creationDate = $creationDate;
         $this->name = $name;
     }
 
@@ -21,11 +20,16 @@ class UserGroup{
     public function getCreationDate(): DateTime{
         return $this->creationDate;
     }
+
+    public function setCreationDate(DateTime $creationDate):void{
+        $this->creationDate = $creationDate;
+    }
+
     public function getName(): String{
         return $this->name;
     }
 
-    public function setId(int $id){
+    public function setId(int $id):void{
         $this->id = $id;
     }
 }

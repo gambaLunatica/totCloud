@@ -2,8 +2,6 @@
 $con = mysqli_connect("localhost","root","") or die("Localhost no disponible");
 $db = mysqli_select_db($con,"totcloud") or die("Base de dades no disponible");
 
-require "user.php";
-
 class MyDataBase{
     private $db;
     public function __construct(mysqli $db) {
@@ -20,16 +18,25 @@ class MyDataBase{
             if (!$stmt) {
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
+
+            $username = $user->getUsername();
+            $realName = $user->getRealName();
+            $realSurname = $user->getRealSurname();
+            $email = $user->getEmail();
+            $password = $user->getPassword();
+            $idUserGroup = $user->getIdUserGroup();
+            $idCompany = $user->getIdCompany();
+
             
             $stmt->bind_param(
                 "sssssii",
-                $user->getName(),
-                $user->getRealName(),
-                $user->getRealSurname(),
-                $user->getEmail(),
-                $user->getPassword(),
-                $user->getIdUserGroup(),
-                $user->getIdCompany()
+                $username,
+                $realName,
+                $realSurname,
+                $email,
+                $password,
+                $idUserGroup,
+                $idCompany
             );
             
             $returnValue = $stmt->execute();
@@ -40,9 +47,9 @@ class MyDataBase{
             
             return $returnValue;
         } catch (Exception $e) {
-            echo "Error adding user: " . $e->getMessage();
+            return false;
         }
-        return false;
+        
     }
     
     public function insertCompany(Company $company): bool {
@@ -56,10 +63,13 @@ class MyDataBase{
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
             
+            $nameRegion = $company->getNameRegion();
+            $name = $company->getName();
+
             $stmt->bind_param(
                 "ss",
-                $company->getNameRegion(),
-                $company->getName()
+                $nameRegion,
+                $name
             );
             
             $returnValue = $stmt->execute();
@@ -72,27 +82,29 @@ class MyDataBase{
             
             return $returnValue;
         } catch (Exception $e) {
-            echo "Error adding company: " . $e->getMessage();
+            return false;
         }
         return false;
     }
     
     public function insertUserGroup(UserGroup $userGroup): bool {
         try {
-            $sql = "INSERT INTO UserGroup (idCompany, creationDate, nameUserGroup)
-                    VALUES (?, ?, ?)";
+            $sql = "INSERT INTO UserGroup (idCompany, nameUserGroup)
+                    VALUES (?, ?)";
             
             $stmt = $this->db->prepare($sql);
             
             if (!$stmt) {
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
+
+            $idCompany = $userGroup->getIdCompany();
+            $name = $userGroup->getName();
             
             $stmt->bind_param(
-                "iss",
-                $userGroup->getIdCompany(),
-                $userGroup->getCreationDate()->format(format: 'Y-m-d H:i:s'),
-                $userGroup->getName()
+                "is",
+                $idCompany,
+                $name
             );
             
             $returnValue = $stmt->execute();
@@ -105,9 +117,8 @@ class MyDataBase{
             
             return $returnValue;
         } catch (Exception $e) {
-            echo "Error adding UserGroup: " . $e->getMessage();
+            return false;
         }
-        return false;
     }
     
     public function selectRegions():array{
@@ -123,6 +134,15 @@ class MyDataBase{
         }
         return $values;
     }
+
+    public function selectUserByUsername(){
+        //TODO
+    }
+
+    public function selectUserByEmail(string $email):array{
+        //TODO
+    }
+
     
 }
 

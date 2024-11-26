@@ -27,7 +27,7 @@ create table Mask(
 create table Company(
     idCompany INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nameRegion VARCHAR(32) NOT NULL,
-    nameCompany VARCHAR(32) NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL UNIQUE,
 
     PRIMARY KEY(idCompany),
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion)
@@ -43,7 +43,7 @@ create table UserGroup(
 );
 
 create table MyUser(
-    userName VARCHAR(32) NOT NULL,
+    userName VARCHAR(32) NOT NULL UNIQUE,
     realName VARCHAR(32) NOT NULL,
     realSurname VARCHAR(32) NOT NULL,
     email VARCHAR(64) NOT NULL UNIQUE,
