@@ -25,35 +25,33 @@ create table Mask(
     PRIMARY KEY (cidr)
 );
 create table Company(
-    idCompany INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nameRegion VARCHAR(32) NOT NULL,
     nameCompany VARCHAR(32) NOT NULL UNIQUE,
 
-    PRIMARY KEY(idCompany),
+    PRIMARY KEY(nameCompany),
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion)
 );
 create table UserGroup(
     idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    idCompany INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     nameUserGroup VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idUserGroup),
-    FOREIGN KEY(idCompany) REFERENCES Company(idCompany)
+    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany)
 );
 
 create table MyUser(
-    userName VARCHAR(32) NOT NULL UNIQUE,
     realName VARCHAR(32) NOT NULL,
     realSurname VARCHAR(32) NOT NULL,
     email VARCHAR(64) NOT NULL UNIQUE,
     password VARCHAR(256) NOT NULL,
     idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    idCompany INT UNSIGNED NULL UNIQUE,
+    nameCompany VARCHAR(32) NOT NULL,
 
-    PRIMARY KEY(userName),
+    PRIMARY KEY(email),
     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(idCompany) REFERENCES Company(idCompany)
+    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany)
 );
 
 create table PaymentMethod(
@@ -64,14 +62,14 @@ create table PaymentMethod(
 create table VCN(
     cidr TINYINT UNSIGNED NOT NULL,
     idVCN INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    idCompany INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
     privateIP BINARY(4) NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     nameRegion VARCHAR(32) NOT NULL,
     name VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idVCN),
-    FOREIGN KEY(idCompany) REFERENCES Company(idCompany),
+    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion),
     FOREIGN KEY(cidr) REFERENCES Mask(cidr)
 );
@@ -94,13 +92,13 @@ create table Public(
 );
 create table Payment(
     idPayment INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    idCompany INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
     nameMethod VARCHAR(32) NOT NULL,
     quantity FLOAT NOT NULL,
     paymentDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(idPayment),
-    FOREIGN KEY(idCompany) REFERENCES Company(idCompany),
+    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(nameMethod) REFERENCES PaymentMethod(nameMethod)
 );
 #pueden haber muchos user group con el mismo nombre
@@ -207,7 +205,7 @@ create table Image(
 create table ComputeInstance(
     idComputeInstance INT UNSIGNED NOT NULL AUTO_INCREMENT,
     idSubnet INT UNSIGNED NOT NULL,
-    idCompany INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
     idMemory INT UNSIGNED NOT NULL,
     idImage INT UNSIGNED NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -217,7 +215,7 @@ create table ComputeInstance(
 
     PRIMARY KEY(idComputeInstance),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet),
-    FOREIGN KEY(idCompany) REFERENCES Company(idCompany),
+    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(idMemory) REFERENCES Memory(idMemory),
     FOREIGN KEY(model) REFERENCES CPU(model),
     FOREIGN KEY(idImage) REFERENCES Image(idImage)
@@ -236,7 +234,7 @@ create table CompatibilityCPUImage(
 
 create table Storage(
     idStorage INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    idCompany INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
     idSubnet INT UNSIGNED NOT NULL,
     idComputeInstance INT UNSIGNED NOT NULL,
     usedSpace FLOAT UNSIGNED NOT NULL,
@@ -247,7 +245,7 @@ create table Storage(
     name VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idStorage),
-    FOREIGN KEY(idCompany) REFERENCES Company(idCompany),
+    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet),
     FOREIGN KEY(idComputeInstance) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
@@ -298,7 +296,7 @@ create table DBTypeMySql(
 
 create table MyDataBase(
     idDataBase INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    idCompany INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
     idSubnet INT UNSIGNED NOT NULL,
     idComputeInstance INT UNSIGNED NOT NULL,
     idDBType INT UNSIGNED NOT NULL,
@@ -307,7 +305,7 @@ create table MyDataBase(
     description VARCHAR(512) NULL,
 
     PRIMARY KEY(idDataBase),
-    FOREIGN KEY(idCompany) REFERENCES Company(idCompany),
+    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet),
     FOREIGN key(idComputeInstance) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(idDBType) REFERENCES DBTypeMySql(idDBType)
