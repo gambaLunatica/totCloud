@@ -126,6 +126,7 @@ input, select {
   color: white;
   height: 30px;
   width:50px;
+  font-weight: bold;
 }
 
 .errorBox{

@@ -10,8 +10,8 @@ class MyDataBase{
 
     public function insertUser(User $user): bool {
         try {
-            $sql = "INSERT INTO MyUser (userName, realName, realSurname, email, password, idUserGroup, idCompany)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO MyUser (realName, realSurname, email, password, idUserGroup, nameCompany)
+                    VALUES (?, ?, ?, ?, ?, ?)";
             
             $stmt = $this->db->prepare($sql);
             
@@ -19,17 +19,16 @@ class MyDataBase{
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
 
-            $username = $user->getUsername();
             $realName = $user->getRealName();
             $realSurname = $user->getRealSurname();
             $email = $user->getEmail();
             $password = $user->getPassword();
             $idUserGroup = $user->getIdUserGroup();
-            $idCompany = $user->getIdCompany();
+            $idCompany = $user->getNameCompany();
 
             
             $stmt->bind_param(
-                "sssssii",
+                "ssssis",
                 $username,
                 $realName,
                 $realSurname,
@@ -52,10 +51,9 @@ class MyDataBase{
         
     }
     
-    public function insertCompany(Company $company): bool {
+    public function insertCompany(Company $company, User $user): int {
         try {
-            $sql = "INSERT INTO Company (nameRegion, nameCompany)
-                    VALUES (?, ?)";
+            $sql = "SELECT RegisterCompany(?, ?, ?, ?, ?, ?) AS groupId";
             
             $stmt = $this->db->prepare($sql);
             
@@ -64,32 +62,42 @@ class MyDataBase{
             }
             
             $nameRegion = $company->getNameRegion();
-            $name = $company->getName();
+            $nameCompany = $company->getName();
+
+            $realName = $user->getRealName();
+            $surname = $user->getRealSurname();
+            $email = $user->getEmail();
+            $password = $user->getPassword();
 
             $stmt->bind_param(
-                "ss",
+                'ssssss',
                 $nameRegion,
-                $name
+                $nameCompany,
+                $realName,
+                $surname,
+                $email,
+                $password
             );
             
-            $returnValue = $stmt->execute();
+            if($stmt->execute())
             
-            if (!$returnValue) {
-                throw new Exception("Error executing statement: " . $stmt->error);
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                if ($row = $result->fetch_assoc()) {
+                    return $row['groupId'];
+                }
             }
             
-            $company->setId($this->db->insert_id);
             
-            return $returnValue;
+            return -1;
         } catch (Exception $e) {
-            return false;
+            return -1;
         }
-        return false;
     }
     
     public function insertUserGroup(UserGroup $userGroup): bool {
         try {
-            $sql = "INSERT INTO UserGroup (idCompany, nameUserGroup)
+            $sql = "INSERT INTO UserGroup (nameCompany, nameUserGroup)
                     VALUES (?, ?)";
             
             $stmt = $this->db->prepare($sql);
@@ -98,11 +106,11 @@ class MyDataBase{
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
 
-            $idCompany = $userGroup->getIdCompany();
+            $idCompany = $userGroup->getNameCompany();
             $name = $userGroup->getName();
             
             $stmt->bind_param(
-                "is",
+                "ss",
                 $idCompany,
                 $name
             );
@@ -135,13 +143,6 @@ class MyDataBase{
         return $values;
     }
 
-    public function selectUserByUsername(){
-        //TODO
-    }
-
-    public function selectUserByEmail(string $email):array{
-        //TODO
-    }
 
     
 }
