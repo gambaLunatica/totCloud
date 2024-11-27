@@ -74,9 +74,9 @@ create table VCN(
     cidr TINYINT UNSIGNED NOT NULL,
     idVCN INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nameCompany VARCHAR(32) NOT NULL,
+    nameRegion VARCHAR(32) NOT NULL,
     privateIP BINARY(4) NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    nameRegion VARCHAR(32) NOT NULL,
     name VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idVCN),
@@ -97,6 +97,7 @@ create table Subnet(
 create table Public(
     idSubnet INT UNSIGNED NOT NULL AUTO_INCREMENT,
     privateIP BINARY(4) NOT NULL UNIQUE,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(idSubnet),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet)
@@ -151,9 +152,9 @@ create table Memory(
     statusName VARCHAR(16) NOT NULL,
     totalCapacity FLOAT UNSIGNED NOT NULL,
     IOSpeed FLOAT UNSIGNED NOT NULL,
-    cost FLOAT UNSIGNED NOT NULL,
     typeName VARCHAR(16) NOT NULL,
     generation VARCHAR(32) NOT NULL,
+    cost FLOAT UNSIGNED NOT NULL,
 
     PRIMARY KEY (idMemory),
     FOREIGN KEY(generation) REFERENCES Generation(generation),
@@ -219,9 +220,9 @@ create table ComputeInstance(
     nameCompany VARCHAR(32) NOT NULL,
     idMemory INT UNSIGNED NOT NULL,
     idImage INT UNSIGNED NOT NULL,
-    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     model VARCHAR(32) NOT NULL,
     name VARCHAR(32) NOT NULL,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     sshKey BLOB(512) NULL,
 
     PRIMARY KEY(idComputeInstance),
@@ -382,6 +383,7 @@ create table Setting(
 
     PRIMARY KEY(nameSetting)
 );
+
 create table DBConfiguration(
     idDataBase INT UNSIGNED NOT NULL,
     nameSetting VARCHAR(32) NOT NULL,
