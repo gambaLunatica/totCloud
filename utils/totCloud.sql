@@ -6,7 +6,18 @@ create table Privilege(
 
     PRIMARY KEY(idPrivilege)
 );
+create table PrivilegeStatus(
+    idPrivilege INT UNSIGNED NOT NULL,
+    idUserGroup INT UNSIGNED NOT NULL,
+    value INT UNSIGNED NOT NULL,
 
+    PRIMARY KEY(idPrivilege, idUserGroup),
+    FOREIGN KEY(idPrivilege) REFERENCES Privilege(idPrivilege),
+    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
+
+);
+
+#Clase estado de lso componentes
 create table Status(
     statusName VARCHAR(16) NOT NULL,
     PRIMARY KEY(statusName)
