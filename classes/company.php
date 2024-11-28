@@ -3,7 +3,7 @@ class Company{
     private $nameRegion;
     private $name;
 
-    public function __construct(String $nameRegion, String $name){
+    public function __construct( String $name, String $nameRegion){
         $this->nameRegion = $nameRegion;
         $this->name = $name;
     }

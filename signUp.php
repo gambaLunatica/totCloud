@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <?php
 include "head.php";
 include "classes/dataBase.php";
@@ -69,3 +72,5 @@ include "classes/dataBase.php";
         </div>
     </main>
 </body>
+
+</html>

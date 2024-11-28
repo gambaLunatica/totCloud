@@ -1,20 +1,11 @@
 CREATE DATABASE totCloud;
+USE totCloud;
 
 create table Privilege(
     idPrivilege INT UNSIGNED NOT NULL AUTO_INCREMENT,
     namePrivilege VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idPrivilege)
-);
-create table PrivilegeStatus(
-    idPrivilege INT UNSIGNED NOT NULL,
-    idUserGroup INT UNSIGNED NOT NULL,
-    value INT UNSIGNED NOT NULL,
-
-    PRIMARY KEY(idPrivilege, idUserGroup),
-    FOREIGN KEY(idPrivilege) REFERENCES Privilege(idPrivilege),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
-
 );
 
 #Clase estado de lso componentes
@@ -37,8 +28,9 @@ create table Mask(
 );
 
 create table Company(
-    nameRegion VARCHAR(32) NOT NULL,
     nameCompany VARCHAR(32) NOT NULL UNIQUE,
+    nameRegion VARCHAR(32) NOT NULL,
+    
 
     PRIMARY KEY(nameCompany),
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion)
@@ -52,6 +44,15 @@ create table UserGroup(
 
     PRIMARY KEY(idUserGroup),
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany)
+);
+create table PrivilegeStatus(
+    idPrivilege INT UNSIGNED NOT NULL,
+    idUserGroup INT UNSIGNED NOT NULL,
+    value INT UNSIGNED NOT NULL,
+
+    PRIMARY KEY(idPrivilege, idUserGroup),
+    FOREIGN KEY(idPrivilege) REFERENCES Privilege(idPrivilege),
+    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
 );
 
 create table MyUser(
@@ -446,38 +447,88 @@ create table StorageCost(
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
 );
 
-DELIMITER $$
+DELIMITER //
+
 CREATE FUNCTION RegisterCompany(
-    nameCompany VARCHAR(32),
-    nameRegion VARCHAR(32),
-    realName VARCHAR(32),
-    realSurname VARCHAR(32),
-    email VARCHAR(64),
-    password VARCHAR(256)
+    nameCompanyPar VARCHAR(32), 
+    nameRegionPar VARCHAR(32),
+    realNamePar VARCHAR(32),
+    realSurnamePar VARCHAR(32),
+    emailPar VARCHAR(64),
+    passwordPar VARCHAR(256)
 ) RETURNS INT
 BEGIN
     DECLARE companyExists INT;
     DECLARE userExists INT;
     DECLARE groupId INT;
 
-    SELECT COUNT(nameCompany) INTO companyExists
-    FROM Company c WHERE c.nameCompany = nameCompany;
+    -- Check if the company already exists
+    SELECT COUNT(*) INTO companyExists
+    FROM Company c
+    WHERE c.nameCompany = nameCompanyPar;
 
-    SELECT COUNT(email) INTO userExists
-    FROM MyUser u WHERE u.email = email;
+    -- Check if the user already exists
+    SELECT COUNT(*) INTO userExists
+    FROM MyUser u
+    WHERE u.email = emailPar;
 
+    -- If either the company or user exists, return -1
     IF companyExists > 0 OR userExists > 0 THEN
-        RETURN NULL;
+        RETURN -1;
     END IF;
 
-    INSERT INTO Company (nameCompany, nameRegion) VALUES (nameCompany, nameRegion);
-    INSERT INTO UserGroup (nameUserGroup, nameCompany) VALUES ("Administrators", nameCompany);
+    -- Insert into Company table
+    INSERT INTO Company (nameCompany, nameRegion)
+    VALUES (nameCompanyPar, nameRegionPar);
 
-    SELECT idUserGroup INTO groupId FROM UserGroup u WHERE u.nameCompany = nameCompany;
+    -- Insert into UserGroup table
+    INSERT INTO UserGroup (nameUserGroup, nameCompany)
+    VALUES ('Administrators', nameCompanyPar);
 
-    INSERT INTO MyUser (realName, realSurname, email, password, idUserGroup, nameCompany)
-    VALUES (realName, realSurname, email, password, groupId, nameCompany);
+    -- Retrieve the ID of the UserGroup
+    SET groupId = LAST_INSERT_ID();
 
+    -- Insert into MyUser table
+    INSERT INTO MyUser (realName, realSurname, email, `password`, idUserGroup, nameCompany)
+    VALUES (realNamePar, realSurnamePar, emailPar, passwordPar, groupId, nameCompanyPar);
+
+    -- Return the UserGroup ID
     RETURN groupId;
-END$$
+END;
+//
+
 DELIMITER ;
+
+INSERT INTO Region (nameRegion)
+VALUES
+    ('United States'),
+    ('Canada'),
+    ('Mexico'),
+    ('Brazil'),
+    ('Argentina'),
+    ('United Kingdom'),
+    ('Germany'),
+    ('France'),
+    ('Italy'),
+    ('Spain'),
+    ('Russia'),
+    ('China'),
+    ('India'),
+    ('Japan'),
+    ('South Korea'),
+    ('Australia'),
+    ('South Africa'),
+    ('Nigeria'),
+    ('Egypt'),
+    ('Saudi Arabia'),
+    ('Turkey');
+
+
+Insert into Privilege(namePrivilege) VALUES
+("View Payments"),
+("Super Admin"),
+("Edit Privilegies"),
+("Edit User Groups"),
+("Edit Users"),
+("Edit Company"),
+("Edit Status");

@@ -71,15 +71,13 @@ class MyDataBase{
 
             $stmt->bind_param(
                 'ssssss',
-                $nameRegion,
                 $nameCompany,
+                $nameRegion,
                 $realName,
                 $surname,
                 $email,
                 $password
             );
-            
-            if($stmt->execute())
             
             if ($stmt->execute()) {
                 $result = $stmt->get_result();
@@ -89,9 +87,9 @@ class MyDataBase{
             }
             
             
-            return -1;
+            return -3;
         } catch (Exception $e) {
-            return -1;
+            return -2;
         }
     }
     
@@ -141,6 +139,37 @@ class MyDataBase{
             }
         }
         return $values;
+    }
+
+    public function getUser(User $user):User{
+        try {
+
+            $email = $user->getEmail();
+            $password = $user->getPassword();
+            $stmt = $this->db->prepare("SELECT realName, realSurname, email, password, idUserGroup, nameCompany FROM MyUser WHERE email = ? AND password = ?");
+            $stmt->bind_param("ss", $email, $password);
+            
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                if ($row = $result->fetch_assoc()) {
+                    $user->setRealName($row["realName"]);
+                    $user->setRealSurname($row["realSurname"]);
+                    $user->setIdUserGroup($row["idUserGroup"]);
+                    $user->setNameCompany($row["nameCompany"]);
+                    return $user;
+                }
+            }
+            
+            
+            return null;
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
 

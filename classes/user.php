@@ -42,4 +42,18 @@ class User{
     public function getRealSurname():String{
         return $this->realSurname;
     }
+
+    public function setIdUserGroup(int $idUserGroup):void{
+        $this->idUserGroup = $idUserGroup;
+    }
+    public function setNameCompany(String $nameCompany):void{
+        $this->nameCompany = $nameCompany;
+    }
+    public function setRealName(String $realName):void{
+        $this->realName = $realName;
+    }
+    public function setRealSurname(String $realSurname):void{
+        $this->realSurname = $realSurname;
+    }
+    
 }

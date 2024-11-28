@@ -22,5 +22,3 @@ VALUES
     ('Saudi Arabia'),
     ('Turkey');
 
-
-    
