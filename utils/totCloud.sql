@@ -46,7 +46,7 @@ create table UserGroup(
 create table PrivilegeStatus(
     namePrivilege VARCHAR(32) NOT NULL,
     idUserGroup INT UNSIGNED NOT NULL,
-    value INT UNSIGNED NOT NULL,
+    value BIT NOT NULL,
 
     PRIMARY KEY(namePrivilege, idUserGroup),
     FOREIGN KEY(namePrivilege) REFERENCES Privilege(namePrivilege),
@@ -433,6 +433,14 @@ create table StorageCost(
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
 );
 
+Insert into Privilege(namePrivilege) VALUES
+("View Payments"),
+("Super Admin"),
+("Edit Privilegies"),
+("Edit User Groups"),
+("Edit Users"),
+("Edit Company");
+
 DELIMITER //
 
 CREATE FUNCTION RegisterCompany(
@@ -480,10 +488,26 @@ BEGIN
 
     -- Return the UserGroup ID
     RETURN groupId;
-END;
-//
+END//
+
+CREATE PROCEDURE InsertPrivilegeStatus(
+    IN idUserGroupPar INT UNSIGNED,
+    IN valuePar BIT
+)
+BEGIN
+    INSERT INTO PrivilegeStatus (namePrivilege, idUserGroup, value) 
+    VALUES ("View Payments", idUserGroupPar, valuePar),
+    ("Edit Privilegies", idUserGroupPar, valuePar),
+    ("Edit User Groups", idUserGroupPar, valuePar),
+    ("Edit Users", idUserGroupPar, valuePar),
+    ("Edit Company", idUserGroupPar, valuePar);
+END//
 
 DELIMITER ;
+
+
+SELECT RegisterCompany("TotCloud", "Spain", "Master", "Admin", "admin@gmail.com", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
+
 
 INSERT INTO Region (nameRegion)
 VALUES
@@ -508,12 +532,3 @@ VALUES
     ('Egypt'),
     ('Saudi Arabia'),
     ('Turkey');
-
-
-Insert into Privilege(namePrivilege) VALUES
-("View Payments"),
-("Super Admin"),
-("Edit Privilegies"),
-("Edit User Groups"),
-("Edit Users"),
-("Edit Company");

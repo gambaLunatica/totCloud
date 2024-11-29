@@ -12,7 +12,7 @@ class User{
 
     public function __construct(String $realName, String $realSurname, String $email, String $password, int $idUserGroup, String $nameCompany=null){
         $this->email = $email;
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->password = hash('sha256', $password);
         $this->idUserGroup = $idUserGroup;
         $this->nameCompany = $nameCompany;
         $this->realSurname = $realSurname;
