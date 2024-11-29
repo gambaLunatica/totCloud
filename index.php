@@ -21,7 +21,6 @@ if(!isset($_SESSION["message"])){
     <main>
 
         <?php 
-        session_reset();
         if($_SESSION["error"] != 0){
             ?>
             <div class="errorBox">
