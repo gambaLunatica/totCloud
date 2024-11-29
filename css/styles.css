@@ -177,3 +177,35 @@ select {
 .myAccountMenuItem:hover {
   background-color: #36393e;
 }
+.topDesc {
+  display: flex;
+  background-color: #afafaf;
+  box-shadow: 0 2px 4px rgb(0, 0, 0, 0.1);
+}
+.textDesc{
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.catalog{
+  display: grid;
+  grid-template-columns: repeat(4, 4fr);
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+.product{
+  background-color: #afafaf;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 15px;
+}
