@@ -1,11 +1,17 @@
 CREATE DATABASE totCloud;
+USE totCloud;
 
 create table Privilege(
     namePrivilege VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(namePrivilege)
 );
-#Clase estado de los componentes
+<<<<<<< HEAD
+
+=======
+
+#Clase estado de lso componentes
+>>>>>>> 49000366a31a039e91ce0ee7645bdb59e5eba876
 create table Status(
     statusName VARCHAR(16) NOT NULL,
     PRIMARY KEY(statusName)
@@ -23,13 +29,16 @@ create table Mask(
 
     PRIMARY KEY (cidr)
 );
+
 create table Company(
-    nameRegion VARCHAR(32) NOT NULL,
     nameCompany VARCHAR(32) NOT NULL UNIQUE,
+    nameRegion VARCHAR(32) NOT NULL,
+    
 
     PRIMARY KEY(nameCompany),
     FOREIGN KEY(nameRegion) REFERENCES Region(nameRegion)
 );
+
 create table UserGroup(
     idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nameCompany VARCHAR(32) NOT NULL,
@@ -39,13 +48,22 @@ create table UserGroup(
     PRIMARY KEY(idUserGroup),
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany)
 );
+create table PrivilegeStatus(
+    idPrivilege INT UNSIGNED NOT NULL,
+    idUserGroup INT UNSIGNED NOT NULL,
+    value INT UNSIGNED NOT NULL,
+
+    PRIMARY KEY(idPrivilege, idUserGroup),
+    FOREIGN KEY(idPrivilege) REFERENCES Privilege(idPrivilege),
+    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
+);
 
 create table MyUser(
     realName VARCHAR(32) NOT NULL,
     realSurname VARCHAR(32) NOT NULL,
     email VARCHAR(64) NOT NULL UNIQUE,
     password VARCHAR(256) NOT NULL,
-    idUserGroup INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    idUserGroup INT UNSIGNED NOT NULL,
     nameCompany VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(email),
@@ -431,3 +449,88 @@ create table StorageCost(
     FOREIGN KEY(typeName) REFERENCES Type(typeName),
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
 );
+
+DELIMITER //
+
+CREATE FUNCTION RegisterCompany(
+    nameCompanyPar VARCHAR(32), 
+    nameRegionPar VARCHAR(32),
+    realNamePar VARCHAR(32),
+    realSurnamePar VARCHAR(32),
+    emailPar VARCHAR(64),
+    passwordPar VARCHAR(256)
+) RETURNS INT
+BEGIN
+    DECLARE companyExists INT;
+    DECLARE userExists INT;
+    DECLARE groupId INT;
+
+    -- Check if the company already exists
+    SELECT COUNT(*) INTO companyExists
+    FROM Company c
+    WHERE c.nameCompany = nameCompanyPar;
+
+    -- Check if the user already exists
+    SELECT COUNT(*) INTO userExists
+    FROM MyUser u
+    WHERE u.email = emailPar;
+
+    -- If either the company or user exists, return -1
+    IF companyExists > 0 OR userExists > 0 THEN
+        RETURN -1;
+    END IF;
+
+    -- Insert into Company table
+    INSERT INTO Company (nameCompany, nameRegion)
+    VALUES (nameCompanyPar, nameRegionPar);
+
+    -- Insert into UserGroup table
+    INSERT INTO UserGroup (nameUserGroup, nameCompany)
+    VALUES ('Administrators', nameCompanyPar);
+
+    -- Retrieve the ID of the UserGroup
+    SET groupId = LAST_INSERT_ID();
+
+    -- Insert into MyUser table
+    INSERT INTO MyUser (realName, realSurname, email, `password`, idUserGroup, nameCompany)
+    VALUES (realNamePar, realSurnamePar, emailPar, passwordPar, groupId, nameCompanyPar);
+
+    -- Return the UserGroup ID
+    RETURN groupId;
+END;
+//
+
+DELIMITER ;
+
+INSERT INTO Region (nameRegion)
+VALUES
+    ('United States'),
+    ('Canada'),
+    ('Mexico'),
+    ('Brazil'),
+    ('Argentina'),
+    ('United Kingdom'),
+    ('Germany'),
+    ('France'),
+    ('Italy'),
+    ('Spain'),
+    ('Russia'),
+    ('China'),
+    ('India'),
+    ('Japan'),
+    ('South Korea'),
+    ('Australia'),
+    ('South Africa'),
+    ('Nigeria'),
+    ('Egypt'),
+    ('Saudi Arabia'),
+    ('Turkey');
+
+
+Insert into Privilege(namePrivilege) VALUES
+("View Payments"),
+("Super Admin"),
+("Edit Privilegies"),
+("Edit User Groups"),
+("Edit Users"),
+("Edit Company");

@@ -10,7 +10,7 @@
 
     <?php if (isset($_SESSION["user"])): ?>
         
-            <a href="#" class="navbutton navuser">
+            <a href="myAccount.php" class="navbutton navuser">
                 <i class="fa-solid fa-user"></i>
                 <div>My Account</div>
             </a>

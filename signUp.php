@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <?php
 include "head.php";
 include "classes/dataBase.php";
@@ -13,9 +16,9 @@ include "classes/dataBase.php";
                 <div>
                     <h2>Log in</h2>
                     <form action="classes/loginAction.php" method="post">
-                        <label for="username">Username</label>
+                        <label for="email">Email</label>
                         <br>
-                        <input type="text" id="username" name="username" required>
+                        <input type="email" id="email" name="email" required>
                         <br>
                         <label for="password">Password</label>
                         <br>
@@ -54,14 +57,10 @@ include "classes/dataBase.php";
                         <br>
                         <input type="text" id="realSurname" name="realSurname" required>
                         <br><br>
-                        <label for="username">Username</label>
-                        <br>
-                        <input type="text" id="username" name="username" required>
-                        <br>
                         <label for="email">Email</label>
                         <br>
                         <input type="email" id="email" name="email" required>
-                        <br><br>
+                        <br>
                         <label for="password">Password</label>
                         <br>
                         <input type="password" id="password" name="password" required>
@@ -73,3 +72,5 @@ include "classes/dataBase.php";
         </div>
     </main>
 </body>
+
+</html>

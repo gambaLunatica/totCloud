@@ -2,20 +2,20 @@
 
 class UserGroup{
     private $id;
-    private $idCompany;
+    private $nameCompany;
     private $creationDate;
     private $name;
 
-    public function __construct(int $idCompany, String $name){
-        $this->idCompany = $idCompany;
+    public function __construct(String $nameCompany, String $name){
+        $this->nameCompany = $nameCompany;
         $this->name = $name;
     }
 
     public function getId():int{
         return $this->id;
     }
-    public function getIdCompany():int{
-        return $this->idCompany;
+    public function getNameCompany():String{
+        return $this->nameCompany;
     }
     public function getCreationDate(): DateTime{
         return $this->creationDate;

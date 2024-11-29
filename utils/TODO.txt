@@ -2,13 +2,11 @@ NAHUEL:
 Una misma compañia no puede tener 2 grupos de usuario con el mismo nombre
 Un archivo php que prepare todo: inserte lo necesario en bbdd
 
-Cuando compañia tenga como clave primaria el nombre, revisar que la compañia y el usuario(username y email) no existen antes de insertar todo. Requiere cambios en signupAction y dataBase. 
+
 
 Cargar la fecha de creacion en el objeto userGroup cuando se sube a la bbdd
 
-Adaptar php a los cambios de Compañia y Usuario que hara luna
-
-Acabar de implementar login
+Acabar de implementar login y arreglar signup
 
 LUNA:
 Hacer que el nombre de la compañia sea la clave primaria.
