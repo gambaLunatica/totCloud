@@ -1,23 +1,11 @@
 CREATE DATABASE totCloud;
 
 create table Privilege(
-    idPrivilege INT UNSIGNED NOT NULL AUTO_INCREMENT,
     namePrivilege VARCHAR(32) NOT NULL,
 
-    PRIMARY KEY(idPrivilege)
+    PRIMARY KEY(namePrivilege)
 );
-create table PrivilegeStatus(
-    idPrivilege INT UNSIGNED NOT NULL,
-    idUserGroup INT UNSIGNED NOT NULL,
-    value INT UNSIGNED NOT NULL,
-
-    PRIMARY KEY(idPrivilege, idUserGroup),
-    FOREIGN KEY(idPrivilege) REFERENCES Privilege(idPrivilege),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
-
-);
-
-#Clase estado de lso componentes
+#Clase estado de los componentes
 create table Status(
     statusName VARCHAR(16) NOT NULL,
     PRIMARY KEY(statusName)
@@ -117,12 +105,12 @@ create table Payment(
 
 create table PrivilegeConfiguration(
     idUserGroup INT UNSIGNED NOT NULL,
-    idPrivilege INT UNSIGNED NOT NULL,
+    namePrivilege INT UNSIGNED NOT NULL,
     value BIT NOT NULL,
 
-    PRIMARY KEY (idUserGroup, idPrivilege),
+    PRIMARY KEY (idUserGroup, namePrivilege),
     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(idPrivilege) REFERENCES Privilege (idPrivilege)
+    FOREIGN KEY(namePrivilege) REFERENCES Privilege (namePrivilege)
 );
 
 
