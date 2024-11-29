@@ -6,12 +6,7 @@ create table Privilege(
 
     PRIMARY KEY(namePrivilege)
 );
-<<<<<<< HEAD
 
-=======
-
-#Clase estado de lso componentes
->>>>>>> 49000366a31a039e91ce0ee7645bdb59e5eba876
 create table Status(
     statusName VARCHAR(16) NOT NULL,
     PRIMARY KEY(statusName)
@@ -49,12 +44,12 @@ create table UserGroup(
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany)
 );
 create table PrivilegeStatus(
-    idPrivilege INT UNSIGNED NOT NULL,
+    namePrivilege VARCHAR(32) NOT NULL,
     idUserGroup INT UNSIGNED NOT NULL,
     value INT UNSIGNED NOT NULL,
 
-    PRIMARY KEY(idPrivilege, idUserGroup),
-    FOREIGN KEY(idPrivilege) REFERENCES Privilege(idPrivilege),
+    PRIMARY KEY(namePrivilege, idUserGroup),
+    FOREIGN KEY(namePrivilege) REFERENCES Privilege(namePrivilege),
     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup)
 );
 
@@ -119,18 +114,6 @@ create table Payment(
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(nameMethod) REFERENCES PaymentMethod(nameMethod)
 );
-#pueden haber muchos user group con el mismo nombre
-
-create table PrivilegeConfiguration(
-    idUserGroup INT UNSIGNED NOT NULL,
-    namePrivilege INT UNSIGNED NOT NULL,
-    value BIT NOT NULL,
-
-    PRIMARY KEY (idUserGroup, namePrivilege),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(namePrivilege) REFERENCES Privilege (namePrivilege)
-);
-
 
 
 create table Generation(
