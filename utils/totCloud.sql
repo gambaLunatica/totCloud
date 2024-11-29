@@ -46,7 +46,7 @@ create table UserGroup(
 create table PrivilegeStatus(
     namePrivilege VARCHAR(32) NOT NULL,
     idUserGroup INT UNSIGNED NOT NULL,
-    value INT UNSIGNED NOT NULL,
+    value BIT NOT NULL,
 
     PRIMARY KEY(namePrivilege, idUserGroup),
     FOREIGN KEY(namePrivilege) REFERENCES Privilege(namePrivilege),

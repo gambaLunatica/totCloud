@@ -4,6 +4,7 @@
         <p>Somos una compañia bla bla y orecemos servisios de bla bla </p>
     </div>
     <!-- Insertar Imagen -->
+     <!--img src = "totCloud.ico" alt="Princilpal Image"-->
 </div>
 <div class = "catalog">
     <div class = "produt">
