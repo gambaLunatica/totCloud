@@ -189,6 +189,10 @@ select {
   flex-direction: column;
   justify-content: center;
 }
+.imageDesc{
+  width: 300px;
+  object-fit: cover;
+}
 
 .catalog{
   display: grid;
@@ -199,13 +203,20 @@ select {
 }
 .product{
   background-color: #afafaf;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  height: 250px;
+  border-radius: 5px;
+  box-shadow: 0 4px 4px rgba(0,0,0,0.1);
+  height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 15px;
+}
+.product img {
+  max-width: 150px;
+  max-height: 150px;
+  width: auto; /* Mantiene la proporción */
+  height: auto;
+  /*margin-bottom: 5px;*/
 }
