@@ -530,5 +530,4 @@ Insert into Privilege(namePrivilege) VALUES
 ("Edit Privilegies"),
 ("Edit User Groups"),
 ("Edit Users"),
-("Edit Company"),
-("Edit Status");
+("Edit Company");

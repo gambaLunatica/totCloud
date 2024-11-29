@@ -172,7 +172,9 @@ class MyDataBase{
         }
     }
 
-
+    public function getPermisionsByUserGroupId(int $userGroupId){
+        
+    }
     
 }
 

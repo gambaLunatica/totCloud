@@ -51,7 +51,8 @@ h1 {
 h2 {
   color: white
 }
-h3{
+
+h3 {
   color: white
 }
 
@@ -102,7 +103,8 @@ form {
   /* Ensure forms and their contents are not affected by flex */
 }
 
-input, select {
+input,
+select {
   background: #424549;
   border: 2px solid #36393e;
   border-radius: 6px;
@@ -119,18 +121,59 @@ input, select {
   /* Include padding and borders in size */
 }
 
-.goButton{
+.goButton {
   background: #424549;
   border: 2px solid #36393e;
   border-radius: 6px;
   color: white;
   height: 30px;
-  width:50px;
+  width: 50px;
   font-weight: bold;
 }
 
-.errorBox{
+.errorBox {
   background: rgb(255, 152, 152);
   border: 3px solid #ff0000;
   color: black;
+}
+
+.myAccountBody {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.myAccountMenu {
+  background-color: #282b30;
+  color: white;
+  width: 200px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.myAccountMain {
+  flex-grow: 1;
+  max-width: 800px;
+  color: white;
+}
+
+.myAccountMenuItem {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  text-decoration: none;
+  border: 1px solid #424549;
+  box-sizing: border-box;
+  color: white;
+  font-weight: bold;
+}
+
+.myAccountMenuItem:hover {
+  background-color: #36393e;
 }
