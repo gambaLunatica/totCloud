@@ -3,7 +3,8 @@ require "company.php";
 require "userGroup.php";
 require "user.php";
 
-require "../index.php";
+require "dataBase.php";
+session_start();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // get the values from the form
@@ -24,10 +25,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: ../index.php");
         exit;
     }
+
+    $dataBase->insertPrivileges($idUserGroup, true);
     
     $user->setIdUserGroup($idUserGroup);
 
-    $_SESSION["user"] = $user;
+    $_SESSION["user"] = serialize($user);
     header("Location: ../index.php");
     
 exit;
