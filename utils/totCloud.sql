@@ -441,7 +441,7 @@ Insert into Privilege(namePrivilege) VALUES
 ("Edit Users"),
 ("Edit Company");
 
-DELIMITER //
+DELIMITER $$
 
 CREATE FUNCTION RegisterCompany(
     nameCompanyPar VARCHAR(32), 
@@ -488,7 +488,11 @@ BEGIN
 
     -- Return the UserGroup ID
     RETURN groupId;
-END//
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
 
 CREATE PROCEDURE InsertPrivilegeStatus(
     IN idUserGroupPar INT UNSIGNED,
@@ -501,7 +505,7 @@ BEGIN
     ("Edit User Groups", idUserGroupPar, valuePar),
     ("Edit Users", idUserGroupPar, valuePar),
     ("Edit Company", idUserGroupPar, valuePar);
-END//
+END$$
 
 DELIMITER ;
 

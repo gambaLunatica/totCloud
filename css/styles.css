@@ -210,6 +210,8 @@ select {
   gap: 20px;
   padding: 20px;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 .product{
   background-color: #afafaf;
