@@ -14,7 +14,7 @@
         if (isset($_SESSION["user"])){
                 include "userStorage.php";
             } else{
-                include "guestCompute.php";
+                include "guestStorage.php";
             } 
         ?>
     </main>
