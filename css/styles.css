@@ -131,7 +131,7 @@ select {
   border-radius: 6px;
   color: white;
   height: 30px;
-  width: 50px;
+  min-width: 50px;
   font-weight: bold;
 }
 
