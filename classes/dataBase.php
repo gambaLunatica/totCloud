@@ -145,7 +145,40 @@ class MyDataBase
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $values[] = htmlspecialchars($row["nameRegion"]); // Sanitize the value
+                $values[] = htmlspecialchars($row["nameRegion"]);
+            }
+        }
+        return $values;
+    }
+
+    public function selectSeries(): array
+    {
+        $sql = "SELECT series FROM Series";
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["series"]);
+            }
+        }
+        return $values;
+    }
+
+    public function insertImageCompatibility($model, $image){
+
+    }
+
+    public function selectCPUs(){
+        $sql = "SELECT model FROM CPU";
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["model"]);
             }
         }
         return $values;

@@ -39,7 +39,7 @@ include "classes/dataBase.php";
                         <br>
                         <label for="region">Region</label>
                         <select id="region" name="region" required>
-                            <option value="">Select an option</option>
+                            <option selected disabled="disabled" value="">Select an option</option>
                             <?php
                             $regions = $dataBase->selectRegions(); // Ensure this returns an array
                             foreach ($regions as $region) {

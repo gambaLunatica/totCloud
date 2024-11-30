@@ -56,6 +56,10 @@ h3 {
   color: white
 }
 
+h4 {
+  color: white
+}
+
 label {
   color: white;
 }
@@ -115,7 +119,7 @@ select {
   /* Optional: Limit the input's max width */
   height: 40px;
   /* Fixed height for consistency */
-  margin: 0 10px;
+  margin: 5px 10px;
   /* Add spacing between inputs */
   box-sizing: border-box;
   /* Include padding and borders in size */
@@ -154,12 +158,18 @@ select {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top:20px;
+  margin-right:20px;
 }
 
 .myAccountMain {
+  padding-left:20px;
+  padding-right:20px;
   flex-grow: 1;
-  max-width: 800px;
+  max-width: 1000px;
   color: white;
+  background-color: #282b30;
+  min-height: 500px;
 }
 
 .myAccountMenuItem {
@@ -219,4 +229,29 @@ select {
   width: auto; /* Mantiene la proporción */
   height: auto;
   /*margin-bottom: 5px;*/
+}
+
+.configurableItemTitle{
+  text-decoration: none;
+  box-sizing: border-box;
+  background-color: #36393e;
+  padding:5px 10px;
+  border: 1px solid #424549;
+  border-radius: 6px;
+  margin-right:20px;
+  margin-top:10px;
+}
+
+.configurableItemContent{
+  margin-right:20px;
+  border: 1px solid #424549;
+  padding:5px 10px;
+  border-radius: 6px;
+}
+
+.configurableItemSection{
+  border: 1px solid #424549;
+  padding-left:20px;
+  padding-bottom: 20px;
+  margin: 40px 0px;
 }

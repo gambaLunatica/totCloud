@@ -18,31 +18,27 @@ $privileges = $dataBase->getPrivilegesByUserGroupId($user->getIdUserGroup());
     <div class="myAccountBody">
         <div class="myAccountMenu">
             <div>
-                <a class="myAccountMenuItem" href="#">My Profile</a>
+                <a class="myAccountMenuItem" href="?page=myProfile.php">Profile</a>
                 <?php
 
                 if (in_array("Super Admin", $privileges)) {
-                    echo '<a class="myAccountMenuItem" href="#">My Company</a>';
-                    echo '<a class="myAccountMenuItem" href="#">Payments</a>';
-                    echo '<a class="myAccountMenuItem" href="#">User Group Privileges</a>';
-                    echo '<a class="myAccountMenuItem" href="#">User Groups</a>';
-                    echo '<a class="myAccountMenuItem" href="#">Users</a>';
-                    echo '<a class="myAccountMenuItem" href="#" style="color:green;">TotCloud Pannel</a>';
+                    echo '<a class="myAccountMenuItem" href="?page=myCompany.php">Company</a>';
+                    echo '<a class="myAccountMenuItem" href="?page=myPayments.php">Payments</a>';
+                    echo '<a class="myAccountMenuItem" href="?page=myUserGroups.php">User Groups</a>';
+                    echo '<a class="myAccountMenuItem" href="?page=myUsers.php">Users</a>';
+                    echo '<a class="myAccountMenuItem" href="?page=myConsole.php" style="color:green;">TotCloud Pannel</a>';
                 } else {
                     if (in_array("Edit Company", $privileges)) {
-                        echo '<a class="myAccountMenuItem" href="#">My Company</a>';
+                        echo '<a class="myAccountMenuItem" href="?page=myCompany.php">Company</a>';
                     }
                     if (in_array("View Payments", $privileges)) {
-                        echo '<a class="myAccountMenuItem" href="#">Payments</a>';
+                        echo '<a class="myAccountMenuItem" href="?page=myPayments.php">Payments</a>';
                     }
-                    if (in_array("Edit Privilegies", $privileges)) {
-                        echo '<a class="myAccountMenuItem" href="#">User Group Privileges</a>';
-                    }
-                    if (in_array("Edit User Groups", $privileges)) {
-                        echo '<a class="myAccountMenuItem" href="#">User Groups</a>';
+                    if (in_array("Edit User Groups", $privileges) || in_array("Edit Privilegies", $privileges)) {
+                        echo '<a class="myAccountMenuItem" href="?page=myUserGroups.php">User Groups</a>';
                     }
                     if (in_array("Edit Users", $privileges)) {
-                        echo '<a class="myAccountMenuItem" href="#">Users</a>';
+                        echo '<a class="myAccountMenuItem" href="?page=myUsers.php">Users</a>';
                     }
                 }
 
@@ -53,7 +49,14 @@ $privileges = $dataBase->getPrivilegesByUserGroupId($user->getIdUserGroup());
         </div>
 
         <div class="myAccountMain">
-            A
+            <?php 
+                if(isset($_GET['page'])){
+                    $page = $_GET['page'];
+                    include $page;
+                    unset($_GET['page']);
+                }
+            
+            ?>
         </div>
     </div>
 </body>
