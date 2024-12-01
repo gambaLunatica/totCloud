@@ -1,5 +1,6 @@
 <?php
 include "classes/image.php";
+include "classes/memory.php";
 
 $costVal = '""';
 $statusVal = '""';
@@ -13,11 +14,19 @@ $frequencyVal = '""';
 $cachel1Val = '""';
 $cachel2Val = '""';
 $cachel3Val = '""';
+$idMemoriesVal = [];
+$idImagesVal = [];
 
 //IMAGE
 $imageIdVal = '""';
 $osNameVal = '""';
 $buildVal = '""';
+
+//MEMORY
+$idMemoryVal = '""';
+$totalCapacityVal = '""';
+$IOSpeedVal = '""';
+$generationVal = '""';
 
 //CPU
 if (isset($_GET['cpu'])) {
@@ -31,12 +40,21 @@ if (isset($_GET['cpu'])) {
     $cachel3Val = $_GET['cachel3'];
     $statusVal = $_GET['status'];
     $costVal = $_GET['cost'];
+    $idMemoriesVal = $_GET['idMemories'];
+    $idImagesVal = $_GET['idImages'];
 } else if (isset($_GET['imageId'])) {
     $imageIdVal = $_GET['imageId'];
     $statusVal = $_GET['status'];
     $osNameVal = $_GET['osName'];
     $costVal = $_GET['cost'];
     $buildVal = $_GET['build'];
+} else if (isset($_GET['idMemory'])) {
+    $idMemoryVal = $_GET['idMemory'];
+    $totalCapacityVal = $_GET['totalCapacity'];
+    $IOSpeedVal = $_GET['IOSpeed'];
+    $generationVal = $_GET['generation'];
+    $costVal = $_GET['cost'];
+    $statusVal = $_GET['status'];
 }
 ?>
 
@@ -139,6 +157,52 @@ if (isset($_GET['cpu'])) {
 
                     <h3>CPU Compatibility</h3>
 
+                    <label for="idMemories">Select Compatible Memories:</label>
+                    <br>
+                    <select multiple id="idMemories" name="idMemories" style="min-height: 150px;">
+                    <option selected disabled="disabled" value="">Select an option</option>
+                        <?php
+                        $memories = $dataBase->selectMemories(); // Ensure this returns an array
+                        foreach ($memories as $memory) {
+                            $idMemory = $memory->getIdMemory();
+                            $speed = $memory->getIOSpeed();
+                            $size = $memory->getTotalCapacity();
+                            $generation = $memory->getGeneration();
+
+                            $select = "";
+                            if (in_array($idMemory , $idMemoriesVal)) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $idMemory . '">' . $generation . ' | ' . $size . 'GB | ' . $speed . 'GB/s</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <br>
+
+                    <label for="idImages">Select Compatible Images:</label>
+                    <br>
+                    <select multiple id="idImages" name="idImages" style="min-height: 150px;">
+                    <option selected disabled="disabled" value="">Select an option</option>
+                        <?php
+                        $images = $dataBase->selectImages(); // Ensure this returns an array
+                        foreach ($images as $image) {
+                            $idImage = $image->getIdImage();
+                            $imageOsName = $image->getOsName();
+                            $imageBuild = $image->getBuild();
+
+                            $select = "";
+                            if (in_array($idImage , $$idImagesVal)) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $idImage . '">' . $imageOsName . ' | ' . $imageBuild . '</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <br><br>
                     <button class="goButton" type="submit" name="action" value="add">Add</button>
                     <button class="goButton" type="submit" name="action" value="remove">Remove</button>
                 </form>
@@ -182,42 +246,85 @@ if (isset($_GET['cpu'])) {
         <details>
             <summary class="configurableItemTitle">Memory</summary>
             <div class="configurableItemContent">
-                <form action="submit_item.php" method="POST">
+                <form action="classes/memoryAction.php" method="POST">
                     <h4>Memory Details</h4>
 
-                    <label for="cpu">Select Model:</label>
-                    <select id="cpu" name="cpu" required onchange="handleDropdownChange()">
+                    <label for="idMemory">Select Memory:</label>
+                    <select id="idMemory" name="idMemory">
                         <option value="--New--">--New--</option>
                         <?php
-                        $CPUs = $dataBase->selectCPUs(); // Ensure this returns an array
-                        foreach ($CPUs as $CPU) {
-                            echo '<option value="' . htmlspecialchars($CPU, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($CPU, ENT_QUOTES, 'UTF-8') . '</option>';
+                        $memories = $dataBase->selectMemories(); // Ensure this returns an array
+                        foreach ($memories as $memory) {
+                            $idMemory = $memory->getIdMemory();
+                            $speed = $memory->getIOSpeed();
+                            $size = $memory->getTotalCapacity();
+                            $generation = $memory->getGeneration();
+
+                            $select = "";
+                            if (strcmp($idMemoryVal, $idMemory) === 0) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $idMemory . '">' . $generation . ' | ' . $size . 'GB | ' . $speed . 'GB/s</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <button class="goButton" type="submit" name="action" value="load">Load</button>
+
+                    <br><br>
+
+                    <label for="totalCapacity">Select Size:</label>
+                    <select id="totalCapacity" name="totalCapacity">
+                        <option selected disabled="disabled" value="">Select an option</option>
+                        <?php
+                        $sizes = $dataBase->selectSizes(); // Ensure this returns an array
+                        foreach ($sizes as $size) {
+
+                            $select = "";
+                            if (strcmp($totalCapacityVal, $size) === 0) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $size . '">' . $size . 'GB' . '</option>';
                         }
                         ?>
                     </select>
 
                     <br>
 
-                    <label for="serie">Series:</label>
-                    <select id="serie" name="serie" required>
+                    <label for="generation">Select Generation:</label>
+                    <select id="generation" name="generation">
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
-                        $series = $dataBase->selectSeries(); // Ensure this returns an array
-                        foreach ($series as $serie) {
-                            echo '<option value="' . htmlspecialchars($serie, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($serie, ENT_QUOTES, 'UTF-8') . '</option>';
+                        $generations = $dataBase->selectGenerations(); // Ensure this returns an array
+                        foreach ($generations as $generation) {
+
+                            $select = "";
+                            if (strcmp($generation, $generationVal) === 0) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $generation . '">' . $generation . '</option>';
                         }
                         ?>
                     </select>
 
                     <br>
 
-                    <label for="serie">Series:</label>
-                    <select id="serie" name="serie" required>
+                    <label for="IOSpeed">Select Speed:</label>
+                    <select id="IOSpeed" name="IOSpeed">
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
-                        $series = $dataBase->selectSeries(); // Ensure this returns an array
-                        foreach ($series as $serie) {
-                            echo '<option value="' . htmlspecialchars($serie, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($serie, ENT_QUOTES, 'UTF-8') . '</option>';
+                        $speeds = $dataBase->selectSpeeds(); // Ensure this returns an array
+                        foreach ($speeds as $speed) {
+
+                            $select = "";
+                            if (strcmp($speed, $IOSpeedVal) === 0) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $speed . '">' . $speed . 'GB/s' . '</option>';
                         }
                         ?>
                     </select>
@@ -225,12 +332,16 @@ if (isset($_GET['cpu'])) {
                     <br>
 
                     <label for="status">Status:</label>
-                    <select id="status" name="status" required>
+                    <select id="status" name="status">
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $statuss = $dataBase->selectStatus(); // Ensure this returns an array
                         foreach ($statuss as $status) {
-                            echo '<option value="' . htmlspecialchars($status, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($status, ENT_QUOTES, 'UTF-8') . '</option>';
+                            $select = "";
+                            if (strcmp($status, $statusVal) === 0) {
+                                $select = "selected";
+                            }
+                            echo '<option ' . $select . ' value="' . $status . '">' . $status . '</option>';
                         }
                         ?>
                     </select>
@@ -238,13 +349,15 @@ if (isset($_GET['cpu'])) {
                     <br><br>
 
                     <label for="cost">Sales Price:</label>
-                    <input min="0" step="0.01" type="number" id="cost" name="cost" required>
+                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost">
 
-                    <button type="submit">Submit</button>
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove">Remove</button>
                 </form>
             </div>
         </details>
-        
+
 
 
         <!--  OS  -->

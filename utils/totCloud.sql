@@ -148,8 +148,8 @@ create table Memory(
     FOREIGN KEY(generation) REFERENCES Generation(generation),
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity),
     FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
-    FOREIGN KEY(statusName) REFERENCES Status(statusName)
-
+    FOREIGN KEY(statusName) REFERENCES Status(statusName),
+    CONSTRAINT unique_ram_combination UNIQUE (IOSpeed, totalCapacity, generation)
 );
 
 create table Series(
