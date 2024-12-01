@@ -141,14 +141,12 @@ create table Memory(
     statusName VARCHAR(16) NOT NULL,
     totalCapacity FLOAT UNSIGNED NOT NULL,
     IOSpeed FLOAT UNSIGNED NOT NULL,
-    typeName VARCHAR(16) NOT NULL,
     generation VARCHAR(32) NOT NULL,
     cost FLOAT UNSIGNED NOT NULL,
 
     PRIMARY KEY (idMemory),
     FOREIGN KEY(generation) REFERENCES Generation(generation),
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity),
-    FOREIGN KEY(typeName) REFERENCES Type(typeName),
     FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
     FOREIGN KEY(statusName) REFERENCES Status(statusName)
 
@@ -163,9 +161,9 @@ create table Series(
 create table CPU(
     statusName VARCHAR(16) NOT NULL,
     coreCount INT UNSIGNED NOT NULL,
-    cacheL1 INT UNSIGNED NOT NULL,
-    cacheL2 INT UNSIGNED NULL,
-    cacheL3 INT UNSIGNED NULL,
+    cacheL1 FLOAT UNSIGNED NOT NULL,
+    cacheL2 FLOAT UNSIGNED NULL,
+    cacheL3 FLOAT UNSIGNED NULL,
     frequency FLOAT UNSIGNED NOT NULL,
     cost FLOAT UNSIGNED NOT NULL,
     model VARCHAR(32) NOT NULL,

@@ -86,6 +86,222 @@ class MyDataBase
         }
     }
 
+    //GENERATION
+    public function insertGeneration(String $generation): bool{
+        try {
+            $sql = "INSERT INTO Generation (generation) VALUES (?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "s",
+                $generation
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function selectGenerations(): array
+    {
+        $sql = "SELECT generation FROM Generation";
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["generation"]);
+            }
+        }
+        return $values;
+    }
+
+    public function deleteGeneration(String $generation): bool{
+        try {
+            $sql = "DELETE FROM Generation WHERE series = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "s",
+                $generation
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    //SPEED
+    public function insertSpeed(float $speed): bool{
+        try {
+            $sql = "INSERT INTO Speed (IOSpeed) VALUES (?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "d",
+                $speed
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function selectSpeeds(): array
+    {
+        $sql = "SELECT IOSpeed FROM Speed";
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["IOSpeed"]);
+            }
+        }
+        return $values;
+    }
+
+    public function deleteSpeed(float $speed): bool{
+        try {
+            $sql = "DELETE FROM Speed WHERE IOSpeed = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "d",
+                $speed
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    //SIZE
+    public function insertSize(float $size): bool{
+        try {
+            $sql = "INSERT INTO Speed (IOSpeed) VALUES (?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "d",
+                $size
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function selectSizes(): array
+    {
+        $sql = "SELECT totalCapacity FROM Size";
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["totalCapacity"]);
+            }
+        }
+        return $values;
+    }
+
+    public function deleteSize(float $size): bool{
+        try {
+            $sql = "DELETE FROM Size WHERE totalCapacity = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "d",
+                $size
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     //OS
     public function insertOS(String $os): bool{
         try {

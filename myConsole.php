@@ -15,9 +15,9 @@ $cachel2Val = '""';
 $cachel3Val = '""';
 
 //IMAGE
-$imageIdVal= '""';
-$osNameVal= '""';
-$buildVal= '""';
+$imageIdVal = '""';
+$osNameVal = '""';
+$buildVal = '""';
 
 //CPU
 if (isset($_GET['cpu'])) {
@@ -36,7 +36,7 @@ if (isset($_GET['cpu'])) {
     $statusVal = $_GET['status'];
     $osNameVal = $_GET['osName'];
     $costVal = $_GET['cost'];
-    $buildVal  = $_GET['build'];
+    $buildVal = $_GET['build'];
 }
 ?>
 
@@ -50,7 +50,7 @@ if (isset($_GET['cpu'])) {
             <summary class="configurableItemTitle">CPU</summary>
             <div class="configurableItemContent">
                 <form action="classes/cpuAction.php" method="POST">
-                    <h3>CPU Details</h3>
+                    <h4>CPU Details</h4>
 
                     <label for="cpu">Select Model:</label>
                     <select id="cpu" name="cpu">
@@ -150,7 +150,7 @@ if (isset($_GET['cpu'])) {
             <summary class="configurableItemTitle">Series</summary>
             <div class="configurableItemContent">
                 <form action="classes/seriesAction.php" method="POST">
-                    <h3>Add/Remove a Series</h3>
+                    <h4>Add/Remove a Series</h4>
 
                     <label for="series">Name:</label>
                     <input type="text" id="series" name="series" required>
@@ -162,11 +162,28 @@ if (isset($_GET['cpu'])) {
         </details>
 
         <!--  Memory  -->
+        <h3>Memory Configuration</h3>
+
+        <details>
+            <summary class="configurableItemTitle">Generation</summary>
+            <div class="configurableItemContent">
+                <form action="classes/generationAction.php" method="POST">
+                    <h4>Add/Remove a Generation</h4>
+
+                    <label for="generation">Name:</label>
+                    <input type="text" id="generation" name="generation" required>
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove">Remove</button>
+                </form>
+            </div>
+        </details>
+
         <details>
             <summary class="configurableItemTitle">Memory</summary>
             <div class="configurableItemContent">
                 <form action="submit_item.php" method="POST">
-                    <h3>Memory Details</h3>
+                    <h4>Memory Details</h4>
 
                     <label for="cpu">Select Model:</label>
                     <select id="cpu" name="cpu" required onchange="handleDropdownChange()">
@@ -228,12 +245,16 @@ if (isset($_GET['cpu'])) {
             </div>
         </details>
         
+
+
         <!--  OS  -->
+        <h3>Image Configuration</h3>
+
         <details>
             <summary class="configurableItemTitle">Operating System</summary>
             <div class="configurableItemContent">
                 <form action="classes/osAction.php" method="POST">
-                    <h3>Add/Remove an Operating System</h3>
+                    <h4>Add/Remove an Operating System</h4>
 
                     <label for="os">Name:</label>
                     <input type="text" id="os" name="os" required>
@@ -249,7 +270,7 @@ if (isset($_GET['cpu'])) {
             <summary class="configurableItemTitle">Image</summary>
             <div class="configurableItemContent">
                 <form action="classes/imageAction.php" method="POST">
-                    <h3>Image Details</h3>
+                    <h4>Image Details</h4>
 
                     <label for="imageId">Select Image:</label>
                     <select id="imageId" name="imageId">
@@ -266,7 +287,7 @@ if (isset($_GET['cpu'])) {
                                 $select = "selected";
                             }
 
-                            echo '<option ' .$select. ' value="' . $imageId . '">' . $imageOsName . ' | ' . $imageBuild . '</option>';
+                            echo '<option ' . $select . ' value="' . $imageId . '">' . $imageOsName . ' | ' . $imageBuild . '</option>';
                         }
                         ?>
                     </select>
@@ -318,6 +339,7 @@ if (isset($_GET['cpu'])) {
                     <label for="cost">Sales Price:</label>
                     <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost">
 
+                    <br>
                     <button class="goButton" type="submit" name="action" value="add">Add</button>
                     <button class="goButton" type="submit" name="action" value="remove">Remove</button>
                 </form>
@@ -343,6 +365,39 @@ if (isset($_GET['cpu'])) {
             <div class="configurableItemContent">
                 Epcot is a theme park at Walt Disney World Resort featuring exciting attractions, international
                 pavilions, award-winning fireworks and seasonal special events.
+            </div>
+        </details>
+    </section>
+
+    <section class="configurableItemSection">
+        <h2> Misc</h2>
+        <details>
+            <summary class="configurableItemTitle">Speed</summary>
+            <div class="configurableItemContent">
+                <form action="classes/speedAction.php" method="POST">
+                    <h4>Add/Remove a Speed (GB/s)</h4>
+
+                    <label for="speed">Speed:</label>
+                    <input type="number" step="0.01" id="speed" name="speed" required>
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove">Remove</button>
+                </form>
+            </div>
+        </details>
+
+        <details>
+            <summary class="configurableItemTitle">Size</summary>
+            <div class="configurableItemContent">
+                <form action="classes/sizeAction.php" method="POST">
+                    <h4>Add/Remove a Size (GB)</h4>
+
+                    <label for="size">Size:</label>
+                    <input type="number" step="0.01" id="size" name="size" required>
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove">Remove</button>
+                </form>
             </div>
         </details>
     </section>

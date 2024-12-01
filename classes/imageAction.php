@@ -22,6 +22,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
 
     } else if ($_POST["action"] === "remove") {
+        if (($_POST["imageId"] === "--New--") == false) {
+            $image = new Image($_POST["imageId"], "", 0, "", "");
+
+            if (!$dataBase->deleteImage($image)) {
+                $_SESSION["error"] = 1;
+                $_SESSION["message"] = "The image could not be deleted.";
+                header("Location: ../index.php");
+                exit;
+            }
+
+            header("Location: ../myAccount.php?page=myConsole.php");
+            exit;
+        }
+
+        header("Location: ../myAccount.php?page=myConsole.php");
+        exit;
 
     } else if ($_POST["action"] === "add") {
         if (($_POST["imageId"] === "--New--") == false) {
