@@ -1,6 +1,7 @@
 <?php
 include "classes/image.php";
 include "classes/memory.php";
+include "classes/mask.php";
 
 $costVal = '""';
 $statusVal = '""';
@@ -27,6 +28,9 @@ $idMemoryVal = '""';
 $totalCapacityVal = '""';
 $IOSpeedVal = '""';
 $generationVal = '""';
+
+//MASK
+$cidrVal = '""';
 
 //CPU
 if (isset($_GET['cpu'])) {
@@ -55,6 +59,9 @@ if (isset($_GET['cpu'])) {
     $generationVal = $_GET['generation'];
     $costVal = $_GET['cost'];
     $statusVal = $_GET['status'];
+} else if(isset($_GET['cidr'])) {
+    $cidrVal =$_GET['cidr'];
+    $costVal = $_GET['cost'];
 }
 ?>
 
@@ -471,9 +478,53 @@ if (isset($_GET['cpu'])) {
     </section>
 
     <section class="configurableItemSection">
-        <h2> Compute Configuration</h2>
+        <h2> VCN Configuration</h2>
         <details>
-            <summary class="configurableItemTitle">CPU</summary>
+            <summary class="configurableItemTitle">Mask</summary>
+            <div class="configurableItemContent">
+            <form action="classes/maskAction.php" method="POST">
+                    <h4>Mask Details</h4>
+
+                    <label for="cidrId">Select Mask:</label>
+                    <select id="cidrId" name="cidrId"required>
+                        <option value="--New--">--New--</option>
+                        <?php
+                        $masks = $dataBase->selectMasks(); // Ensure this returns an array
+                        foreach ($masks as $mask) {
+                            $cidr = $mask->getCidr();
+
+                            $select = "";
+                            if (strcmp($cidrVal, $cidr) === 0) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $cidr . '">CIDR: ' . $cidr . '</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
+
+                    <br><br>
+
+                    <label for="cidr">CIDR:</label>
+                    <input value=<?= $cidrVal ?> min="16" step="1" max="30" type="number" id="cidr" name="cidr"required>
+
+                    <label for="cost">Sales Price:</label>
+                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost"required>
+
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove"formnovalidate>Remove</button>
+                </form>
+            </div>
+        </details>
+    </section>
+
+    <section class="configurableItemSection">
+        <h2> DDBB Configuration</h2>
+        <details>
+            <summary class="configurableItemTitle">AAAA</summary>
             <div class="configurableItemContent">
                 Epcot is a theme park at Walt Disney World Resort featuring exciting attractions, international
                 pavilions, award-winning fireworks and seasonal special events.
@@ -506,6 +557,21 @@ if (isset($_GET['cpu'])) {
 
                     <label for="size">Size:</label>
                     <input type="number" step="0.01" id="size" name="size" required>
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove">Remove</button>
+                </form>
+            </div>
+        </details>
+
+        <details>
+            <summary class="configurableItemTitle">Region</summary>
+            <div class="configurableItemContent">
+                <form action="classes/regionAction.php" method="POST">
+                    <h4>Add/Remove a Region</h4>
+
+                    <label for="regionName">Name:</label>
+                    <input type="text" id="regionName" name="regionName" size="32" required>
                     <br>
                     <button class="goButton" type="submit" name="action" value="add">Add</button>
                     <button class="goButton" type="submit" name="action" value="remove">Remove</button>

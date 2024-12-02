@@ -1313,6 +1313,209 @@ class MyDataBase
         }
         return null;
     }
+
+    //REGION
+    public function insertRegion(string $nameRegion): bool
+    {
+        try {
+            $sql = "INSERT INTO region (nameRegion) VALUES (?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "s",
+                $nameRegion
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteRegion(string $nameRegion): bool
+    {
+        try {
+            $sql = "DELETE FROM region WHERE nameRegion = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "s",
+                $nameRegion
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function selectRegion(): array
+    {
+        $sql = "SELECT regionName FROM Region";
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["regionName"]);
+            }
+        }
+        return $values;
+    }
+
+    //MASK
+    public function selectMasks(): array
+    {
+        $sql = "SELECT cidr, cost FROM Mask";
+
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = new Mask($row["cost"], $row["cidr"]);
+            }
+        }
+        return $values;
+    }
+
+    public function selectMask(int $cidr): Mask|null
+    {
+
+        $sql = "SELECT cidr, cost FROM Mask WHERE cidr = $cidr";
+
+        $result = $this->db->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                return new Mask($row["cost"], $row["cidr"]);
+            }
+        }
+        return null;
+    }
+
+    public function insertMask(Mask $mask): bool
+    {
+        try {
+            $sql = "INSERT INTO Mask (cidr, cost)
+                    VALUES (?, ?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $cdir = $mask->getCidr();
+            $cost = $mask->getCost();
+            
+
+            $stmt->bind_param(
+                "id",
+                $cdir,
+                $cost
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateMask(Mask $mask): bool
+    {
+        try {
+            $sql = "UPDATE Mask SET 
+                cidr = ?, 
+                cost = ?, 
+                WHERE cidr = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $cidr = $mask->getCidr();
+            $cost = $mask->getCost();
+
+            $stmt->bind_param(
+                "id",
+                $cidr,
+                $cost,
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function deleteMask(int $cidr): bool
+    {
+        try {
+            $sql = "DELETE FROM Mask WHERE cidr = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $stmt->bind_param(
+                "i",
+                $cidr
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }
 
 $dataBase = new MyDataBase($con);
