@@ -1590,7 +1590,7 @@ class MyDataBase
         }
     }
 
-    //STORAGE
+    //STORAGE: TO REVVIEW AND DO
     public function selectStorages(string $status = null): array
     {
         if ($status == null) {
@@ -1640,11 +1640,11 @@ class MyDataBase
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
 
-            $statusName = $memory->getStatusName();
-            $totalCapacity = $memory->getTotalCapacity();
-            $IOSpeed = $memory->getIOSpeed();
-            $generation = $memory->getGeneration();
-            $cost = $memory->getCost();
+            $statusName = $storage->getStatusName();
+            $totalCapacity = $storage->getTotalCapacity();
+            $IOSpeed = $storage->getIOSpeed();
+            $generation = $storage->getGeneration();
+            $cost = $storage->getCost();
 
             $stmt->bind_param(
                 "sddsd",
@@ -1667,7 +1667,7 @@ class MyDataBase
         }
     }
 
-    public function updateMemory(Memory $memory): bool
+    public function updateStorage(Storage $storage): bool
     {
         try {
             $sql = "UPDATE Memory SET 
@@ -1684,12 +1684,12 @@ class MyDataBase
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
 
-            $statusName = $memory->getStatusName();
-            $totalCapacity = $memory->getTotalCapacity();
-            $IOSpeed = $memory->getIOSpeed();
-            $generation = $memory->getGeneration();
-            $cost = $memory->getCost();
-            $idMemory = $memory->getIdMemory();
+            $statusName = $storage->getStatusName();
+            $totalCapacity = $storage->getTotalCapacity();
+            $IOSpeed = $storage->getIOSpeed();
+            $generation = $storage->getGeneration();
+            $cost = $storage->getCost();
+            $idMemory = $storage->getIdMemory();
 
 
             $stmt->bind_param(
@@ -1713,7 +1713,7 @@ class MyDataBase
             return false;
         }
     }
-    public function deleteMemory(Memory $memory): bool
+    public function deleteStorage(String $nombre): bool
     {
         try {
             $sql = "DELETE FROM Memory WHERE idMemory = ?";
