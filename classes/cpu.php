@@ -116,5 +116,28 @@ class Cpu{
     public function setMemories(array $memories): void {
         $this->memories = $memories;
     }
+
+    public function toString():String{
+        $stringMem = "Memories: ";
+        foreach($this->memories as $memory){
+            $stringMem = $stringMem .", " . $memory;
+        }
+
+        $stringImg = "Images: ";
+        foreach($this->images as $image){
+            $stringImg = $stringImg .", " . $image;
+        }
+
+        return "statusName: {$this->statusName}, " .
+           "coreCount: {$this->coreCount}, " .
+           "cacheL1: {$this->cacheL1}, " .
+           "cacheL2: {$this->cacheL2}, " .
+           "cacheL3: {$this->cacheL3}, " .
+           "frequency: {$this->frequency}, " .
+           "cost: {$this->cost}, " .
+           "model: {$this->model}, " .
+           "series: {$this->series}".
+           "$stringImg, $stringMem";
+    }
     
 }

@@ -10,15 +10,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: ../myAccount.php?page=myConsole.php");
             exit;
         }
-        $CPUs = $dataBase->selectCPUs($_POST["cpu"]);
+        $CPU = $dataBase->selectCPU($_POST["cpu"]);
 
-        $statusName = $image->getStatusName();
-        $cost = $image->getCost();
-        $osName = $image->getOsName();
-        $build = $image->getBuild();
-        $idImage = $image->getIdImage();
+        $statusName = $CPU->getStatusName();
+        $coreCount = $CPU->getCoreCount();
+        $cacheL1 = $CPU->getCacheL1();
+        $cacheL2 = $CPU->getCacheL2();
+        $cacheL3 = $CPU->getCacheL3();
+        $frequency = $CPU->getFrequency();
+        $cost = $CPU->getCost();
+        $model = $CPU->getModel();
+        $series = $CPU->getSeries();
 
-        header("Location: ../myAccount.php?page=myConsole.php&imageId=$idImage&status=$statusName&osName=$osName&cost=$cost&build=$build");
+        $memories = $dataBase->selectMemoryCompatibility($model);
+        $images = $dataBase->selectImageCompatibility($model);
+
+        $queryMemories = http_build_query(['idMemories' => $memories]);
+        $queryImages = http_build_query(['idImages' => $images]);
+
+        header("Location: ../myAccount.php?page=myConsole.php&cpu=$model&model=$model&serie=$series&coreCount=$coreCount&frequency=$frequency&cachel1=$cacheL1&cachel2=$cacheL2&cachel3=$cacheL3&status=$statusName&cost=$cost&$queryMemories&$queryImages");
         exit;
 
     } else if ($_POST["action"] === "remove") {
@@ -26,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             if (!$dataBase->deleteCPU($_POST["cpu"])) {
                 $_SESSION["error"] = 1;
-                $_SESSION["message"] = "The image could not be deleted.";
+                $_SESSION["message"] = "The CPU could not be deleted.";
                 header("Location: ../index.php");
                 exit;
             }
@@ -39,12 +49,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
 
     } else if ($_POST["action"] === "add") {
-        if (($_POST["imageId"] === "--New--") == false) {
-            $image = new Image($_POST["imageId"], $_POST["status"], $_POST["cost"], $_POST["osName"], $_POST["build"]);
+        if (($_POST["cpu"] === "--New--") == false) {
+            $cpu = new CPU(
+                $_POST["model"],
+                $_POST["serie"],
+                $_POST["status"],
+                $_POST["coreCount"],
+                $_POST["cachel1"],
+                $_POST["cachel2"],
+                $_POST["cachel3"],
+                $_POST["frequency"],
+                $_POST["cost"],
+                $_POST["idMemories"],
+                $_POST["idImages"]
+            );
 
-            if (!$dataBase->updateImage($image)) {
+            if (!$dataBase->updateCPU($cpu)) {
                 $_SESSION["error"] = 1;
-                $_SESSION["message"] = "The image could not be updated.";
+                $_SESSION["message"] = "The CPU could not be updated.";
                 header("Location: ../index.php");
                 exit;
             }
@@ -52,11 +74,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: ../myAccount.php?page=myConsole.php");
             exit;
         } else {
-            $image = new Image(-1, $_POST["status"], $_POST["cost"], $_POST["osName"], $_POST["build"]);
+            $cpu = new CPU(
+                $_POST["model"],
+                $_POST["serie"],
+                $_POST["status"],
+                $_POST["coreCount"],
+                $_POST["cachel1"],
+                $_POST["cachel2"],
+                $_POST["cachel3"],
+                $_POST["frequency"],
+                $_POST["cost"],
+                $_POST["idMemories"],
+                $_POST["idImages"]
+            );
 
-            if (!$dataBase->insertImage($image)) {
+            if (!$dataBase->insertCPU($cpu)) {
                 $_SESSION["error"] = 1;
-                $_SESSION["message"] = "The image already exists.";
+                $_SESSION["message"] = "The CPU already exists.";
                 header("Location: ../index.php");
                 exit;
             }
@@ -70,6 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     $_SESSION["error"] = 1;
-    $_SESSION["message"] = "Severe error when handling the image.";
+    $_SESSION["message"] = "Severe error when handling the CPU.";
     header("Location: ../index.php");
 }

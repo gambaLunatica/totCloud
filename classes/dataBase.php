@@ -716,11 +716,6 @@ class MyDataBase
         }
     }
 
-    public function insertImageCompatibility($model, $image): void
-    {
-
-    }
-
     //MEMORY
     public function selectMemories(string $status = null): array
     {
@@ -897,7 +892,7 @@ class MyDataBase
     public function selectCPU(string $model): CPU|null
     {
 
-        $sql = "SELECT statusName,coreCount,cacheL1,cacheL2,cacheL3,frequency,cost,model,series FROM CPU WHERE model = $model";
+        $sql = "SELECT statusName,coreCount,cacheL1,cacheL2,cacheL3,frequency,cost,model,series FROM CPU WHERE model = '$model'";
         $result = $this->db->query($sql);
 
 
@@ -905,7 +900,7 @@ class MyDataBase
             $row = $result->fetch_assoc();
             $cpu = new CPU($row["model"], $row["series"], $row["statusName"], $row["coreCount"], $row["cacheL1"], $row["cacheL2"], $row["cacheL3"], $row["frequency"], $row["cost"]);
 
-            $sql = "SELECT idMemory FROM CompatibilityMemoryCPU WHERE model = $model";
+            $sql = "SELECT idMemory FROM CompatibilityMemoryCPU WHERE model = '$model'";
             $result = $this->db->query($sql);
 
             $memories = [];
@@ -916,7 +911,7 @@ class MyDataBase
                 }
             }
 
-            $sql = "SELECT idImage FROM CompatibilityCPUImage WHERE model = $model";
+            $sql = "SELECT idImage FROM CompatibilityCPUImage WHERE model = '$model'";
             $result = $this->db->query($sql);
 
             $images = [];
@@ -938,6 +933,8 @@ class MyDataBase
     public function updateCPU(CPU $cpu): bool
     {
         try {
+
+            //UPDATE CPU
             $sql = "UPDATE CPU SET 
                 statusName = ?,
                 coreCount = ?,
@@ -949,6 +946,209 @@ class MyDataBase
                 model = ?,
                 series = ?
                 WHERE model = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $cpu->getStatusName();
+            $coreCount = $cpu->getCoreCount();
+            $cacheL1 = $cpu->getCacheL1();
+            $cacheL2 = $cpu->getCacheL2();
+            $cacheL3 = $cpu->getCacheL3();
+            $frequency = $cpu->getFrequency();
+            $cost = $cpu->getCost();
+            $model = $cpu->getModel();
+            $series = $cpu->getSeries();
+
+
+            $stmt->bind_param(
+                "sidddddss",
+                $statusName,
+                $coreCount,
+                $cacheL1,
+                $cacheL2,
+                $cacheL3,
+                $frequency,
+                $cost,
+                $model,
+                $series
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+            //CLEAR IMAGES
+            $sql = "DELETE FROM CompatibilityCPUImage WHERE model = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $stmt->bind_param(
+                "s",
+                $model
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+            //ADD IMAGES
+            $images = $cpu->getImages();
+
+            $stmt = $this->db->prepare("INSERT INTO CompatibilityCPUImage (model, idImage) VALUES (?, ?)");
+
+            // Check if preparation is successful
+            if (!$stmt) {
+                die("Preparation failed: " . $this->db->error);
+            }
+
+            // Bind parameters
+            $stmt->bind_param("si", $model, $image);
+
+            // Loop through the array and execute the statement for each idImage
+            foreach ($images as $image) {
+                if (!$stmt->execute()) {
+                    $returnValue = false;
+                }
+            }
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            //CLEAR MEMORIES
+            $sql = "DELETE FROM CompatibilityMemoryCPU WHERE model = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $stmt->bind_param(
+                "s",
+                $model
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            //ADD MEMORIES
+            $memories = $cpu->getMemories();
+
+            $stmt = $this->db->prepare("INSERT INTO CompatibilityMemoryCPU (model, idMemory) VALUES (?, ?)");
+
+            // Check if preparation is successful
+            if (!$stmt) {
+                die("Preparation failed: " . $this->db->error);
+            }
+
+            // Bind parameters
+            $stmt->bind_param("si", $model, $memory);
+
+            foreach ($memories as $memory) {
+                if (!$stmt->execute()) {
+                    $returnValue = false;
+                }
+            }
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function deleteCPU(string $model): bool
+    {
+        try {
+            //CLEAR MEMORIES
+            $sql = "DELETE FROM CompatibilityMemoryCPU WHERE model = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $stmt->bind_param(
+                "s",
+                $model
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            //DELETE IMAGES
+            $sql = "DELETE FROM CompatibilityCPUImage WHERE model = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $stmt->bind_param(
+                "s",
+                $model
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            //DELETE CPU
+            $sql = "DELETE FROM CPU WHERE model = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "s",
+                $model
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function insertCPU(CPU $cpu): bool
+    {
+        try {
+            $sql = "INSERT INTO CPU (statusName,coreCount,cacheL1,cacheL2,cacheL3,frequency,cost,model,series)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt = $this->db->prepare($sql);
 
@@ -1037,33 +1237,39 @@ class MyDataBase
             return false;
         }
     }
-    public function deleteCPU(String $model): bool
+
+    public function selectImageCompatibility(String $model): array
     {
-        try {
-            $sql = "DELETE FROM CPU WHERE model = ?";
 
-            $stmt = $this->db->prepare($sql);
+        $sql = "SELECT idImage FROM compatibilitycpuimage WHERE model = '$model'";
 
-            if (!$stmt) {
-                throw new Exception("Error preparing statement: " . $this->db->error);
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["idImage"]);
             }
-
-
-            $stmt->bind_param(
-                "s",
-                $model
-            );
-
-            $returnValue = $stmt->execute();
-
-            if (!$returnValue) {
-                throw new Exception("Error executing statement: " . $stmt->error);
-            }
-
-            return $returnValue;
-        } catch (Exception $e) {
-            return false;
         }
+        return $values;
+    }
+
+    public function selectMemoryCompatibility(String $model): array
+    {
+
+        $sql = "SELECT idMemory FROM compatibilitymemorycpu WHERE model = '$model'";
+
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["idMemory"]);
+            }
+        }
+        return $values;
     }
 
     //PRIVILEGES

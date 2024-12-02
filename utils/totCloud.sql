@@ -181,7 +181,8 @@ create table CompatibilityMemoryCPU(
 
     PRIMARY KEY(model, idMemory),
     FOREIGN KEY(model) REFERENCES CPU(model),
-    FOREIGN key(idMemory) REFERENCES Memory(idMemory)
+    FOREIGN key(idMemory) REFERENCES Memory(idMemory),
+    CONSTRAINT unique_memory_combination UNIQUE(model, idMemory)
 );
 
 create table OS(
@@ -227,7 +228,8 @@ create table CompatibilityCPUImage(
 
     PRIMARY KEY(model, idImage),
     FOREIGN KEY(model) REFERENCES CPU(model),
-    FOREIGN KEY(idImage) REFERENCES Image(idImage)
+    FOREIGN KEY(idImage) REFERENCES Image(idImage),
+    CONSTRAINT unique_image_combination UNIQUE(model, idImage)
 );
 
 

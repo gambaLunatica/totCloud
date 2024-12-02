@@ -126,11 +126,11 @@ if (isset($_GET['cpu'])) {
                     <input value=<?= $cachel1Val ?> min="1" max="256" type="number" id="cachel1" name="cachel1">
 
                     <label for="cachel2">Cache L2 (MB):</label>
-                    <input value=<?= $cachel2Val ?> placeholder="0" min="1" max="256" type="number" id="cachel2"
+                    <input value=<?= $cachel2Val ?> placeholder="0" min="0" max="256" type="number" id="cachel2"
                         name="cachel2">
 
                     <label for="cachel3">Cache L3 (MB):</label>
-                    <input value=<?= $cachel3Val ?> placeholder="0" min="1" max="256" type="number" id="cachel3"
+                    <input value=<?= $cachel3Val ?> placeholder="0" min="0" max="256" type="number" id="cachel3"
                         name="cachel3">
 
                     <br><br>
@@ -159,7 +159,7 @@ if (isset($_GET['cpu'])) {
 
                     <label for="idMemories">Select Compatible Memories:</label>
                     <br>
-                    <select multiple id="idMemories" name="idMemories" style="min-height: 150px;">
+                    <select multiple id="idMemories" name="idMemories[]" style="min-height: 150px;">
                     <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $memories = $dataBase->selectMemories(); // Ensure this returns an array
@@ -183,7 +183,7 @@ if (isset($_GET['cpu'])) {
 
                     <label for="idImages">Select Compatible Images:</label>
                     <br>
-                    <select multiple id="idImages" name="idImages" style="min-height: 150px;">
+                    <select multiple id="idImages" name="idImages[]" style="min-height: 150px;">
                     <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $images = $dataBase->selectImages(); // Ensure this returns an array
@@ -193,7 +193,7 @@ if (isset($_GET['cpu'])) {
                             $imageBuild = $image->getBuild();
 
                             $select = "";
-                            if (in_array($idImage , $$idImagesVal)) {
+                            if (in_array($idImage , $idImagesVal)) {
                                 $select = "selected";
                             }
 
