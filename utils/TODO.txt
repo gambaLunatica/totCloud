@@ -11,3 +11,10 @@ Acabar de implementar login y arreglar signup
 LUNA:
 Hacer que el nombre de la compañia sea la clave primaria.
 HAcer que el email del usuario sea la clave primaria y eliminar el nombre de usuario
+
+Cambios concetual:
+Series-Mem
+Os-Image
+Os-status
+storage-status???
+fuera relaciones type, size y speed con StatusS
