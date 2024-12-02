@@ -203,7 +203,22 @@ select {
   width: 300px;
   object-fit: cover;
 }
-
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+background-color: #424549;
+}
+.image-container img {
+  max-width: 100%;
+  height: auto;
+}
+.feature {
+  flex: 1;
+  margin: 40px;
+}
 .catalog{
   display: grid;
   grid-template-columns: repeat(4, 4fr);

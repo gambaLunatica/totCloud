@@ -18,3 +18,4 @@ Os-Image
 Os-status
 storage-status???
 fuera relaciones type, size y speed con StatusS
+- En myConsole php controlar los input y mirar lso datos y mirar los carcteres de largo con el sql
