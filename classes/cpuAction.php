@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $_POST["status"],
                 $_POST["coreCount"],
                 $_POST["cachel1"],
-                $_POST["cachel2"],
+                $_POST["cachel2"] ?? 0,
                 $_POST["cachel3"],
                 $_POST["frequency"],
                 $_POST["cost"],

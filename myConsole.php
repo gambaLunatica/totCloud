@@ -71,7 +71,7 @@ if (isset($_GET['cpu'])) {
                     <h4>CPU Details</h4>
 
                     <label for="cpu">Select Model:</label>
-                    <select id="cpu" name="cpu">
+                    <select id="cpu" name="cpu" required>
                         <option value="--New--">--New--</option>
                         <?php
                         $CPUs = $dataBase->selectCPUs(); // Ensure this returns an array
@@ -86,17 +86,17 @@ if (isset($_GET['cpu'])) {
                         ?>
                     </select>
 
-                    <button class="goButton" type="submit" name="action" value="load">Load</button>
+                    <button formnovalidate class="goButton" type="submit" name="action" value="load">Load</button>
 
                     <br><br>
 
                     <label for="model">Model:</label>
-                    <input value=<?= $modelVal ?> type="text" id="model" name="model">
+                    <input value=<?= $modelVal ?> type="text" id="model" name="model"required>
 
                     <br>
 
                     <label for="serie">Series:</label>
-                    <select id="serie" name="serie">
+                    <select id="serie" name="serie"required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $series = $dataBase->selectSeries(); // Ensure this returns an array
@@ -112,31 +112,30 @@ if (isset($_GET['cpu'])) {
                     </select>
 
                     <label for="coreCount">Core Count:</label>
-                    <input value=<?= $coreCountVal ?> min="1" max="256" type="number" id="coreCount" name="coreCount">
+                    <input value=<?= $coreCountVal ?> min="1" max="256" type="number" id="coreCount" name="coreCount"required>
 
                     <br>
 
                     <label for="frequency">Frequency (GHz):</label>
-                    <input value=<?= $frequencyVal ?> min="0.5" max="6" step="0.01" type="number" id="frequency"
-                        name="frequency">
+                    <input value=<?= $frequencyVal ?> min="0.5" max="6" step="0.01" type="number" id="frequency" name="frequency"required>
 
                     <br><br>
 
                     <label for="cachel1">Cache L1 (MB):</label>
-                    <input value=<?= $cachel1Val ?> min="1" max="256" type="number" id="cachel1" name="cachel1">
+                    <input value=<?= $cachel1Val ?> min="1" max="256" type="number" id="cachel1" name="cachel1"required>
 
                     <label for="cachel2">Cache L2 (MB):</label>
                     <input value=<?= $cachel2Val ?> placeholder="0" min="0" max="256" type="number" id="cachel2"
-                        name="cachel2">
+                        name="cachel2"required>
 
                     <label for="cachel3">Cache L3 (MB):</label>
                     <input value=<?= $cachel3Val ?> placeholder="0" min="0" max="256" type="number" id="cachel3"
-                        name="cachel3">
+                        name="cachel3"required>
 
                     <br><br>
 
                     <label for="status">Status:</label>
-                    <select id="status" name="status">
+                    <select id="status" name="status"required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $statuss = $dataBase->selectStatus(); // Ensure this returns an array
@@ -153,14 +152,14 @@ if (isset($_GET['cpu'])) {
                     <br><br>
 
                     <label for="cost">Sales Price:</label>
-                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost">
+                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost"required>
 
                     <h3>CPU Compatibility</h3>
 
                     <label for="idMemories">Select Compatible Memories:</label>
                     <br>
-                    <select multiple id="idMemories" name="idMemories[]" style="min-height: 150px;">
-                    <option selected disabled="disabled" value="">Select an option</option>
+                    <select multiple id="idMemories" name="idMemories[]" style="min-height: 150px;"required>
+                    <option disabled="disabled" value="">Select an option</option>
                         <?php
                         $memories = $dataBase->selectMemories(); // Ensure this returns an array
                         foreach ($memories as $memory) {
@@ -183,8 +182,8 @@ if (isset($_GET['cpu'])) {
 
                     <label for="idImages">Select Compatible Images:</label>
                     <br>
-                    <select multiple id="idImages" name="idImages[]" style="min-height: 150px;">
-                    <option selected disabled="disabled" value="">Select an option</option>
+                    <select multiple id="idImages" name="idImages[]" style="min-height: 150px;"required>
+                    <option disabled="disabled" value="">Select an option</option>
                         <?php
                         $images = $dataBase->selectImages(); // Ensure this returns an array
                         foreach ($images as $image) {
@@ -204,7 +203,7 @@ if (isset($_GET['cpu'])) {
 
                     <br><br>
                     <button class="goButton" type="submit" name="action" value="add">Add</button>
-                    <button class="goButton" type="submit" name="action" value="remove">Remove</button>
+                    <button class="goButton" type="submit" name="action" value="remove" formnovalidate>Remove</button>
                 </form>
             </div>
         </details>
@@ -250,7 +249,7 @@ if (isset($_GET['cpu'])) {
                     <h4>Memory Details</h4>
 
                     <label for="idMemory">Select Memory:</label>
-                    <select id="idMemory" name="idMemory">
+                    <select id="idMemory" name="idMemory"required>
                         <option value="--New--">--New--</option>
                         <?php
                         $memories = $dataBase->selectMemories(); // Ensure this returns an array
@@ -270,12 +269,12 @@ if (isset($_GET['cpu'])) {
                         ?>
                     </select>
 
-                    <button class="goButton" type="submit" name="action" value="load">Load</button>
+                    <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
 
                     <br><br>
 
                     <label for="totalCapacity">Select Size:</label>
-                    <select id="totalCapacity" name="totalCapacity">
+                    <select id="totalCapacity" name="totalCapacity"required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $sizes = $dataBase->selectSizes(); // Ensure this returns an array
@@ -294,7 +293,7 @@ if (isset($_GET['cpu'])) {
                     <br>
 
                     <label for="generation">Select Generation:</label>
-                    <select id="generation" name="generation">
+                    <select id="generation" name="generation"required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $generations = $dataBase->selectGenerations(); // Ensure this returns an array
@@ -313,7 +312,7 @@ if (isset($_GET['cpu'])) {
                     <br>
 
                     <label for="IOSpeed">Select Speed:</label>
-                    <select id="IOSpeed" name="IOSpeed">
+                    <select id="IOSpeed" name="IOSpeed"required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $speeds = $dataBase->selectSpeeds(); // Ensure this returns an array
@@ -332,7 +331,7 @@ if (isset($_GET['cpu'])) {
                     <br>
 
                     <label for="status">Status:</label>
-                    <select id="status" name="status">
+                    <select id="status" name="status" required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $statuss = $dataBase->selectStatus(); // Ensure this returns an array
@@ -349,11 +348,11 @@ if (isset($_GET['cpu'])) {
                     <br><br>
 
                     <label for="cost">Sales Price:</label>
-                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost">
+                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost" required>
 
                     <br>
                     <button class="goButton" type="submit" name="action" value="add">Add</button>
-                    <button class="goButton" type="submit" name="action" value="remove">Remove</button>
+                    <button class="goButton" type="submit" name="action" value="remove" formnovalidate>Remove</button>
                 </form>
             </div>
         </details>
@@ -386,7 +385,7 @@ if (isset($_GET['cpu'])) {
                     <h4>Image Details</h4>
 
                     <label for="imageId">Select Image:</label>
-                    <select id="imageId" name="imageId">
+                    <select id="imageId" name="imageId"required>
                         <option value="--New--">--New--</option>
                         <?php
                         $images = $dataBase->selectImages(); // Ensure this returns an array
@@ -405,17 +404,17 @@ if (isset($_GET['cpu'])) {
                         ?>
                     </select>
 
-                    <button class="goButton" type="submit" name="action" value="load">Load</button>
+                    <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
 
                     <br><br>
 
                     <label for="build">Build:</label>
-                    <input value=<?= $buildVal ?> type="text" id="build" name="build">
+                    <input value=<?= $buildVal ?> type="text" id="build" name="build"required>
 
                     <br>
 
                     <label for="osName">Operating System:</label>
-                    <select id="osName" name="osName">
+                    <select id="osName" name="osName"required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $osNames = $dataBase->selectOS();
@@ -433,7 +432,7 @@ if (isset($_GET['cpu'])) {
                     <br><br>
 
                     <label for="status">Status:</label>
-                    <select id="status" name="status">
+                    <select id="status" name="status"required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
                         $statuss = $dataBase->selectStatus(); // Ensure this returns an array
@@ -450,11 +449,11 @@ if (isset($_GET['cpu'])) {
                     <br><br>
 
                     <label for="cost">Sales Price:</label>
-                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost">
+                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost"required>
 
                     <br>
                     <button class="goButton" type="submit" name="action" value="add">Add</button>
-                    <button class="goButton" type="submit" name="action" value="remove">Remove</button>
+                    <button class="goButton" type="submit" name="action" value="remove"formnovalidate>Remove</button>
                 </form>
             </div>
         </details>
