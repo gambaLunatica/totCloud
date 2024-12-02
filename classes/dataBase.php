@@ -1238,7 +1238,7 @@ class MyDataBase
         }
     }
 
-    public function selectImageCompatibility(String $model): array
+    public function selectImageCompatibility(string $model): array
     {
 
         $sql = "SELECT idImage FROM compatibilitycpuimage WHERE model = '$model'";
@@ -1255,7 +1255,7 @@ class MyDataBase
         return $values;
     }
 
-    public function selectMemoryCompatibility(String $model): array
+    public function selectMemoryCompatibility(string $model): array
     {
 
         $sql = "SELECT idMemory FROM compatibilitymemorycpu WHERE model = '$model'";
@@ -1434,7 +1434,7 @@ class MyDataBase
 
             $cdir = $mask->getCidr();
             $cost = $mask->getCost();
-            
+
 
             $stmt->bind_param(
                 "id",
@@ -1502,6 +1502,233 @@ class MyDataBase
             $stmt->bind_param(
                 "i",
                 $cidr
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    //STORAGE TYPE
+    public function insertType(string $type): bool
+    {
+        try {
+            $sql = "INSERT INTO Type (typeName) VALUES (?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "s",
+                $type
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function selectTypes(): array
+    {
+        $sql = "SELECT typeName FROM type";
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = htmlspecialchars($row["typeName"]);
+            }
+        }
+        return $values;
+    }
+
+    public function deleteType(string $type): bool
+    {
+        try {
+            $sql = "DELETE FROM Type WHERE typeName = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "s",
+                $type
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    //STORAGE
+    public function selectStorages(string $status = null): array
+    {
+        if ($status == null) {
+            $sql = "SELECT idStorage,usedSpace,totalCapacity,IOSpeed,creationDate,typeName,nameStorage,cost FROM Storage";
+        } else {
+            $sql = "SELECT idStorage,usedSpace,totalCapacity,IOSpeed,creationDate,typeName,nameStorage,cost FROM Storage WHERE statusName = $status";
+        }
+
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = new Storage($row["idStorage"], $row["usedSpace"], $row["totalCapacity"], $row["IOSpeed"],
+                 $row["typeName"], $row["nameStorage"], $row["cost"]);
+            }
+        }
+        return $values;
+    }
+
+    public function selectStorage(int $id): Storage|null
+    {
+
+        $sql = "SELECT idStorage,usedSpace,totalCapacity,IOSpeed,creationDate,typeName,nameStorage,cost FROM Storage WHERE idStorage = $id";
+
+        $result = $this->db->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                return new Storage($row["idStorage"], $row["usedSpace"], $row["totalCapacity"], $row["IOSpeed"],
+                $row["typeName"], $row["nameStorage"], $row["cost"]);
+            }
+        }
+        return null;
+    }
+
+    public function insertStorage(Storage $storage): bool
+    {
+        try {
+            $sql = "INSERT INTO Storage (usedSpace,totalCapacity,IOSpeed,typeName,nameStorage,cost)
+                    VALUES (?, ?, ?, ?, ?, ?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $memory->getStatusName();
+            $totalCapacity = $memory->getTotalCapacity();
+            $IOSpeed = $memory->getIOSpeed();
+            $generation = $memory->getGeneration();
+            $cost = $memory->getCost();
+
+            $stmt->bind_param(
+                "sddsd",
+                $statusName,
+                $totalCapacity,
+                $IOSpeed,
+                $generation,
+                $cost
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateMemory(Memory $memory): bool
+    {
+        try {
+            $sql = "UPDATE Memory SET 
+                statusName = ?, 
+                totalCapacity = ?, 
+                IOSpeed = ?, 
+                generation = ?,
+                cost = ?
+                WHERE idMemory = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $memory->getStatusName();
+            $totalCapacity = $memory->getTotalCapacity();
+            $IOSpeed = $memory->getIOSpeed();
+            $generation = $memory->getGeneration();
+            $cost = $memory->getCost();
+            $idMemory = $memory->getIdMemory();
+
+
+            $stmt->bind_param(
+                "sddsdi",
+                $statusName,
+                $totalCapacity,
+                $IOSpeed,
+                $generation,
+                $cost,
+                $idMemory
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function deleteMemory(Memory $memory): bool
+    {
+        try {
+            $sql = "DELETE FROM Memory WHERE idMemory = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $idMemory = $memory->getIdMemory();
+
+            $stmt->bind_param(
+                "i",
+                $idMemory
             );
 
             $returnValue = $stmt->execute();

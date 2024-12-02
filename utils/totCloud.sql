@@ -240,6 +240,7 @@ create table Storage(
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     typeName VARCHAR(16) NOT NULL,
     nameStorage VARCHAR(32) NOT NULL,
+    const FLOAT UNSIGNED NOT NULL,
 
     PRIMARY KEY(idStorage),
     FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
