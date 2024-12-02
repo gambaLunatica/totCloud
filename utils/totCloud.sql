@@ -78,7 +78,7 @@ create table VCN(
     nameRegion VARCHAR(32) NOT NULL,
     privateIP BINARY(4) NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    name VARCHAR(32) NOT NULL,
+    nameVCN VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idVCN),
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
@@ -90,7 +90,7 @@ create table Subnet(
     idSubnet INT UNSIGNED NOT NULL AUTO_INCREMENT,
     idVCN INT UNSIGNED NOT NULL,
     privateIP BINARY(4) NOT NULL,
-    name VARCHAR(32) NOT NULL,
+    nameSubnet VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idSubnet),
     FOREIGN KEY(idVCN) REFERENCES VCN(idVCN)
@@ -232,10 +232,25 @@ create table CompatibilityCPUImage(
     CONSTRAINT unique_image_combination UNIQUE(model, idImage)
 );
 
-
-
 create table Storage(
     idStorage INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    usedSpace FLOAT UNSIGNED NOT NULL,
+    totalCapacity FLOAT UNSIGNED NOT NULL,
+    IOSpeed FLOAT UNSIGNED NOT NULL,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    typeName VARCHAR(16) NOT NULL,
+    nameStorage VARCHAR(32) NOT NULL,
+
+    PRIMARY KEY(idStorage),
+    FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
+    FOREIGN KEY(typeName) REFERENCES Type(typeName),
+    FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
+
+);
+
+
+create table StorageUnit(
+    idStorageUnit INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nameCompany VARCHAR(32) NOT NULL,
     idSubnet INT UNSIGNED NOT NULL,
     idComputeInstance INT UNSIGNED NOT NULL,
@@ -244,15 +259,16 @@ create table Storage(
     IOSpeed FLOAT UNSIGNED NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     typeName VARCHAR(16) NOT NULL,
-    name VARCHAR(32) NOT NULL,
+    nameStorageU VARCHAR(32) NOT NULL,
+    idUserGroup INT UNSIGNED NOT NULL,
+    idStorage INT UNSIGNED NOT NULL,
 
-    PRIMARY KEY(idStorage),
+    PRIMARY KEY(idStorageUnit),
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet),
     FOREIGN KEY(idComputeInstance) REFERENCES ComputeInstance(idComputeInstance),
-    FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
-    FOREIGN KEY(typeName) REFERENCES Type(typeName),
-    FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
+    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
+    FOREIGN KEY(idStorage) REFERENCES Storage(idStorage)
 
 );
 
@@ -407,18 +423,18 @@ create table PostgradeSetting(
 create table MYUsage(
     idComputeCPU INT UNSIGNED NOT NULL,
     idComputeMEM INT UNSIGNED NOT NULL,
-    idStorage INT UNSIGNED NOT NULL,
+    idStorageUnit INT UNSIGNED NOT NULL,
     idVCN INT UNSIGNED NOT NULL,
     idDataBase INT UNSIGNED NOT NULL,
     value FLOAT,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    PRIMARY KEY(idComputeCPU, idComputeMEM, idStorage, idVCN, creationDate),
+    PRIMARY KEY(idComputeCPU, idComputeMEM, idStorageUnit, idVCN, creationDate),
     FOREIGN KEY(idComputeCPU) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(idComputeMem) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(idVCN) REFERENCES VCN(idVCN),
     FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase),
-    FOREIGN KEY(idStorage) REFERENCES Storage(idStorage)
+    FOREIGN KEY(idStorageUnit) REFERENCES StorageUnit(idStorageUnit)
 );
 
 create table StorageCost(
