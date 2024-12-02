@@ -10,7 +10,12 @@ class Cpu{
     private $model;
     private $series;
 
-    public function __construct(String $model, String $series, String $statusName, int $coreCount, float $cacheL1, float $cacheL2, float $cacheL3, float $frequency, float $cost){
+    private $memories;
+
+    private $images;
+
+    public function __construct(String $model, String $series, String $statusName, int $coreCount, float $cacheL1, float $cacheL2, float $cacheL3, 
+    float $frequency, float $cost, array $memories = null, array $images = null){
         $this->model = $model;
         $this->series = $series;
         $this->statusName = $statusName;
@@ -20,6 +25,8 @@ class Cpu{
         $this->cacheL3 = $cacheL3;
         $this->frequency = $frequency;
         $this->cost = $cost;
+        $this->memories = $memories;
+        $this->images = $images;
     }
 
     public function getModel(): string {
@@ -93,4 +100,21 @@ class Cpu{
     public function setCost(float $cost): void {
         $this->cost = $cost;
     }
+
+    public function getImages(): array {
+        return $this->images;
+    }
+
+    public function setImages(array $images): void {
+        $this->images = $images;
+    }
+
+    public function getMemories(): array {
+        return $this->memories;
+    }
+
+    public function setMemories(array $memories): void {
+        $this->memories = $memories;
+    }
+    
 }

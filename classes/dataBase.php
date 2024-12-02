@@ -15,7 +15,8 @@ class MyDataBase
     }
 
     //SERIES
-    public function insertSeries(String $series): bool{
+    public function insertSeries(string $series): bool
+    {
         try {
             $sql = "INSERT INTO Series (series) VALUES (?)";
 
@@ -58,7 +59,8 @@ class MyDataBase
         return $values;
     }
 
-    public function deleteSeries(String $series): bool{
+    public function deleteSeries(string $series): bool
+    {
         try {
             $sql = "DELETE FROM Series WHERE series = ?";
 
@@ -87,7 +89,8 @@ class MyDataBase
     }
 
     //GENERATION
-    public function insertGeneration(String $generation): bool{
+    public function insertGeneration(string $generation): bool
+    {
         try {
             $sql = "INSERT INTO Generation (generation) VALUES (?)";
 
@@ -130,7 +133,8 @@ class MyDataBase
         return $values;
     }
 
-    public function deleteGeneration(String $generation): bool{
+    public function deleteGeneration(string $generation): bool
+    {
         try {
             $sql = "DELETE FROM Generation WHERE series = ?";
 
@@ -159,7 +163,8 @@ class MyDataBase
     }
 
     //SPEED
-    public function insertSpeed(float $speed): bool{
+    public function insertSpeed(float $speed): bool
+    {
         try {
             $sql = "INSERT INTO Speed (IOSpeed) VALUES (?)";
 
@@ -202,7 +207,8 @@ class MyDataBase
         return $values;
     }
 
-    public function deleteSpeed(float $speed): bool{
+    public function deleteSpeed(float $speed): bool
+    {
         try {
             $sql = "DELETE FROM Speed WHERE IOSpeed = ?";
 
@@ -231,9 +237,10 @@ class MyDataBase
     }
 
     //SIZE
-    public function insertSize(float $size): bool{
+    public function insertSize(float $size): bool
+    {
         try {
-            $sql = "INSERT INTO Speed (IOSpeed) VALUES (?)";
+            $sql = "INSERT INTO Size (totalCapacity) VALUES (?)";
 
             $stmt = $this->db->prepare($sql);
 
@@ -274,7 +281,8 @@ class MyDataBase
         return $values;
     }
 
-    public function deleteSize(float $size): bool{
+    public function deleteSize(float $size): bool
+    {
         try {
             $sql = "DELETE FROM Size WHERE totalCapacity = ?";
 
@@ -303,7 +311,8 @@ class MyDataBase
     }
 
     //OS
-    public function insertOS(String $os): bool{
+    public function insertOS(string $os): bool
+    {
         try {
             $sql = "INSERT INTO OS (osName) VALUES (?)";
 
@@ -346,7 +355,8 @@ class MyDataBase
         return $values;
     }
 
-    public function deleteOS(String $os): bool{
+    public function deleteOS(string $os): bool
+    {
         try {
             $sql = "DELETE FROM OS WHERE osName = ?";
 
@@ -418,7 +428,8 @@ class MyDataBase
         }
     }
 
-    public function insertUserGroup(UserGroup $userGroup): bool{
+    public function insertUserGroup(UserGroup $userGroup): bool
+    {
         try {
             $sql = "INSERT INTO UserGroup (nameCompany, nameUserGroup)
                     VALUES (?, ?)";
@@ -560,13 +571,14 @@ class MyDataBase
     }
 
     //IMAGE
-    public function selectImages(String $status=null): array{
-        if($status==null){
+    public function selectImages(string $status = null): array
+    {
+        if ($status == null) {
             $sql = "SELECT idImage, statusName, cost, osName, build FROM Image";
-        } else{
+        } else {
             $sql = "SELECT idImage, statusName, cost, osName, build FROM Image WHERE statusName = $status";
         }
-        
+
         $result = $this->db->query($sql);
 
         $values = [];
@@ -579,10 +591,11 @@ class MyDataBase
         return $values;
     }
 
-    public function selectImage(int $id): Image|null{
-        
+    public function selectImage(int $id): Image|null
+    {
+
         $sql = "SELECT idImage, statusName, cost, osName, build FROM Image WHERE idImage = $id";
-        
+
         $result = $this->db->query($sql);
 
         if ($result->num_rows > 0) {
@@ -593,7 +606,8 @@ class MyDataBase
         return null;
     }
 
-    public function insertImage(Image $image): bool{
+    public function insertImage(Image $image): bool
+    {
         try {
             $sql = "INSERT INTO Image (statusName, cost, osName, build)
                     VALUES (?, ?, ?, ?)";
@@ -613,8 +627,8 @@ class MyDataBase
                 "sdss",
                 $statusName,
                 $cost,
-                    $osName,
-                    $build,
+                $osName,
+                $build,
             );
 
             $returnValue = $stmt->execute();
@@ -629,7 +643,8 @@ class MyDataBase
         }
     }
 
-    public function updateImage(Image $image): bool{
+    public function updateImage(Image $image): bool
+    {
         try {
             $sql = "UPDATE Image SET 
                 statusName = ?, 
@@ -655,9 +670,9 @@ class MyDataBase
                 "sdssi",
                 $statusName,
                 $cost,
-                    $osName,
-                    $build,
-                    $idImage
+                $osName,
+                $build,
+                $idImage
             );
 
             $returnValue = $stmt->execute();
@@ -671,7 +686,8 @@ class MyDataBase
             return false;
         }
     }
-    public function deleteImage(Image $image): bool{
+    public function deleteImage(Image $image): bool
+    {
         try {
             $sql = "DELETE FROM Image WHERE idImage = ?";
 
@@ -700,18 +716,172 @@ class MyDataBase
         }
     }
 
-    public function insertImageCompatibility($model, $image):void{
+    public function insertImageCompatibility($model, $image): void
+    {
 
     }
 
-    public function selectCPUs(String $status=null):array{
+    //MEMORY
+    public function selectMemories(string $status = null): array
+    {
+        if ($status == null) {
+            $sql = "SELECT idMemory, statusName, totalCapacity, IOSpeed, generation, cost FROM Memory";
+        } else {
+            $sql = "SELECT idMemory, statusName, totalCapacity, IOSpeed, generation, cost FROM Memory WHERE statusName = $status";
+        }
 
-        if($status==null){
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = new Memory($row["idMemory"], $row["statusName"], $row["totalCapacity"], $row["IOSpeed"], $row["generation"], $row["cost"]);
+            }
+        }
+        return $values;
+    }
+
+    public function selectMemory(int $id): Memory|null
+    {
+
+        $sql = "SELECT idMemory, statusName, totalCapacity, IOSpeed, generation, cost FROM Memory WHERE idMemory = $id";
+
+        $result = $this->db->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                return new Memory($row["idMemory"], $row["statusName"], $row["totalCapacity"], $row["IOSpeed"], $row["generation"], $row["cost"]);
+            }
+        }
+        return null;
+    }
+
+    public function insertMemory(Memory $memory): bool
+    {
+        try {
+            $sql = "INSERT INTO Memory (statusName, totalCapacity, IOSpeed, generation, cost)
+                    VALUES (?, ?, ?, ?, ?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $memory->getStatusName();
+            $totalCapacity = $memory->getTotalCapacity();
+            $IOSpeed = $memory->getIOSpeed();
+            $generation = $memory->getGeneration();
+            $cost = $memory->getCost();
+
+            $stmt->bind_param(
+                "sddsd",
+                $statusName,
+                $totalCapacity,
+                $IOSpeed,
+                $generation,
+                $cost
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateMemory(Memory $memory): bool
+    {
+        try {
+            $sql = "UPDATE Memory SET 
+                statusName = ?, 
+                totalCapacity = ?, 
+                IOSpeed = ?, 
+                generation = ?,
+                cost = ?
+                WHERE idMemory = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $memory->getStatusName();
+            $totalCapacity = $memory->getTotalCapacity();
+            $IOSpeed = $memory->getIOSpeed();
+            $generation = $memory->getGeneration();
+            $cost = $memory->getCost();
+            $idMemory = $memory->getIdMemory();
+
+
+            $stmt->bind_param(
+                "sddsdi",
+                $statusName,
+                $totalCapacity,
+                $IOSpeed,
+                $generation,
+                $cost,
+                $idMemory
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function deleteMemory(Memory $memory): bool
+    {
+        try {
+            $sql = "DELETE FROM Memory WHERE idMemory = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $idMemory = $memory->getIdMemory();
+
+            $stmt->bind_param(
+                "i",
+                $idMemory
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    //CPU
+    public function selectCPUs(string $status = null): array
+    {
+
+        if ($status == null) {
             $sql = "SELECT model FROM CPU";
-        } else{
+        } else {
             $sql = "SELECT model FROM CPU WHERE statusName = $status";
         }
-        
+
         $result = $this->db->query($sql);
 
         $values = [];
@@ -723,6 +893,180 @@ class MyDataBase
         }
         return $values;
     }
+
+    public function selectCPU(string $model): CPU|null
+    {
+
+        $sql = "SELECT statusName,coreCount,cacheL1,cacheL2,cacheL3,frequency,cost,model,series FROM CPU WHERE model = $model";
+        $result = $this->db->query($sql);
+
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $cpu = new CPU($row["model"], $row["series"], $row["statusName"], $row["coreCount"], $row["cacheL1"], $row["cacheL2"], $row["cacheL3"], $row["frequency"], $row["cost"]);
+
+            $sql = "SELECT idMemory FROM CompatibilityMemoryCPU WHERE model = $model";
+            $result = $this->db->query($sql);
+
+            $memories = [];
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $memories[] = $row["idMemory"];
+                }
+            }
+
+            $sql = "SELECT idImage FROM CompatibilityCPUImage WHERE model = $model";
+            $result = $this->db->query($sql);
+
+            $images = [];
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $images[] = $row["idImage"];
+                }
+            }
+
+            $cpu->setMemories($memories);
+            $cpu->setImages($images);
+
+            return $cpu;
+        }
+        return null;
+    }
+
+    public function updateCPU(CPU $cpu): bool
+    {
+        try {
+            $sql = "UPDATE CPU SET 
+                statusName = ?,
+                coreCount = ?,
+                cacheL1 = ?,
+                cacheL2 = ?,
+                cacheL3 = ?,
+                frequency = ?,
+                cost = ?,
+                model = ?,
+                series = ?
+                WHERE model = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $cpu->getStatusName();
+            $coreCount = $cpu->getCoreCount();
+            $cacheL1 = $cpu->getCacheL1();
+            $cacheL2 = $cpu->getCacheL2();
+            $cacheL3 = $cpu->getCacheL3();
+            $frequency = $cpu->getFrequency();
+            $cost = $cpu->getCost();
+            $model = $cpu->getModel();
+            $series = $cpu->getSeries();
+
+
+            $stmt->bind_param(
+                "sidddddss",
+                $statusName,
+                $coreCount,
+                $cacheL1,
+                $cacheL2,
+                $cacheL3,
+                $frequency,
+                $cost,
+                $model,
+                $series
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            $images = $cpu->getImages();
+
+            $stmt = $this->db->prepare("INSERT INTO CompatibilityCPUImage (model, idImage) VALUES (?, ?)");
+
+            // Check if preparation is successful
+            if (!$stmt) {
+                die("Preparation failed: " . $this->db->error);
+            }
+
+            // Bind parameters
+            $stmt->bind_param("si", $model, $image);
+
+            // Loop through the array and execute the statement for each idImage
+            foreach ($images as $image) {
+                if (!$stmt->execute()) {
+                    $returnValue = false;
+                }
+            }
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            $memories = $cpu->getMemories();
+
+            $stmt = $this->db->prepare("INSERT INTO CompatibilityMemoryCPU (model, idMemory) VALUES (?, ?)");
+
+            // Check if preparation is successful
+            if (!$stmt) {
+                die("Preparation failed: " . $this->db->error);
+            }
+
+            // Bind parameters
+            $stmt->bind_param("si", $model, $memory);
+
+            foreach ($memories as $memory) {
+                if (!$stmt->execute()) {
+                    $returnValue = false;
+                }
+            }
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function deleteCPU(String $model): bool
+    {
+        try {
+            $sql = "DELETE FROM CPU WHERE model = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+
+            $stmt->bind_param(
+                "s",
+                $model
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    //PRIVILEGES
 
     public function insertPrivileges(int $idUserGroup, bool $value)
     {
@@ -739,7 +1083,7 @@ class MyDataBase
         }
     }
 
-    public function getPrivilegesByUserGroupId(int $userGroupId):array|null
+    public function getPrivilegesByUserGroupId(int $userGroupId): array|null
     {
         $query = "SELECT namePrivilege FROM PrivilegeStatus WHERE idUserGroup = ? AND value = 1";
 
@@ -756,7 +1100,7 @@ class MyDataBase
                 $privileges[] = $namePrivilege;
             }
 
-            if(!empty($privileges)) {
+            if (!empty($privileges)) {
                 return $privileges;
             }
             return null;

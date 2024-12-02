@@ -257,3 +257,66 @@ select {
   padding-bottom: 20px;
   margin: 40px 0px;
 }
+
+
+/**/
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+  width: 125%;
+  max-width: 300px;
+}
+
+.dropdown-toggle {
+  background: #424549;
+  border: 2px solid #36393e;
+  border-radius: 6px;
+  color: white;
+  height: 40px;
+  margin: 5px 10px;
+  box-sizing: border-box;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dropdown-menu {
+  background: #424549;
+  border: 2px solid #36393e;
+  border-radius: 6px;
+  color: white;
+  margin-top: 5px;
+  padding: 10px;
+  list-style: none;
+  width: 100%;
+  max-width: 300px;
+  box-sizing: border-box;
+  position: absolute;
+  display: none;
+  z-index: 1000;
+}
+
+.dropdown-menu li {
+  margin: 5px 0;
+}
+
+.dropdown-menu label {
+  cursor: pointer;
+}
+
+.dropdown-menu input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Make the dropdown appear when `details` is open */
+.dropdown[open] .dropdown-menu {
+  display: block;
+}
+
+/* Hide the default triangle on `summary` */
+.dropdown-toggle::-webkit-details-marker {
+  display: none;
+}
