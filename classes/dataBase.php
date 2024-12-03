@@ -1594,9 +1594,9 @@ class MyDataBase
     public function selectStorages(string $status = null): array
     {
         if ($status == null) {
-            $sql = "SELECT idStorage,usedSpace,totalCapacity,IOSpeed,creationDate,typeName,nameStorage,cost FROM Storage";
+            $sql = "SELECT totalCapacity,IOSpeed,typeName,nameStorage,cost, statusName FROM Storage";
         } else {
-            $sql = "SELECT idStorage,usedSpace,totalCapacity,IOSpeed,creationDate,typeName,nameStorage,cost FROM Storage WHERE statusName = $status";
+            $sql = "SELECT totalCapacity,IOSpeed,typeName,nameStorage,cost, statusName FROM Storage WHERE statusName = $status";
         }
 
         $result = $this->db->query($sql);
@@ -1605,24 +1605,23 @@ class MyDataBase
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $values[] = new Storage($row["idStorage"], $row["usedSpace"], $row["totalCapacity"], $row["IOSpeed"],
-                 $row["typeName"], $row["nameStorage"], $row["cost"]);
+                $values[] = new Storage( $row["totalCapacity"], $row["IOSpeed"], $row["typeName"], $row["nameStorage"], $row["cost"], $row["statusName"]);
             }
         }
         return $values;
     }
 
-    public function selectStorage(int $id): Storage|null
+    public function selectStorage(String $nameStorage): Storage|null
     {
 
-        $sql = "SELECT idStorage,usedSpace,totalCapacity,IOSpeed,creationDate,typeName,nameStorage,cost FROM Storage WHERE idStorage = $id";
+        $sql = "SELECT totalCapacity,IOSpeed,typeName,nameStorage,cost, statusName FROM Storage WHERE nameStorage = $nameStorage";
 
         $result = $this->db->query($sql);
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                return new Storage($row["idStorage"], $row["usedSpace"], $row["totalCapacity"], $row["IOSpeed"],
-                $row["typeName"], $row["nameStorage"], $row["cost"]);
+                return new Storage($row["totalCapacity"], $row["IOSpeed"],
+                $row["typeName"], $row["nameStorage"], $row["cost"], $row["statusName"]);
             }
         }
         return null;
@@ -1631,7 +1630,7 @@ class MyDataBase
     public function insertStorage(Storage $storage): bool
     {
         try {
-            $sql = "INSERT INTO Storage (usedSpace,totalCapacity,IOSpeed,typeName,nameStorage,cost)
+            $sql = "INSERT INTO Storage (totalCapacity,IOSpeed,typeName,nameStorage,cost,statusName)
                     VALUES (?, ?, ?, ?, ?, ?)";
 
             $stmt = $this->db->prepare($sql);
@@ -1640,19 +1639,21 @@ class MyDataBase
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
 
-            $statusName = $storage->getStatusName();
             $totalCapacity = $storage->getTotalCapacity();
             $IOSpeed = $storage->getIOSpeed();
-            $generation = $storage->getGeneration();
+            $typeName = $storage->getTypeName();
+            $nameStorage = $storage->getNameStorage();
             $cost = $storage->getCost();
+            $statusName = $storage->getStatusName();
 
             $stmt->bind_param(
-                "sddsd",
-                $statusName,
+                "ddssds",
                 $totalCapacity,
                 $IOSpeed,
-                $generation,
-                $cost
+                $typeName,
+                $nameStorage,
+                $cost,
+                $statusName
             );
 
             $returnValue = $stmt->execute();
@@ -1670,13 +1671,13 @@ class MyDataBase
     public function updateStorage(Storage $storage): bool
     {
         try {
-            $sql = "UPDATE Memory SET 
-                statusName = ?, 
-                totalCapacity = ?, 
-                IOSpeed = ?, 
-                generation = ?,
-                cost = ?
-                WHERE idMemory = ?";
+            $sql = "UPDATE Storage SET 
+                totalCapacity=?,
+                IOSpeed=?,
+                typeName=?,
+                cost=?,
+                statusName=?
+                WHERE nameStorage=?";
 
             $stmt = $this->db->prepare($sql);
 
@@ -1684,22 +1685,22 @@ class MyDataBase
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
 
-            $statusName = $storage->getStatusName();
             $totalCapacity = $storage->getTotalCapacity();
             $IOSpeed = $storage->getIOSpeed();
-            $generation = $storage->getGeneration();
+            $typeName = $storage->getTypeName();
             $cost = $storage->getCost();
-            $idMemory = $storage->getIdMemory();
+            $statusName = $storage->getStatusName();
+            $nameStorage = $storage->getNameStorage();
 
 
             $stmt->bind_param(
-                "sddsdi",
-                $statusName,
+                "ddsds",
                 $totalCapacity,
                 $IOSpeed,
-                $generation,
+                $typeName,
                 $cost,
-                $idMemory
+                $statusName,
+                $nameStorage
             );
 
             $returnValue = $stmt->execute();
@@ -1713,10 +1714,10 @@ class MyDataBase
             return false;
         }
     }
-    public function deleteStorage(String $nombre): bool
+    public function deleteStorage(String $nameStorage): bool
     {
         try {
-            $sql = "DELETE FROM Memory WHERE idMemory = ?";
+            $sql = "DELETE FROM Storage WHERE nameStorage = ?";
 
             $stmt = $this->db->prepare($sql);
 
@@ -1724,11 +1725,9 @@ class MyDataBase
                 throw new Exception("Error preparing statement: " . $this->db->error);
             }
 
-            $idMemory = $memory->getIdMemory();
-
             $stmt->bind_param(
-                "i",
-                $idMemory
+                "s",
+                $nameStorage
             );
 
             $returnValue = $stmt->execute();

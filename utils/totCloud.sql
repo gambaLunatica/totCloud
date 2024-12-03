@@ -237,14 +237,15 @@ create table Storage(
     IOSpeed FLOAT UNSIGNED NOT NULL,
     typeName VARCHAR(16) NOT NULL,
     nameStorage VARCHAR(32) NOT NULL,
-    const FLOAT UNSIGNED NOT NULL,
+    cost FLOAT UNSIGNED NOT NULL,
+    statusName VARCHAR(16) NOT NULL,
 
     PRIMARY KEY(nameStorage),
     FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
     FOREIGN KEY(typeName) REFERENCES Type(typeName),
     FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity),
+    FOREIGN key(statusName) REFERENCES Status(statusName),
     CONSTRAINT unique_storage_combination UNIQUE(IOSpeed, totalCapacity, typeName)
-
 );
 
 
@@ -266,24 +267,6 @@ create table StorageUnit(
     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
     FOREIGN KEY(nameStorage) REFERENCES Storage(nameStorage)
 
-);
-
-create table CompatibilitySpeedType(
-    IOSpeed FLOAT UNSIGNED NOT NULL,
-    typeName VARCHAR(16) NOT NULL,
-
-    PRIMARY KEY(IOSpeed, typeName),
-    FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
-    FOREIGN KEY(typeName) REFERENCES Type(typeName)
-);
-
-create table CompatibilityTypeSize(
-    totalCapacity FLOAT UNSIGNED NOT NULL,
-    typeName VARCHAR(16) NOT NULL,
-
-    PRIMARY KEY(totalCapacity, typeName),
-    FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity),
-    FOREIGN KEY(typeName) REFERENCES Type(typeName)
 );
 
 create table DBTypePostgrade(
@@ -346,11 +329,11 @@ create table PermissionGroupDB(
 
 create table PermissionGroupStorage(
     idUserGroup INT UNSIGNED NOT NULL,
-    idStorage INT UNSIGNED NOT NULL,
+    idStorageUnit INT UNSIGNED NOT NULL,
 
-    PRIMARY KEY(idUserGroup, idStorage),
-     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(idStorage) REFERENCES Storage(idStorage)
+    PRIMARY KEY(idUserGroup, idStorageUnit),
+    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
+    FOREIGN KEY(idStorageUnit) REFERENCES StorageUnit(idStorageUnit)
 );
 
 create table PermissionGroupCompute(
