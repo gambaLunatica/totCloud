@@ -43,8 +43,11 @@ $nameStorageVal = '""';
 //MySQL Postgrade
 $idDBTypeSQLVal = '""';
 $idDBTypePostgradeVal = '""';
-$releaseDateVal = "'".date('Y-m-d')."'";
+$releaseDateVal = "'" . date('Y-m-d') . "'";
 $versionVal = '""';
+
+//SETTING
+$nameSettingVal;
 
 //CPU
 if (isset($_GET['cpu'])) {
@@ -86,16 +89,17 @@ if (isset($_GET['cpu'])) {
     $statusVal = $_GET['status'];
 } else if (isset($_GET['idDBTypeSQL'])) {
     $idDBTypeSQLVal = $_GET['idDBTypeSQL'];
-    $releaseDateVal = "'".$_GET['releaseDate']."'";
+    $releaseDateVal = "'" . $_GET['releaseDate'] . "'";
     $versionVal = $_GET['version'];
     $costVal = $_GET['cost'];
     $statusVal = $_GET['status'];
 } else if (isset($_GET['idDBTypePostgrade'])) {
     $idDBTypePostgradeVal = $_GET['idDBTypePostgrade'];
-    $releaseDateVal = "'".$_GET['releaseDate']."'";
+    $releaseDateVal = "'" . $_GET['releaseDate'] . "'";
     $buildVal = $_GET['build'];
     $costVal = $_GET['cost'];
     $statusVal = $_GET['status'];
+} else if(isset($_GET[''])) {
 }
 ?>
 
@@ -714,7 +718,7 @@ if (isset($_GET['cpu'])) {
                     <input value=<?= $versionVal ?> type="text" id="version" name="version" required>
 
                     <label for="releaseDate">Release Date:</label>
-                    <input value=<?=$releaseDateVal?>type="date" id="releaseDate" name="releaseDate">
+                    <input value=<?= $releaseDateVal ?>type="date" id="releaseDate" name="releaseDate">
 
                     <br><br>
 
@@ -746,12 +750,12 @@ if (isset($_GET['cpu'])) {
         </details>
 
         <details>
-            <summary class="configurableItemTitle">Postgrade</summary>
+            <summary class="configurableItemTitle">Postgre</summary>
             <div class="configurableItemContent">
                 <form action="classes/postgradeAction.php" method="POST">
-                    <h4>Postgrade Details</h4>
+                    <h4>Postgre Details</h4>
 
-                    <label for="idDBTypePostgrade">Select Postgrade:</label>
+                    <label for="idDBTypePostgrade">Select Postgre:</label>
                     <select id="idDBTypePostgrade" name="idDBTypePostgrade" required>
                         <option value="--New--">--New--</option>
                         <?php
@@ -778,7 +782,7 @@ if (isset($_GET['cpu'])) {
                     <input value=<?= $buildVal ?> type="text" id="build" name="build" required>
 
                     <label for="releaseDate">Release Date:</label>
-                    <input value=<?=$releaseDateVal?>type="date" id="releaseDate" name="releaseDate">
+                    <input value=<?= $releaseDateVal ?>type="date" id="releaseDate" name="releaseDate">
 
                     <br><br>
 
@@ -810,13 +814,13 @@ if (isset($_GET['cpu'])) {
         </details>
 
         <details>
-            <summary class="configurableItemTitle">MySQL Settings</summary>
+            <summary class="configurableItemTitle">Data Base Settings</summary>
             <div class="configurableItemContent">
                 <form action="classes/Action.php" method="POST">
-                    <h4>Postgrade Details</h4>
+                    <h4>Setting Details</h4>
 
-                    <label for="idDBTypePostgrade">Select Postgrade:</label>
-                    <select id="idDBTypePostgrade" name="idDBTypePostgrade" required>
+                    <label for="idSetting">Select Setting:</label>
+                    <select id="idSetting" name="idSetting" required>
                         <option value="--New--">--New--</option>
                         <?php
                         $postgrades = $dataBase->selectPostgrades(); // Ensure this returns an array
@@ -836,13 +840,47 @@ if (isset($_GET['cpu'])) {
 
                     <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
 
+                    <p>Select Data Base Type:</p>
+                    <div style="display:flex; justify-content: center; margin-top:10px;">
+                        <div class="checkbox-wrapper">
+                            <label>
+                                <input type="checkbox" class="checkbox-input" />
+                                <span class="checkbox-tile">
+                                    <span class="checkbox-icon">
+                                        <img src="css/mysql.svg" alt="Icon">
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="checkbox-wrapper">
+                            <label>
+                                <input type="checkbox" class="checkbox-input" />
+                                <span class="checkbox-tile">
+                                    <span class="checkbox-icon">
+                                        <img src="css/postgresql.svg" alt="Icon">
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
                     <br><br>
 
-                    <label for="build">Build:</label>
-                    <input value=<?= $buildVal ?> type="text" id="build" name="build" required>
+                    <label for="nameSetting">Setting Name:</label>
+                    <input value=<?= $nameSettingVal ?> type="text" id="nameSetting" name="nameSetting" required>
 
-                    <label for="releaseDate">Release Date:</label>
-                    <input value=<?=$releaseDateVal?>type="date" id="releaseDate" name="releaseDate">
+                    <br>
+                    
+                    <h4>Default Values</h4>
+
+                    <label for="stringValue">Text Value:</label>
+                    <input value=<?= $nameSettingVal ?> type="text" id="stringValue" name="stringValue" required>
+
+                    <label for="decimalValue">Numeric Value:</label>
+                    <input value=<?= $nameSettingVal ?> type="text" id="decimalValue" name="decimalValue" required>
+
+                    <label for="booleanValue">Boolean Value:</label>
+                    <input value=<?= $nameSettingVal ?> type="text" id="booleanValue" name="booleanValue" required>
 
                     <br><br>
 
@@ -862,11 +900,6 @@ if (isset($_GET['cpu'])) {
                     </select>
 
                     <br><br>
-
-                    <label for="cost">Sales Price:</label>
-                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost" required>
-
-                    <br>
                     <button class="goButton" type="submit" name="action" value="add">Add</button>
                     <button class="goButton" type="submit" name="action" value="remove" formnovalidate>Remove</button>
                 </form>

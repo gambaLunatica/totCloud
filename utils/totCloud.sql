@@ -366,17 +366,21 @@ create table Instruction(
 create table Setting(
     nameSetting VARCHAR(32) NOT NULL,
     statusName VARCHAR(16) NOT NULL,
+    idDBTypePostgrade INT UNSIGNED NOT NULL;
+    idDBTypeMySQL INT UNSIGNED NOT NULL;
 
     PRIMARY KEY(nameSetting),
-    FOREIGN KEY(statusName) REFERENCES Status(statusName)
+    FOREIGN KEY(statusName) REFERENCES Status(statusName),
+    FOREIGN KEY(idDBTypePostgrade) REFERENCES DBTypePostgrade(idDBType),
+    FOREIGN KEY(idDBTypeMySQL) REFERENCES DBTypeMySql(idDBType)
 );
 
 create table DBConfiguration(
     idDataBase INT UNSIGNED NOT NULL,
     nameSetting VARCHAR(32) NOT NULL,
-    bolleanValue BOOLEAN NOT NULL,
-    decimalValue DECIMAL NOT NULL,
-    stringValue VARCHAR(36) NOT NULL,
+    booleanValue BOOLEAN NOT NULL,
+    decimalValue FLOAT NOT NULL,
+    stringValue VARCHAR(128) NOT NULL,
 
     PRIMARY KEY(idDataBase, nameSetting),
     FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase),
@@ -401,7 +405,7 @@ create table PostgradeSetting(
     FOREIGN KEY(nameSetting) REFERENCES Setting(nameSetting)
 );
 
-create table MYUsage(
+create table MyUsage(
     idComputeCPU INT UNSIGNED NOT NULL,
     idComputeMEM INT UNSIGNED NOT NULL,
     idStorageUnit INT UNSIGNED NOT NULL,
