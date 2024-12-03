@@ -274,7 +274,7 @@ create table DBTypePostgrade(
     statusName VARCHAR(16) NOT NULL,
     cost FLOAT NOT NULL,
     releaseDate DATE NOT NULL,
-    build VARCHAR(32),
+    build VARCHAR(32) UNIQUE,
 
     PRIMARY KEY(idDBType),
     FOREIGN KEY(statusName) REFERENCES Status(statusName)
@@ -285,7 +285,7 @@ create table DBTypeMySql(
     statusName VARCHAR(16) NOT NULL,
     cost FLOAT NOT NULL,
     releaseDate DATE NOT NULL,
-    version VARCHAR(8),
+    version VARCHAR(8) UNIQUE,
 
     PRIMARY KEY(idDBType),
     FOREIGN KEY(statusName) REFERENCES Status(statusName)

@@ -1590,7 +1590,7 @@ class MyDataBase
         }
     }
 
-    //STORAGE: TO REVVIEW AND DO
+    //STORAGE
     public function selectStorages(string $status = null): array
     {
         if ($status == null) {
@@ -1614,7 +1614,7 @@ class MyDataBase
     public function selectStorage(String $nameStorage): Storage|null
     {
 
-        $sql = "SELECT totalCapacity,IOSpeed,typeName,nameStorage,cost, statusName FROM Storage WHERE nameStorage = $nameStorage";
+        $sql = "SELECT totalCapacity,IOSpeed,typeName,nameStorage,cost, statusName FROM Storage WHERE nameStorage = '$nameStorage'";
 
         $result = $this->db->query($sql);
 
@@ -1694,7 +1694,7 @@ class MyDataBase
 
 
             $stmt->bind_param(
-                "ddsds",
+                "ddsdss",
                 $totalCapacity,
                 $IOSpeed,
                 $typeName,
@@ -1728,6 +1728,294 @@ class MyDataBase
             $stmt->bind_param(
                 "s",
                 $nameStorage
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    //MySQL
+    public function selectMySQLs(string $status = null): array
+    {
+        if ($status == null) {
+            $sql = "SELECT idDBType,statusName,cost,releaseDate,version FROM DBTypeMySql";
+        } else {
+            $sql = "SELECT idDBType,statusName,cost,releaseDate,version FROM DBTypeMySql WHERE statusName = $status";
+        }
+
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = new MySQL($row["idDBType"], $row["statusName"],$row["cost"], new DateTime($row["releaseDate"]), $row["version"]);
+            }
+        }
+        return $values;
+    }
+
+    public function selectMySQL(int $idDBType): MySQL|null
+    {
+
+        $sql = "SELECT idDBType,statusName,cost,releaseDate,version FROM DBTypeMySql WHERE idDBType = $idDBType";
+
+        $result = $this->db->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                return new MySQL($row["idDBType"], $row["statusName"],$row["cost"], new DateTime($row["releaseDate"]), $row["version"]);
+            }
+        }
+        return null;
+    }
+
+    public function insertMySQL(MySQL $mySQL): bool
+    {
+        try {
+            $sql = "INSERT INTO DBTypeMySql (statusName,cost,releaseDate,version)
+                    VALUES (?, ?, ?, ?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $mySQL->getStatusName();
+            $cost = $mySQL->getCost();
+            $releaseDate = $mySQL->getReleaseDate()->format('Y-m-d');
+            $version = $mySQL->getVersion();
+
+            $stmt->bind_param(
+                "sdss",
+                $statusName,
+                $cost,
+                $releaseDate,
+                $version
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateMySQL(MySQL $mySQL): bool
+    {
+        try {
+            $sql = "UPDATE DBTypeMySql SET 
+                statusName=?,
+                cost=?,
+                releaseDate=?,
+                version=?
+                WHERE idDBType=?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $mySQL->getStatusName();
+            $cost = $mySQL->getCost();
+            $releaseDate = $mySQL->getReleaseDate()->format('Y-m-d');
+            $version = $mySQL->getVersion();
+            $idDBType = $mySQL->getIdDBType();
+
+
+            $stmt->bind_param(
+                "sdssi",
+                $statusName,
+                $cost,
+                $releaseDate,
+                $version,
+                $idDBType
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function deleteMySQL(int $idDBType): bool
+    {
+        try {
+            $sql = "DELETE FROM DBTypeMySql WHERE idDBType = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $stmt->bind_param(
+                "i",
+                $idDBType
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    //POSTGRADE
+    public function selectPostgrades(string $status = null): array
+    {
+        if ($status == null) {
+            $sql = "SELECT idDBType,statusName,cost,releaseDate,build FROM DBTypePostgrade";
+        } else {
+            $sql = "SELECT idDBType,statusName,cost,releaseDate,build FROM DBTypePostgrade WHERE statusName = $status";
+        }
+
+        $result = $this->db->query($sql);
+
+        $values = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $values[] = new Postgrade($row["idDBType"], $row["statusName"],$row["cost"], new DateTime($row["releaseDate"]), $row["build"]);
+            }
+        }
+        return $values;
+    }
+
+    public function selectPostgrade(int $idDBType): Postgrade|null
+    {
+
+        $sql = "SELECT idDBType,statusName,cost,releaseDate,build FROM DBTypePostgrade WHERE idDBType = $idDBType";
+
+        $result = $this->db->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                return new Postgrade($row["idDBType"], $row["statusName"],$row["cost"], new DateTime($row["releaseDate"]), $row["build"]);
+            }
+        }
+        return null;
+    }
+
+    public function insertPostgrade(Postgrade $postgrade): bool
+    {
+        try {
+            $sql = "INSERT INTO DBTypePostgrade (statusName,cost,releaseDate,build)
+                    VALUES (?, ?, ?, ?)";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $postgrade->getStatusName();
+            $cost = $postgrade->getCost();
+            $releaseDate = $postgrade->getReleaseDate()->format('Y-m-d');
+            $build = $postgrade->getBuild();
+
+            $stmt->bind_param(
+                "sdss",
+                $statusName,
+                $cost,
+                $releaseDate,
+                $build
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updatePostgrade(Postgrade $postgrade): bool
+    {
+        try {
+            $sql = "UPDATE DBTypePostgrade SET 
+                statusName=?,
+                cost=?,
+                releaseDate=?,
+                build=?
+                WHERE idDBType=?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $statusName = $postgrade->getStatusName();
+            $cost = $postgrade->getCost();
+            $releaseDate = $postgrade->getReleaseDate()->format('Y-m-d');
+            $build = $postgrade->getBuild();
+            $idDBType = $postgrade->getIdDBType();
+
+
+            $stmt->bind_param(
+                "sdssi",
+                $statusName,
+                $cost,
+                $releaseDate,
+                $build,
+                $idDBType
+            );
+
+            $returnValue = $stmt->execute();
+
+            if (!$returnValue) {
+                throw new Exception("Error executing statement: " . $stmt->error);
+            }
+
+            return $returnValue;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function deletePostgrade(int $idDBType): bool
+    {
+        try {
+            $sql = "DELETE FROM DBTypePostgrade WHERE idDBType = ?";
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            $stmt->bind_param(
+                "i",
+                $idDBType
             );
 
             $returnValue = $stmt->execute();

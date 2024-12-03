@@ -72,6 +72,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     $_SESSION["error"] = 1;
-    $_SESSION["message"] = "Severe error when handling the image.";
+    $_SESSION["message"] = "Severe error when handling the memory.";
     header("Location: ../index.php");
 }

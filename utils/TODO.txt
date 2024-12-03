@@ -1,7 +1,6 @@
 NAHUEL:
 Una misma compañia no puede tener 2 grupos de usuario con el mismo nombre
 Un archivo php que prepare todo: inserte lo necesario en bbdd
-Implementar gestion de Storages en cuanto esten los Cambios NEXT
 Implementar gestion de bbdd
 implementar Usuarios
 implementar Grupos de usuario y gestion de los permisos

@@ -2,6 +2,9 @@
 include "classes/image.php";
 include "classes/memory.php";
 include "classes/mask.php";
+include "classes/storage.php";
+include "classes/MySQL.php";
+include "classes/Postgrade.php";
 
 $costVal = '""';
 $statusVal = '""';
@@ -34,10 +37,14 @@ $cidrVal = '""';
 
 //STORAGE
 $idStorageVal = '""';
-$usedSpaceVal = '""';
-$creationDateVal = '""';
 $typeNameVal = '""';
 $nameStorageVal = '""';
+
+//MySQL Postgrade
+$idDBTypeSQLVal = '""';
+$idDBTypePostgradeVal = '""';
+$releaseDateVal = "'".date('Y-m-d')."'";
+$versionVal = '""';
 
 //CPU
 if (isset($_GET['cpu'])) {
@@ -71,13 +78,24 @@ if (isset($_GET['cpu'])) {
     $costVal = $_GET['cost'];
 } else if (isset($_GET['idStorage'])) {
     $idStorageVal = $_GET['idStorage'];
-    $usedSpaceVal = $_GET['usedSpace'];
     $totalCapacityVal = $_GET['totalCapacity'];
     $IOSpeedVal = $_GET['IOSpeed'];
-    $creationDateVal = $_GET['creationDate'];
     $typeNameVal = $_GET['typeName'];
     $nameStorageVal = $_GET['nameStorage'];
     $costVal = $_GET['cost'];
+    $statusVal = $_GET['status'];
+} else if (isset($_GET['idDBTypeSQL'])) {
+    $idDBTypeSQLVal = $_GET['idDBTypeSQL'];
+    $releaseDateVal = "'".$_GET['releaseDate']."'";
+    $versionVal = $_GET['version'];
+    $costVal = $_GET['cost'];
+    $statusVal = $_GET['status'];
+} else if (isset($_GET['idDBTypePostgrade'])) {
+    $idDBTypePostgradeVal = $_GET['idDBTypePostgrade'];
+    $releaseDateVal = "'".$_GET['releaseDate']."'";
+    $buildVal = $_GET['build'];
+    $costVal = $_GET['cost'];
+    $statusVal = $_GET['status'];
 }
 ?>
 
@@ -382,8 +400,6 @@ if (isset($_GET['cpu'])) {
             </div>
         </details>
 
-
-
         <!--  OS  -->
         <h3>Image Configuration</h3>
 
@@ -504,31 +520,33 @@ if (isset($_GET['cpu'])) {
         <details>
             <summary class="configurableItemTitle">Storage</summary>
             <div class="configurableItemContent">
-                <form action="classes/memoryAction.php" method="POST">
+                <form action="classes/storageAction.php" method="POST">
                     <h4>Storage Details</h4>
 
                     <label for="idStorage">Select Storage:</label>
                     <select id="idStorage" name="idStorage" required>
                         <option value="--New--">--New--</option>
                         <?php
-                        $memories = $dataBase->selectMemories(); // Ensure this returns an array
-                        foreach ($memories as $memory) {
-                            $idMemory = $memory->getIdMemory();
-                            $speed = $memory->getIOSpeed();
-                            $size = $memory->getTotalCapacity();
-                            $generation = $memory->getGeneration();
+                        $storages = $dataBase->selectStorages(); // Ensure this returns an array
+                        foreach ($storages as $storage) {
+                            $nameStorage = $storage->getNameStorage();
 
                             $select = "";
-                            if (strcmp($idMemoryVal, $idMemory) === 0) {
+                            if (strcmp($nameStorage, $idStorageVal) === 0) {
                                 $select = "selected";
                             }
 
-                            echo '<option ' . $select . ' value="' . $idMemory . '">' . $generation . ' | ' . $size . 'GB | ' . $speed . 'GB/s</option>';
+                            echo '<option ' . $select . ' value="' . $nameStorage . '">' . $nameStorage . '</option>';
                         }
                         ?>
                     </select>
 
                     <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
+
+                    <br><br>
+
+                    <label for="nameStorage">Name:</label>
+                    <input value=<?= $nameStorageVal ?> type="text" id="nameStorage" name="nameStorage" required>
 
                     <br><br>
 
@@ -551,19 +569,19 @@ if (isset($_GET['cpu'])) {
 
                     <br>
 
-                    <label for="generation">Select Generation:</label>
-                    <select id="generation" name="generation" required>
+                    <label for="typeName">Select Type:</label>
+                    <select id="typeName" name="typeName" required>
                         <option selected disabled="disabled" value="">Select an option</option>
                         <?php
-                        $generations = $dataBase->selectGenerations(); // Ensure this returns an array
-                        foreach ($generations as $generation) {
+                        $types = $dataBase->selectTypes(); // Ensure this returns an array
+                        foreach ($types as $type) {
 
                             $select = "";
-                            if (strcmp($generation, $generationVal) === 0) {
+                            if (strcmp($type, $typeNameVal) === 0) {
                                 $select = "selected";
                             }
 
-                            echo '<option ' . $select . ' value="' . $generation . '">' . $generation . '</option>';
+                            echo '<option ' . $select . ' value="' . $type . '">' . $type . '</option>';
                         }
                         ?>
                     </select>
@@ -587,7 +605,7 @@ if (isset($_GET['cpu'])) {
                         ?>
                     </select>
 
-                    <br>
+                    <br><br>
 
                     <label for="status">Status:</label>
                     <select id="status" name="status" required>
@@ -664,10 +682,194 @@ if (isset($_GET['cpu'])) {
     <section class="configurableItemSection">
         <h2> DDBB Configuration</h2>
         <details>
-            <summary class="configurableItemTitle">AAAA</summary>
+            <summary class="configurableItemTitle">MySQL</summary>
             <div class="configurableItemContent">
-                Epcot is a theme park at Walt Disney World Resort featuring exciting attractions, international
-                pavilions, award-winning fireworks and seasonal special events.
+                <form action="classes/mySQLAction.php" method="POST">
+                    <h4>MySQL Details</h4>
+
+                    <label for="idDBTypeSQL">Select MySQL:</label>
+                    <select id="idDBTypeSQL" name="idDBTypeSQL" required>
+                        <option value="--New--">--New--</option>
+                        <?php
+                        $mySQLs = $dataBase->selectMySQLs(); // Ensure this returns an array
+                        foreach ($mySQLs as $mySQL) {
+                            $IdDBType = $mySQL->getIdDBType();
+                            $version = $mySQL->getVersion();
+
+                            $select = "";
+                            if (strcmp($IdDBType, $idDBTypeSQLVal) === 0) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $IdDBType . '"> MySQL v.' . $version . '</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
+
+                    <br><br>
+
+                    <label for="version">Version:</label>
+                    <input value=<?= $versionVal ?> type="text" id="version" name="version" required>
+
+                    <label for="releaseDate">Release Date:</label>
+                    <input value=<?=$releaseDateVal?>type="date" id="releaseDate" name="releaseDate">
+
+                    <br><br>
+
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option selected disabled="disabled" value="">Select an option</option>
+                        <?php
+                        $statuss = $dataBase->selectStatus(); // Ensure this returns an array
+                        foreach ($statuss as $status) {
+                            $select = "";
+                            if (strcmp($status, $statusVal) === 0) {
+                                $select = "selected";
+                            }
+                            echo '<option ' . $select . ' value="' . $status . '">' . $status . '</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <br><br>
+
+                    <label for="cost">Sales Price:</label>
+                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost" required>
+
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove" formnovalidate>Remove</button>
+                </form>
+            </div>
+        </details>
+
+        <details>
+            <summary class="configurableItemTitle">Postgrade</summary>
+            <div class="configurableItemContent">
+                <form action="classes/postgradeAction.php" method="POST">
+                    <h4>Postgrade Details</h4>
+
+                    <label for="idDBTypePostgrade">Select Postgrade:</label>
+                    <select id="idDBTypePostgrade" name="idDBTypePostgrade" required>
+                        <option value="--New--">--New--</option>
+                        <?php
+                        $postgrades = $dataBase->selectPostgrades(); // Ensure this returns an array
+                        foreach ($postgrades as $postgrade) {
+                            $IdDBType = $postgrade->getIdDBType();
+                            $build = $postgrade->getBuild();
+
+                            $select = "";
+                            if (strcmp($IdDBType, $idDBTypePostgradeVal) === 0) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $IdDBType . '"> Postgrade (' . $build . ')</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
+
+                    <br><br>
+
+                    <label for="build">Build:</label>
+                    <input value=<?= $buildVal ?> type="text" id="build" name="build" required>
+
+                    <label for="releaseDate">Release Date:</label>
+                    <input value=<?=$releaseDateVal?>type="date" id="releaseDate" name="releaseDate">
+
+                    <br><br>
+
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option selected disabled="disabled" value="">Select an option</option>
+                        <?php
+                        $statuss = $dataBase->selectStatus(); // Ensure this returns an array
+                        foreach ($statuss as $status) {
+                            $select = "";
+                            if (strcmp($status, $statusVal) === 0) {
+                                $select = "selected";
+                            }
+                            echo '<option ' . $select . ' value="' . $status . '">' . $status . '</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <br><br>
+
+                    <label for="cost">Sales Price:</label>
+                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost" required>
+
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove" formnovalidate>Remove</button>
+                </form>
+            </div>
+        </details>
+
+        <details>
+            <summary class="configurableItemTitle">MySQL Settings</summary>
+            <div class="configurableItemContent">
+                <form action="classes/Action.php" method="POST">
+                    <h4>Postgrade Details</h4>
+
+                    <label for="idDBTypePostgrade">Select Postgrade:</label>
+                    <select id="idDBTypePostgrade" name="idDBTypePostgrade" required>
+                        <option value="--New--">--New--</option>
+                        <?php
+                        $postgrades = $dataBase->selectPostgrades(); // Ensure this returns an array
+                        foreach ($postgrades as $postgrade) {
+                            $IdDBType = $postgrade->getIdDBType();
+                            $build = $postgrade->getBuild();
+
+                            $select = "";
+                            if (strcmp($IdDBType, $idDBTypePostgradeVal) === 0) {
+                                $select = "selected";
+                            }
+
+                            echo '<option ' . $select . ' value="' . $IdDBType . '"> Postgrade (' . $build . ')</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
+
+                    <br><br>
+
+                    <label for="build">Build:</label>
+                    <input value=<?= $buildVal ?> type="text" id="build" name="build" required>
+
+                    <label for="releaseDate">Release Date:</label>
+                    <input value=<?=$releaseDateVal?>type="date" id="releaseDate" name="releaseDate">
+
+                    <br><br>
+
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option selected disabled="disabled" value="">Select an option</option>
+                        <?php
+                        $statuss = $dataBase->selectStatus(); // Ensure this returns an array
+                        foreach ($statuss as $status) {
+                            $select = "";
+                            if (strcmp($status, $statusVal) === 0) {
+                                $select = "selected";
+                            }
+                            echo '<option ' . $select . ' value="' . $status . '">' . $status . '</option>';
+                        }
+                        ?>
+                    </select>
+
+                    <br><br>
+
+                    <label for="cost">Sales Price:</label>
+                    <input value=<?= $costVal ?> min="0" step="0.01" type="number" id="cost" name="cost" required>
+
+                    <br>
+                    <button class="goButton" type="submit" name="action" value="add">Add</button>
+                    <button class="goButton" type="submit" name="action" value="remove" formnovalidate>Remove</button>
+                </form>
             </div>
         </details>
     </section>
@@ -675,7 +877,7 @@ if (isset($_GET['cpu'])) {
     <section class="configurableItemSection">
         <h2> Misc</h2>
         <details>
-            <summary class="configurableItemTitle">Speed</summary>
+            <summary class="configurableItemTitle">Speeds</summary>
             <div class="configurableItemContent">
                 <form action="classes/speedAction.php" method="POST">
                     <h4>Add/Remove a Speed (GB/s)</h4>
@@ -690,7 +892,7 @@ if (isset($_GET['cpu'])) {
         </details>
 
         <details>
-            <summary class="configurableItemTitle">Size</summary>
+            <summary class="configurableItemTitle">Sizes</summary>
             <div class="configurableItemContent">
                 <form action="classes/sizeAction.php" method="POST">
                     <h4>Add/Remove a Size (GB)</h4>
@@ -705,12 +907,12 @@ if (isset($_GET['cpu'])) {
         </details>
 
         <details>
-            <summary class="configurableItemTitle">Region</summary>
+            <summary class="configurableItemTitle">Regions</summary>
             <div class="configurableItemContent">
                 <form action="classes/regionAction.php" method="POST">
                     <h4>Add/Remove a Region</h4>
 
-                    <label for="regionName">Name:</label>
+                    <label for="regionName">Country:</label>
                     <input type="text" id="regionName" name="regionName" size="32" required>
                     <br>
                     <button class="goButton" type="submit" name="action" value="add">Add</button>
