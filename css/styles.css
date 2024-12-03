@@ -209,7 +209,39 @@ select {
   padding: 10px;
   display: flex;
   align-items: center;
-background-color: #424549;
+ background-color: #424549;
+}
+/*.titlecontainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px;
+  display: flex;
+  justify-content: center; /* Centra horizontalmente 
+  align-items: center; /* Centra verticalmente 
+  text-align: center;
+  background-color: #424549;
+}*/
+.centered-title {
+  margin: 0 auto; /* Centra el título horizontalmente */
+  text-align: center; /* Centra el texto dentro del h1 */
+  flex-grow: 1; /* Expande el espacio alrededor del título para mantener el centro */
+}
+.button-container {
+  margin-top: 20px;
+}
+.button-container button {
+  font-size: 14px; /* Texto pequeño */
+  font-weight: bold; /* Opcional: letra en negrita */
+  color: #ffffff; /* Color del texto */
+  padding: 5px 15px; /* Tamaño pequeño con forma alargada */
+  background-color: #7289da; /* Color de fondo (puedes personalizarlo) */
+  border-radius: 25px; /* Hace que el botón sea ovalado */
+  border: none; /* Sin bordes */
+  cursor: pointer; /* Cambia el cursor al pasar el ratón */
+  transition: background-color 0.3s ease; /* Suaviza el cambio de color */
+}
+.button-container button:hover {
+  background-color: #5b6fb6; /* Cambia el color al pasar el ratón */
 }
 .image-container img {
   max-width: 100%;

@@ -17,13 +17,18 @@
         </div>
     </div>
 </div>-->
-<title>Why toCloud Virtual Networs?</title>
+<div class="container">
+    <h1 class="centered-title">WHY TOTCLOUD VIRTUAL NETWORKS?</h1>
+</div>
 <div class="container">
     <div class ="feature">
         <h2>Secure and reliable</h2>
         <p>Protect your applications and data with our secure and reliable virtual networks. Whether you're connecting multiple cloud environments or extending your on-premises network to the cloud, our virtual networks provide the flexibility and performance you need to support your workloads.</p>
         <p>Isolate your applications and data using network security groups and virtual network appliances, and control traffic flow with user-defined routes and load balancers.</p>
         <p>Monitor and manage your virtual networks with built-in network monitoring and diagnostics, and ensure high availability and reliability with redundant connections and failover options.</p>
+        <div class = "button-container">
+            <button onclick="navigateTo('signUp.php')">Try totCloud Virtual Networks</button>
+        </div>
     </div>
     <div class ="image-container">
         <img src="https://media.istockphoto.com/id/1061357610/es/foto/internet-seguridad-y-datos-concepto-de-protecci%C3%B3n-blockchain.jpg?s=612x612&w=0&k=20&c=JJamp5gslxbKjXbXClPY6dhmRM2LV6YHD6PhWl7kyJQ=" alt="Secure and reliable">
@@ -39,5 +44,13 @@
         <p>Connect your virtual networks to on-premises datacenters, other cloud environments, and the internet with ease. Whether you're building a hybrid cloud environment or extending your network to the cloud, our virtual networks provide the connectivity options you need to support your applications.</p>
         <p>Use VPN gateways and ExpressRoute circuits to establish secure connections to your on-premises network, and control traffic flow with user-defined routes and load balancers.</p>
         <p>Scale your network bandwidth up or down based on your needs, and optimize performance with built-in network monitoring and diagnostics.</p>
+        <div class = "button-container">
+            <button onclick="navigateTo('signUp.php')">Try totCloud Virtual Networks</button>
+        </div>
     </div>
 </div>
+<script>
+    function navigateTo(file) {
+      window.location.href = file;
+    }
+</script>

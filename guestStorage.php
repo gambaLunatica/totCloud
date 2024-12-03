@@ -18,14 +18,18 @@
         </div>
     </div>
 </div>-->
-<body>
-<title>Why toCloud Storage?</title>
+<div class="container">
+    <h1 class="centered-title">WHY TOTCLOUD STORAGE?</h1>
+</div>
 <div class="container">
     <div class ="feature">
         <h2>Scalable storage</h2>
         <p>Store and manage your data with ease using our scalable storage solutions. Whether you're storing small files or large datasets, our storage options provide the flexibility and performance you need to support your applications.</p>
         <p>Scale your storage capacity up or down based on your needs, and pay only for the resources you use. With built-in high availability and durability, you can trust that your data is secure and accessible when you need it.</p>
         <p>Choose from a variety of storage classes to optimize costs and performance, and access your data using APIs and tools of your choice.</p>
+        <div class = "button-container">
+            <button onclick="navigateTo('signUp.php')">Try totCloud Storage</button>
+        </div>
     </div>
     <div class ="image-container">
         <img src="https://media.istockphoto.com/id/467248618/es/foto/computaci%C3%B3n-en-nube.jpg?s=612x612&w=0&k=20&c=3ab6jtFyx1fpFkF9nlfv1e2I6PPUZpiSKvNxN5gGlZs=" alt="Scalable storage">
@@ -41,5 +45,13 @@
         <p>Protect your data with our secure storage solutions. With built-in encryption, access controls, and monitoring, you can ensure that your data is safe from unauthorized access and tampering.</p>
         <p>Choose from a variety of encryption options to meet your security requirements, and manage access to your data using IAM policies and tools.</p>
         <p>Monitor and audit access to your data in real-time, and receive alerts for suspicious activity to help you maintain the integrity and confidentiality of your data.</p>
+        <div class = "button-container">
+            <button onclick="navigateTo('signUp.php')">Try totCloud Storage</button>
+        </div>
     </div>
 </div>
+<script>
+    function navigateTo(file) {
+      window.location.href = file;
+    }
+</script>
