@@ -365,8 +365,10 @@ create table Instruction(
 );
 create table Setting(
     nameSetting VARCHAR(32) NOT NULL,
+    statusName VARCHAR(16) NOT NULL,
 
-    PRIMARY KEY(nameSetting)
+    PRIMARY KEY(nameSetting),
+    FOREIGN KEY(statusName) REFERENCES Status(statusName)
 );
 
 create table DBConfiguration(
