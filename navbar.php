@@ -1,10 +1,10 @@
 <div class="topnav">
     <ul>
         <li><a class="navbutton" href="index.php"><i class="fa-solid fa-house"></i></a></li>
-        <li><a class="navbutton" href="#">Virtual Machines</a></li>
-        <li><a class="navbutton" href="#">Storages</a></li>
-        <li><a class="navbutton" href="#">Data Bases</a></li>
-        <li><a class="navbutton" href="#">Virtual Networks</a></li>
+        <li><a class="navbutton" href="Computerpage.php">Virtual Machines</a></li>
+        <li><a class="navbutton" href="Storagepage.php">Storages</a></li>
+        <li><a class="navbutton" href="DBpage.php">Data Bases</a></li>
+        <li><a class="navbutton" href="VCNpage.php">Virtual Networks</a></li>
     </ul>
 
 
