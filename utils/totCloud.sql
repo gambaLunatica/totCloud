@@ -233,19 +233,17 @@ create table CompatibilityCPUImage(
 );
 
 create table Storage(
-    idStorage INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    usedSpace FLOAT UNSIGNED NOT NULL,
     totalCapacity FLOAT UNSIGNED NOT NULL,
     IOSpeed FLOAT UNSIGNED NOT NULL,
-    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     typeName VARCHAR(16) NOT NULL,
     nameStorage VARCHAR(32) NOT NULL,
     const FLOAT UNSIGNED NOT NULL,
 
-    PRIMARY KEY(idStorage),
+    PRIMARY KEY(nameStorage),
     FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
     FOREIGN KEY(typeName) REFERENCES Type(typeName),
-    FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
+    FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity),
+    CONSTRAINT unique_storage_combination UNIQUE(IOSpeed, totalCapacity, typeName)
 
 );
 
@@ -256,20 +254,17 @@ create table StorageUnit(
     idSubnet INT UNSIGNED NOT NULL,
     idComputeInstance INT UNSIGNED NOT NULL,
     usedSpace FLOAT UNSIGNED NOT NULL,
-    totalCapacity FLOAT UNSIGNED NOT NULL,
-    IOSpeed FLOAT UNSIGNED NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    typeName VARCHAR(16) NOT NULL,
     nameStorageU VARCHAR(32) NOT NULL,
     idUserGroup INT UNSIGNED NOT NULL,
-    idStorage INT UNSIGNED NOT NULL,
+    nameStorage VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idStorageUnit),
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet),
     FOREIGN KEY(idComputeInstance) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(idStorage) REFERENCES Storage(idStorage)
+    FOREIGN KEY(nameStorage) REFERENCES Storage(nameStorage)
 
 );
 
