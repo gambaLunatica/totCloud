@@ -17,6 +17,7 @@
         </div>
     </div>
 </div>-->
+<script src="functions.js"></script>
 <div class="container">
     <h1 class="centered-title">WHY TOTCLOUD DATA BASES?</h1>
 </div>
@@ -66,8 +67,3 @@
         <img src="https://media.istockphoto.com/id/1419070148/es/vector/ilustraci%C3%B3n-vectorial-de-s%C3%ADmbolos-de-nube-m%C3%BAltiple-nube-2d-nube-3d-big-data-conectado-a.jpg?s=612x612&w=0&k=20&c=_5ujOsiWu8c06BTmLTvMH1wavyyQ7X-04LD9kPehfQ0=" alt="Serverless">
     </div>
 </div>
-<script>
-    function navigateTo(file) {
-      window.location.href = file;
-    }
-</script>

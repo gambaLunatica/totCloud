@@ -17,6 +17,7 @@
         </div>
     </div>
 </div>-->
+<script src="functions.js"></script>
 <div class="container">
     <h1 class="centered-title">WHY TOTCLOUD VIRTUAL MACHINES?</h1>
 </div>
@@ -34,8 +35,3 @@
         <img src="https://media.istockphoto.com/id/1203036877/es/foto/chica-con-un-ordenador-port%C3%A1til-simboliza-desarrollar-internet-e-internet-de-las-cosas-para-la.jpg?s=612x612&w=0&k=20&c=g8a2Nx6mQ2V2I4VRhsaYx1zRShwtP1z51s6mi9jsMIs=" alt="Flexible compute options">
     </div>
 </div>
-<script>
-    function navigateTo(file) {
-      window.location.href = file;
-    }
-</script>

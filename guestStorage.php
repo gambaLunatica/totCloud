@@ -18,6 +18,7 @@
         </div>
     </div>
 </div>-->
+<script src="functions.js"></script>
 <div class="container">
     <h1 class="centered-title">WHY TOTCLOUD STORAGE?</h1>
 </div>
@@ -50,8 +51,3 @@
         </div>
     </div>
 </div>
-<script>
-    function navigateTo(file) {
-      window.location.href = file;
-    }
-</script>

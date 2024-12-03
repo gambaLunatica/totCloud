@@ -273,11 +273,14 @@ select {
   padding: 15px;
 }
 .product img {
-  max-width: 150px;
-  max-height: 150px;
+  max-width: 140px;
+  max-height: 140px;
   width: auto; /* Mantiene la proporción */
   height: auto;
   /*margin-bottom: 5px;*/
+}
+.catalog :hover {
+  background-color: #36393e;
 }
 
 .configurableItemTitle{
