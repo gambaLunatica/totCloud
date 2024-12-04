@@ -1,0 +1,37 @@
+<?php include 'classes/user.php'; ?>
+<script src="functions.js"></script>
+<div class = "topDesc">
+    <div class = "textDesc">
+        <h1 style="text-align: center;">¡WELCOME BACK TO TOTCLOUD, 
+            <?php 
+                $user = unserialize($_SESSION["user"]);
+                $username = $user->getRealName();
+                echo $username
+            ?>
+            (cambiamos esta pagina para los usuarios o la dejamos asi tb?)
+        </h1>
+    </div>
+    <img src = "totCloud.jpg" alt="Princilpal Image" class="imageDesc">
+</div>
+<div class = "catalog">
+    <div class="product" onclick="navigateTo('Computerpage.php')">
+        <img src = "https://media.istockphoto.com/id/162488938/es/foto/c%C3%B3digo-binario-y-monitores-de-ordenadores.jpg?s=612x612&w=0&k=20&c=2KyjtxxbZlTemdm4I2uLSPtKqc5xsuyEPa9vuwQvCH0=" alt="MV">
+        <h3>Virtual Machines</h3>
+        <p>Virtual Machines offer a powerful and flexible computing environment that allows you to run applications, test software, or deploy systems in isolated and scalable virtualized servers</p>
+    </div>
+    <div class = "product" onclick="navigateTo('Storagepage.php')" >
+        <img src="https://media.istockphoto.com/id/1254718662/es/foto/tecnolog%C3%ADa-de-computaci%C3%B3n-en-la-nube-y-almacenamiento-de-datos-en-l%C3%ADnea-para-el-concepto-de.jpg?s=612x612&w=0&k=20&c=YKkf-ZVfnT0X2w_WXAfri9zKaIC1IRnqUoPHGLoPfDU=" alt="Storage">
+        <h3>Storages</h3>
+        <p>Our storage solutions provide secure and scalable options for storing and managing your data. Perfect for backups, collaboration, and seamless accessibility across devices</p>
+    </div>
+    <div class = "product" onclick="navigateTo('DBpage.php')">
+        <img src="https://media.istockphoto.com/id/1399944678/es/foto/se-coloca-varias-bases-de-datos-en-tablas-de-bases-de-datos-relacionales-con-sala-de.jpg?s=612x612&w=0&k=20&c=-WzVYH2l8haNOOXD5ErkD2UFScCdjUCNDKO72HTP3DQ=" alt="dataBases">
+        <h3>Data Bases</h3>
+        <p>Discover our highly configurable database solutions designed to handle structured and unstructured data. They ensure fast querying, reliability, and support for your data-driven applications</p>
+    </div>
+    <div class = "product" onclick="navigateTo('VCNpage.php')">
+        <img src = "virtualNetworks.jpg" alt="virtualNetwork">
+        <h3>Virtual Network</h3>
+        <p>Build and manage secure and efficient virtual networks to enhance connectivity between your systems. Ideal for optimizing communication in cloud-based environments</p>
+    </div>
+</div>
