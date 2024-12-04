@@ -24,9 +24,9 @@
 <div class="container">
     <div class ="feature">
         <h2>Flexible compute options</h2>
-        <p>Choose from a variety of virtual machine sizes and types to fit your application needs. Whether you're running small workloads or large-scale applications, our virtual machines provide the flexibility and performance you need to support your workloads.</p>
-        <p>Scale your compute capacity up or down based on your needs, and pay only for the resources you use. With built-in high availability and reliability, you can trust that your applications are running smoothly and efficiently.</p>
-        <p>Access your virtual machines using SSH or RDP, and manage your workloads with ease using our intuitive management tools and APIs.</p>
+        <p class="guestColor">Choose from a variety of virtual machine sizes and types to fit your application needs. Whether you're running small workloads or large-scale applications, our virtual machines provide the flexibility and performance you need to support your workloads.</p>
+        <p class="guestColor">Scale your compute capacity up or down based on your needs, and pay only for the resources you use. With built-in high availability and reliability, you can trust that your applications are running smoothly and efficiently.</p>
+        <p class="guestColor">Access your virtual machines using SSH or RDP, and manage your workloads with ease using our intuitive management tools and APIs.</p>
         <div class = "button-container">
             <button onclick="navigateTo('signUp.php')">Try totCloud Virtual Machines</button>
         </div>

@@ -64,6 +64,10 @@ label {
   color: white;
 }
 
+.guestColor{
+  color: #E3E3E3;
+}
+
 .loginBody {
   background: #282b30;
   position: relative;

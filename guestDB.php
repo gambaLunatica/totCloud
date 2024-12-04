@@ -25,9 +25,9 @@
 <div class="container">
     <div class ="feature">
         <h2>AI for data</h2>
-        <p>Bring AI to your data with integrated AI vector search and machine learning in the database; eliminate the complexity and cost of integrating and managing multiple databases while maintaining data consistency.</p>
-        <p>Leverage artificial intelligence at scale without compromising security, availability, or performance.</p>
-        <p>Utilize cutting-edge technologies such as Retrieval-Augmented Generation (RAG) and enterprise-grade LLMs with your own business data to achieve more contextual and relevant results.</p>
+        <p class="guestColor">Bring AI to your data with integrated AI vector search and machine learning in the database; eliminate the complexity and cost of integrating and managing multiple databases while maintaining data consistency.</p>
+        <p class="guestColor">Leverage artificial intelligence at scale without compromising security, availability, or performance.</p>
+        <p class="guestColor">Utilize cutting-edge technologies such as Retrieval-Augmented Generation (RAG) and enterprise-grade LLMs with your own business data to achieve more contextual and relevant results.</p>
         <div class = "button-container">
             <button onclick="navigateTo('signUp.php')">Try totCloud Data Bases</button>
         </div>
@@ -44,9 +44,9 @@
     </div>
     <div class ="feature">
         <h2>Flexible data models</h2>
-        <p>Choose from a variety of data models to fit your application needs, including document, key-value, graph, and relational models.</p>
-        <p>Use the same database to support multiple data models, and access your data using APIs and languages of your choice.</p>
-        <p>Scale horizontally and vertically with global distribution and built-in high availability and security features.</p>
+        <p class="guestColor">Choose from a variety of data models to fit your application needs, including document, key-value, graph, and relational models.</p>
+        <p class="guestColor">Use the same database to support multiple data models, and access your data using APIs and languages of your choice.</p>
+        <p class="guestColor">Scale horizontally and vertically with global distribution and built-in high availability and security features.</p>
         <div class = "button-container">
             <button onclick="navigateTo('signUp.php')">Try totCloud Data Bases</button>
         </div>
@@ -56,9 +56,9 @@
 <div class="container">
     <div class ="feature">
         <h2>Serverless</h2>
-        <p>Focus on building your applications without managing the infrastructure. With serverless, your database automatically scales up or down based on demand, and you pay only for the resources you use.</p>
-        <p>Run your database workloads with zero administration, and benefit from built-in high availability, automated backups, and security features.</p>
-        <p>Develop and deploy applications faster with serverless, and reduce your operational costs.</p>
+        <p class="guestColor">Focus on building your applications without managing the infrastructure. With serverless, your database automatically scales up or down based on demand, and you pay only for the resources you use.</p>
+        <p class="guestColor">Run your database workloads with zero administration, and benefit from built-in high availability, automated backups, and security features.</p>
+        <p class="guestColor">Develop and deploy applications faster with serverless, and reduce your operational costs.</p>
         <div class = "button-container">
             <button onclick="navigateTo('signUp.php')">Try totCloud Data Bases</button>
         </div>

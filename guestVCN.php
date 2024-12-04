@@ -24,9 +24,9 @@
 <div class="container">
     <div class ="feature">
         <h2>Secure and reliable</h2>
-        <p>Protect your applications and data with our secure and reliable virtual networks. Whether you're connecting multiple cloud environments or extending your on-premises network to the cloud, our virtual networks provide the flexibility and performance you need to support your workloads.</p>
-        <p>Isolate your applications and data using network security groups and virtual network appliances, and control traffic flow with user-defined routes and load balancers.</p>
-        <p>Monitor and manage your virtual networks with built-in network monitoring and diagnostics, and ensure high availability and reliability with redundant connections and failover options.</p>
+        <p class="guestColor">Protect your applications and data with our secure and reliable virtual networks. Whether you're connecting multiple cloud environments or extending your on-premises network to the cloud, our virtual networks provide the flexibility and performance you need to support your workloads.</p>
+        <p class="guestColor">Isolate your applications and data using network security groups and virtual network appliances, and control traffic flow with user-defined routes and load balancers.</p>
+        <p class="guestColor">Monitor and manage your virtual networks with built-in network monitoring and diagnostics, and ensure high availability and reliability with redundant connections and failover options.</p>
         <div class = "button-container">
             <button onclick="navigateTo('signUp.php')">Try totCloud Virtual Networks</button>
         </div>
@@ -42,9 +42,9 @@
     </div>
     <div class ="feature">
         <h2>Flexible connectivity</h2>
-        <p>Connect your virtual networks to on-premises datacenters, other cloud environments, and the internet with ease. Whether you're building a hybrid cloud environment or extending your network to the cloud, our virtual networks provide the connectivity options you need to support your applications.</p>
-        <p>Use VPN gateways and ExpressRoute circuits to establish secure connections to your on-premises network, and control traffic flow with user-defined routes and load balancers.</p>
-        <p>Scale your network bandwidth up or down based on your needs, and optimize performance with built-in network monitoring and diagnostics.</p>
+        <p class="guestColor">Connect your virtual networks to on-premises datacenters, other cloud environments, and the internet with ease. Whether you're building a hybrid cloud environment or extending your network to the cloud, our virtual networks provide the connectivity options you need to support your applications.</p>
+        <p class="guestColor">Use VPN gateways and ExpressRoute circuits to establish secure connections to your on-premises network, and control traffic flow with user-defined routes and load balancers.</p>
+        <p class="guestColor">Scale your network bandwidth up or down based on your needs, and optimize performance with built-in network monitoring and diagnostics.</p>
         <div class = "button-container">
             <button onclick="navigateTo('signUp.php')">Try totCloud Virtual Networks</button>
         </div>
