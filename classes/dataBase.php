@@ -1605,13 +1605,13 @@ class MyDataBase
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $values[] = new Storage( $row["totalCapacity"], $row["IOSpeed"], $row["typeName"], $row["nameStorage"], $row["cost"], $row["statusName"]);
+                $values[] = new Storage($row["totalCapacity"], $row["IOSpeed"], $row["typeName"], $row["nameStorage"], $row["cost"], $row["statusName"]);
             }
         }
         return $values;
     }
 
-    public function selectStorage(String $nameStorage): Storage|null
+    public function selectStorage(string $nameStorage): Storage|null
     {
 
         $sql = "SELECT totalCapacity,IOSpeed,typeName,nameStorage,cost, statusName FROM Storage WHERE nameStorage = '$nameStorage'";
@@ -1620,8 +1620,14 @@ class MyDataBase
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                return new Storage($row["totalCapacity"], $row["IOSpeed"],
-                $row["typeName"], $row["nameStorage"], $row["cost"], $row["statusName"]);
+                return new Storage(
+                    $row["totalCapacity"],
+                    $row["IOSpeed"],
+                    $row["typeName"],
+                    $row["nameStorage"],
+                    $row["cost"],
+                    $row["statusName"]
+                );
             }
         }
         return null;
@@ -1714,7 +1720,7 @@ class MyDataBase
             return false;
         }
     }
-    public function deleteStorage(String $nameStorage): bool
+    public function deleteStorage(string $nameStorage): bool
     {
         try {
             $sql = "DELETE FROM Storage WHERE nameStorage = ?";
@@ -1757,7 +1763,7 @@ class MyDataBase
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $values[] = new MySQL($row["idDBType"], $row["statusName"],$row["cost"], new DateTime($row["releaseDate"]), $row["version"]);
+                $values[] = new MySQL($row["idDBType"], $row["statusName"], $row["cost"], new DateTime($row["releaseDate"]), $row["version"]);
             }
         }
         return $values;
@@ -1772,7 +1778,7 @@ class MyDataBase
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                return new MySQL($row["idDBType"], $row["statusName"],$row["cost"], new DateTime($row["releaseDate"]), $row["version"]);
+                return new MySQL($row["idDBType"], $row["statusName"], $row["cost"], new DateTime($row["releaseDate"]), $row["version"]);
             }
         }
         return null;
@@ -1901,7 +1907,7 @@ class MyDataBase
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $values[] = new Postgrade($row["idDBType"], $row["statusName"],$row["cost"], new DateTime($row["releaseDate"]), $row["build"]);
+                $values[] = new Postgrade($row["idDBType"], $row["statusName"], $row["cost"], new DateTime($row["releaseDate"]), $row["build"]);
             }
         }
         return $values;
@@ -1916,7 +1922,7 @@ class MyDataBase
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                return new Postgrade($row["idDBType"], $row["statusName"],$row["cost"], new DateTime($row["releaseDate"]), $row["build"]);
+                return new Postgrade($row["idDBType"], $row["statusName"], $row["cost"], new DateTime($row["releaseDate"]), $row["build"]);
             }
         }
         return null;
@@ -2028,6 +2034,162 @@ class MyDataBase
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    //SETTING
+    function insertSetting(Setting $setting):bool
+    {
+        // Prepare the SQL statement for calling the stored procedure
+        $stmt = $this->db->prepare("CALL AddSetting(?, ?, ?, ?, ?, ?, ?)");
+
+        if (!$stmt) {
+            throw new Exception("Prepare failed: (" . $this->db->errno . ") " . $this->db->error);
+        }
+
+        // Get the values from the Setting object
+        $nameSetting = $setting->getNameSetting();
+        $statusName = $setting->getStatusName();
+        $idDBTypePostgrade = $setting->getIdDBTypePostgrade();
+        $idDBTypeMySQL = $setting->getIdDBTypeMySQL();
+        $booleanValue = $setting->getBooleanValue();
+        $decimalValue = $setting->getDecimalValue();
+        $stringValue = $setting->getStringValue();
+
+        // Bind the parameters
+        $stmt->bind_param(
+            'ssiidds',
+            $nameSetting,
+            $statusName,
+            $idDBTypePostgrade,
+            $idDBTypeMySQL,
+            $booleanValue,
+            $decimalValue,
+            $stringValue
+        );
+
+        // Execute the statement
+        return $stmt->execute();
+
+    }
+
+
+    function deleteSetting(string $nameSetting):bool
+    {
+        // Prepare the SQL statement for calling the stored procedure
+        $stmt = $this->db->prepare("CALL DeleteSetting(?)");
+
+        if (!$stmt) {
+            throw new Exception("Prepare failed: (" . $this->db->errno . ") " . $this->db->error);
+        }
+
+        // Bind the parameter
+        $stmt->bind_param('s', $nameSetting);
+
+        // Execute the statement
+        return $stmt->execute();
+    }
+
+
+    function selectSettings(): array
+    {
+        // Prepare the SQL query
+        $sql = "SELECT 
+                nameSetting, 
+                statusName, 
+                idDBTypeMySQL, 
+                idDBTypePostgrade, 
+                booleanValue, 
+                decimalValue, 
+                stringValue 
+            FROM Setting";
+
+        // Execute the query
+        if (!$result = $this->db->query($sql)) {
+            throw new Exception("Query failed: (" . $this->db->errno . ") " . $this->db->error);
+        }
+
+        $settings = [];
+
+        // Fetch the results
+        while ($row = $result->fetch_assoc()) {
+            // Create a Setting object for each row
+            $setting = new Setting(
+                $row['nameSetting'],
+                $row['statusName'],
+                (int) $row['idDBTypeMySQL'],
+                (int) $row['idDBTypePostgrade'],
+                (bool) $row['booleanValue'],
+                (float) $row['decimalValue'],
+                $row['stringValue']
+            );
+
+            $settings[] = $setting;
+        }
+
+        // Free the result set
+        $result->free();
+
+        return $settings;
+    }
+
+    function selectSetting(string $nameSetting): Setting
+    {
+        // Prepare the SQL statement with a placeholder for nameSetting
+        $stmt = $this->db->prepare("SELECT 
+                                nameSetting, 
+                                statusName, 
+                                idDBTypeMySQL, 
+                                idDBTypePostgrade, 
+                                booleanValue, 
+                                decimalValue, 
+                                stringValue 
+                            FROM Setting 
+                            WHERE nameSetting = ?");
+
+        if (!$stmt) {
+            throw new Exception("Prepare failed: (" . $this->db->errno . ") " . $this->db->error);
+        }
+
+        // Bind the nameSetting parameter
+        $stmt->bind_param('s', $nameSetting);
+
+        // Execute the statement
+        if (!$stmt->execute()) {
+            throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
+        }
+
+        // Bind the result variables
+        $stmt->bind_result(
+            $res_nameSetting,
+            $res_statusName,
+            $res_idDBTypeMySQL,
+            $res_idDBTypePostgrade,
+            $res_booleanValue,
+            $res_decimalValue,
+            $res_stringValue
+        );
+
+        // Fetch the result
+        if ($stmt->fetch()) {
+            // Create a Setting object with the retrieved data
+            $setting = new Setting(
+                $res_nameSetting,
+                $res_statusName,
+                (int) $res_idDBTypeMySQL,
+                (int) $res_idDBTypePostgrade,
+                (bool) $res_booleanValue,
+                (float) $res_decimalValue,
+                $res_stringValue
+            );
+        } else {
+            // No setting found with the given name
+            $setting = null;
+        }
+
+        // Close the statement
+        $stmt->close();
+
+        return $setting;
     }
 
 }

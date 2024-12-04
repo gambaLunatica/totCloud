@@ -296,7 +296,8 @@ create table MyDataBase(
     nameCompany VARCHAR(32) NOT NULL,
     idSubnet INT UNSIGNED NOT NULL,
     idComputeInstance INT UNSIGNED NOT NULL,
-    idDBType INT UNSIGNED NOT NULL,
+    idDBTypeMySQL INT UNSIGNED NOT NULL,
+    idDBTypePostgrade INT UNSIGNED NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     nameDataBase VARCHAR(32) NOT NULL,
     description VARCHAR(512) NULL,
@@ -305,8 +306,8 @@ create table MyDataBase(
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet),
     FOREIGN key(idComputeInstance) REFERENCES ComputeInstance(idComputeInstance),
-    FOREIGN KEY(idDBType) REFERENCES DBTypeMySql(idDBType)
-
+    FOREIGN KEY(idDBTypeMySQL) REFERENCES DBTypeMySql(idDBType),
+    FOREIGN KEY(idDBTypePostgrade) REFERENCES DBTypePostgrade(idDBType)
 );
 
 create table MyTable(
@@ -366,11 +367,11 @@ create table Instruction(
 create table Setting(
     nameSetting VARCHAR(32) NOT NULL,
     statusName VARCHAR(16) NOT NULL,
-    idDBTypePostgrade INT UNSIGNED NOT NULL,
-    idDBTypeMySQL INT UNSIGNED NOT NULL,
-    booleanValue BOOLEAN NOT NULL,
-    decimalValue FLOAT NOT NULL,
-    stringValue VARCHAR(128) NOT NULL,
+    idDBTypePostgrade INT UNSIGNED,
+    idDBTypeMySQL INT UNSIGNED,
+    booleanValue BOOLEAN,
+    decimalValue FLOAT,
+    stringValue VARCHAR(128),
 
     PRIMARY KEY(nameSetting),
     FOREIGN KEY(statusName) REFERENCES Status(statusName),
@@ -381,30 +382,12 @@ create table Setting(
 create table DBConfiguration(
     idDataBase INT UNSIGNED NOT NULL,
     nameSetting VARCHAR(32) NOT NULL,
-    booleanValue BOOLEAN NOT NULL,
-    decimalValue FLOAT NOT NULL,
-    stringValue VARCHAR(128) NOT NULL,
+    booleanValue BOOLEAN,
+    decimalValue FLOAT,
+    stringValue VARCHAR(128),
 
     PRIMARY KEY(idDataBase, nameSetting),
     FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase),
-    FOREIGN KEY(nameSetting) REFERENCES Setting(nameSetting)
-);
-create table MySQLSetting(
-    idMySQL INT UNSIGNED NOT NULL,
-    nameSetting VARCHAR(32) NOT NULL,
-
-    PRIMARY KEY(idMySQL, nameSetting),
-    FOREIGN KEY(idMySQL) REFERENCES DBTypeMySql(idDBType),
-    FOREIGN KEY(nameSetting) REFERENCES Setting(nameSetting)
-);
-
-
-create table PostgradeSetting(
-    idPostgrade INT UNSIGNED NOT NULL,
-    nameSetting VARCHAR(32) NOT NULL,
-
-    PRIMARY KEY(idPostgrade, nameSetting),
-    FOREIGN KEY(idPostgrade) REFERENCES DBTypePostgrade(idDBType),
     FOREIGN KEY(nameSetting) REFERENCES Setting(nameSetting)
 );
 
@@ -559,4 +542,128 @@ VALUES
 INSERT INTO OS(osName)
 VALUES
     ("Windows"),
-    ("Linux")
+    ("Linux");
+
+    DELIMITER $$
+
+CREATE PROCEDURE AddSetting(
+    IN in_nameSetting VARCHAR(32),
+    IN in_statusName VARCHAR(16),
+    IN in_idDBTypePostgrade INT UNSIGNED,
+    IN in_idDBTypeMySQL INT UNSIGNED,
+    IN in_booleanValue BOOLEAN,
+    IN in_decimalValue FLOAT,
+    IN in_stringValue VARCHAR(128)
+)
+BEGIN
+    -- Insert into Setting table
+    INSERT INTO Setting(
+        nameSetting, statusName, idDBTypePostgrade, idDBTypeMySQL, booleanValue, decimalValue, stringValue
+    ) VALUES (
+        in_nameSetting, in_statusName, in_idDBTypePostgrade, in_idDBTypeMySQL, in_booleanValue, in_decimalValue, in_stringValue
+    );
+
+    -- Only proceed if statusName is 'Live'
+    IF in_statusName = 'Live' THEN
+        IF in_idDBTypePostgrade IS NOT NULL THEN
+            INSERT INTO DBConfiguration(idDataBase, nameSetting, booleanValue, decimalValue, stringValue)
+            SELECT idDataBase, in_nameSetting, in_booleanValue, in_decimalValue, in_stringValue
+            FROM MyDataBase
+            WHERE idDBTypePostgrade = in_idDBTypePostgrade;
+        END IF;
+
+        IF in_idDBTypeMySQL IS NOT NULL THEN
+            INSERT INTO DBConfiguration(idDataBase, nameSetting, booleanValue, decimalValue, stringValue)
+            SELECT idDataBase, in_nameSetting, in_booleanValue, in_decimalValue, in_stringValue
+            FROM MyDataBase
+            WHERE idDBTypeMySQL = in_idDBTypeMySQL;
+        END IF;
+    END IF;
+END$$
+
+CREATE PROCEDURE DeleteSetting(
+    IN in_nameSetting VARCHAR(32)
+)
+BEGIN
+    -- Delete from DBConfiguration where nameSetting matches
+    DELETE FROM DBConfiguration
+    WHERE nameSetting = in_nameSetting;
+
+    -- Delete from Setting where nameSetting matches
+    DELETE FROM Setting
+    WHERE nameSetting = in_nameSetting;
+END$$
+
+CREATE PROCEDURE createDatabase(
+    IN p_nameCompany VARCHAR(32),
+    IN p_idSubnet INT UNSIGNED,
+    IN p_idComputeInstance INT UNSIGNED,
+    IN p_idDBTypeMySQL INT UNSIGNED,
+    IN p_idDBTypePostgrade INT UNSIGNED,
+    IN p_nameDataBase VARCHAR(32),
+    IN p_description VARCHAR(512)
+)
+BEGIN
+    -- Insert into MyDataBase
+    INSERT INTO MyDataBase(
+        nameCompany,
+        idSubnet,
+        idComputeInstance,
+        idDBTypeMySQL,
+        idDBTypePostgrade,
+        nameDataBase,
+        description
+    ) VALUES (
+        p_nameCompany,
+        p_idSubnet,
+        p_idComputeInstance,
+        p_idDBTypeMySQL,
+        p_idDBTypePostgrade,
+        p_nameDataBase,
+        p_description
+    );
+
+    -- Retrieve the newly inserted idDataBase
+    SET @new_idDataBase = LAST_INSERT_ID();
+
+    -- Insert settings for MySQL DB type
+    IF p_idDBTypeMySQL IS NOT NULL THEN
+        INSERT INTO DBConfiguration(idDataBase, nameSetting, booleanValue, decimalValue, stringValue)
+        SELECT
+            @new_idDataBase,
+            s.nameSetting,
+            s.booleanValue,
+            s.decimalValue,
+            s.stringValue
+        FROM Setting s
+        WHERE s.idDBTypeMySQL = p_idDBTypeMySQL;
+    END IF;
+
+    -- Insert settings for Postgrade DB type
+    IF p_idDBTypePostgrade IS NOT NULL THEN
+        INSERT INTO DBConfiguration(idDataBase, nameSetting, booleanValue, decimalValue, stringValue)
+        SELECT
+            @new_idDataBase,
+            s.nameSetting,
+            s.booleanValue,
+            s.decimalValue,
+            s.stringValue
+        FROM Setting s
+        WHERE s.idDBTypePostgrade = p_idDBTypePostgrade;
+    END IF;
+END$$
+
+DELIMITER $$
+
+CREATE PROCEDURE deleteDatabase(
+    IN p_idDataBase INT UNSIGNED
+)
+BEGIN
+    -- Delete associated configurations
+    DELETE FROM DBConfiguration WHERE idDataBase = p_idDataBase;
+
+    -- Delete the database entry
+    DELETE FROM MyDataBase WHERE idDataBase = p_idDataBase;
+END$$
+
+DELIMITER ;

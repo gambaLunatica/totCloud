@@ -25,7 +25,7 @@ if(!isset($_SESSION["message"])){
             ?>
             <div class="errorBox">
                 <?php
-                echo $_SESSION["message"];
+                echo "ERRROR: ".$_SESSION["message"];
                 ?>
             </div>
             <?php

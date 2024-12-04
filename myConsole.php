@@ -5,6 +5,7 @@ include "classes/mask.php";
 include "classes/storage.php";
 include "classes/MySQL.php";
 include "classes/Postgrade.php";
+include "classes/setting.php";
 
 $costVal = '""';
 $statusVal = '""';
@@ -47,7 +48,11 @@ $releaseDateVal = "'" . date('Y-m-d') . "'";
 $versionVal = '""';
 
 //SETTING
-$nameSettingVal;
+$idSettingVal = '""';
+$nameSettingVal = '""';
+$stringValueVal = '""';
+$decimalValueVal = '""';
+$booleanValueVal = '""';
 
 //CPU
 if (isset($_GET['cpu'])) {
@@ -99,7 +104,15 @@ if (isset($_GET['cpu'])) {
     $buildVal = $_GET['build'];
     $costVal = $_GET['cost'];
     $statusVal = $_GET['status'];
-} else if(isset($_GET[''])) {
+} else if (isset($_GET['idSetting'])) {
+    $idSettingVal = $_GET['idSetting'];
+    $nameSettingVal = $_GET['nameSetting'];
+    $idDBTypePostgradeVal = $_GET['idDBTypePostgrade'];
+    $idDBTypeSQLVal = $_GET['idDBTypeSQL'];
+    $stringValueVal = $_GET['stringValue'];
+    $decimalValueVal = $_GET['decimalValue'];
+    $booleanValueVal = $_GET['booleanValue'];
+    $statusVal = $_GET['status'];
 }
 ?>
 
@@ -769,7 +782,7 @@ if (isset($_GET['cpu'])) {
                                 $select = "selected";
                             }
 
-                            echo '<option ' . $select . ' value="' . $IdDBType . '"> Postgrade (' . $build . ')</option>';
+                            echo '<option ' . $select . ' value="' . $IdDBType . '"> Postgre (' . $build . ')</option>';
                         }
                         ?>
                     </select>
@@ -816,71 +829,87 @@ if (isset($_GET['cpu'])) {
         <details>
             <summary class="configurableItemTitle">Data Base Settings</summary>
             <div class="configurableItemContent">
-                <form action="classes/Action.php" method="POST">
+                <form action="classes/settingAction.php" method="POST">
                     <h4>Setting Details</h4>
 
                     <label for="idSetting">Select Setting:</label>
                     <select id="idSetting" name="idSetting" required>
                         <option value="--New--">--New--</option>
                         <?php
-                        $postgrades = $dataBase->selectPostgrades(); // Ensure this returns an array
-                        foreach ($postgrades as $postgrade) {
-                            $IdDBType = $postgrade->getIdDBType();
-                            $build = $postgrade->getBuild();
+                        $settings = $dataBase->selectSettings(); // Ensure this returns an array
+                        foreach ($settings as $setting) {
+                            $nameSetting = $setting->getNameSetting();
 
-                            $select = "";
-                            if (strcmp($IdDBType, $idDBTypePostgradeVal) === 0) {
-                                $select = "selected";
+                            $postgre = $setting->getIdDBTypePostgrade();
+                            $mySQL = $setting->getIdDBTypeMySQL();
+
+                            if ($postgre != null && $mySQL != null) {
+                                $displayName = "(MySQL | Postgre)";
+                            } else if ($postgre != null) {
+                                $displayName = "(Postgre)";
+                            } else if ($mySQL != null) {
+                                $displayName = "(MySQL)";
                             }
 
-                            echo '<option ' . $select . ' value="' . $IdDBType . '"> Postgrade (' . $build . ')</option>';
+                            $displayName = $nameSetting . " " . $displayName;
+
+                            echo '<option value="' . $nameSetting . '">' . $displayName . '</option>';
                         }
                         ?>
                     </select>
 
-                    <button class="goButton" type="submit" name="action" value="load" formnovalidate>Load</button>
+                    <h4>Select Data Base Type:</h4>
+                    <label for="idDBTypePostgrade">Postgrade Version:</label>
+                    <select id="idDBTypePostgrade" name="idDBTypePostgrade">
+                        <option selected value="">Select an option</option>
+                        <?php
+                        $postgrades = $dataBase->selectPostgrades(); // Ensure this returns an array
+                        foreach ($postgrades as $postgrade) {
+                            $build = $postgrade->getBuild();
+                            $IdDBTypeP = $postgrade->getIdDBType();
 
-                    <p>Select Data Base Type:</p>
-                    <div style="display:flex; justify-content: center; margin-top:10px;">
-                        <div class="checkbox-wrapper">
-                            <label>
-                                <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile">
-                                    <span class="checkbox-icon">
-                                        <img src="css/mysql.svg" alt="Icon">
-                                    </span>
-                                </span>
-                            </label>
-                        </div>
-                        <div class="checkbox-wrapper">
-                            <label>
-                                <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile">
-                                    <span class="checkbox-icon">
-                                        <img src="css/postgresql.svg" alt="Icon">
-                                    </span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
+                            echo '<option value="' . $IdDBTypeP . '"> Postgre (' . $build . ')</option>';
+                        }
+                        ?>
+                    </select>
+                    <br>
+                    <label for="idDBTypeSQL">MySQL Version:</label>
+                    <select id="idDBTypeSQL" name="idDBTypeSQL">
+                        <option selected value="">Select an option</option>
+                        <?php
+                        $mySQLs = $dataBase->selectMySQLs(); // Ensure this returns an array
+                        foreach ($mySQLs as $mySQL) {
+                            $IdDBTypeS = $mySQL->getIdDBType();
+                            $version = $mySQL->getVersion();
+
+                            echo '<option value="' . $IdDBTypeS . '"> MySQL v.' . $version . '</option>';
+                        }
+                        ?>
+                    </select>
+
 
                     <br><br>
 
-                    <label for="nameSetting">Setting Name:</label>
-                    <input value=<?= $nameSettingVal ?> type="text" id="nameSetting" name="nameSetting" required>
+                    <label for="nameSetting">Name:</label>
+                    <input type="text" id="nameSetting" name="nameSetting" required>
 
                     <br>
-                    
+
                     <h4>Default Values</h4>
 
                     <label for="stringValue">Text Value:</label>
-                    <input value=<?= $nameSettingVal ?> type="text" id="stringValue" name="stringValue" required>
+                    <input type="text" id="stringValue" name="stringValue">
 
                     <label for="decimalValue">Numeric Value:</label>
-                    <input value=<?= $nameSettingVal ?> type="text" id="decimalValue" name="decimalValue" required>
+                    <input type="text" id="decimalValue" name="decimalValue">
 
                     <label for="booleanValue">Boolean Value:</label>
-                    <input value=<?= $nameSettingVal ?> type="text" id="booleanValue" name="booleanValue" required>
+                    <select id="booleanValue" name="booleanValue">
+                        <option selected value="">Select an option</option>
+                        <option value="true">TRUE</option>
+                        <option value="false">FALSE</option>
+
+                    </select>
 
                     <br><br>
 
@@ -890,11 +919,7 @@ if (isset($_GET['cpu'])) {
                         <?php
                         $statuss = $dataBase->selectStatus(); // Ensure this returns an array
                         foreach ($statuss as $status) {
-                            $select = "";
-                            if (strcmp($status, $statusVal) === 0) {
-                                $select = "selected";
-                            }
-                            echo '<option ' . $select . ' value="' . $status . '">' . $status . '</option>';
+                            echo '<option value="' . $status . '">' . $status . '</option>';
                         }
                         ?>
                     </select>
