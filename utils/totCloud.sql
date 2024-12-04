@@ -366,8 +366,11 @@ create table Instruction(
 create table Setting(
     nameSetting VARCHAR(32) NOT NULL,
     statusName VARCHAR(16) NOT NULL,
-    idDBTypePostgrade INT UNSIGNED NOT NULL;
-    idDBTypeMySQL INT UNSIGNED NOT NULL;
+    idDBTypePostgrade INT UNSIGNED NOT NULL,
+    idDBTypeMySQL INT UNSIGNED NOT NULL,
+    booleanValue BOOLEAN NOT NULL,
+    decimalValue FLOAT NOT NULL,
+    stringValue VARCHAR(128) NOT NULL,
 
     PRIMARY KEY(nameSetting),
     FOREIGN KEY(statusName) REFERENCES Status(statusName),
