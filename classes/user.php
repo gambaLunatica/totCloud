@@ -31,7 +31,7 @@ class User{
         return $this->idUserGroup;
     }
 
-    public function getNameCompany():String{
+    public function getNameCompany():String|null{
         return $this->nameCompany;
     }
 

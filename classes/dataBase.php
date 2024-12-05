@@ -384,7 +384,7 @@ class MyDataBase
         }
     }
 
-    //LOGIN, USER, COMPANY, USERGROUPS
+    //COMPANY
     public function insertCompany(Company $company, User $user): int
     {
         try {
@@ -428,6 +428,7 @@ class MyDataBase
         }
     }
 
+    //USER GROUP
     public function insertUserGroup(UserGroup $userGroup): bool
     {
         try {
@@ -463,6 +464,62 @@ class MyDataBase
         }
     }
 
+    public function selectUserGroups(): array {
+        $query = "SELECT * FROM UserGroup";
+        $result = $this->db->query($query);
+
+        $userGroups = [];
+        while ($row = $result->fetch_assoc()) {
+            $userGroup = new UserGroup($row['nameCompany'], $row['nameUserGroup']);
+            $userGroup->setId($row['idUserGroup']);
+            $userGroup->setCreationDate(new DateTime($row['creationDate']));
+            $userGroups[] = $userGroup;
+        }
+
+        return $userGroups;
+    }
+
+    public function selectUserGroup(int $id): ?UserGroup {
+        $query = "SELECT * FROM UserGroup WHERE idUserGroup = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            $userGroup = new UserGroup($row['nameCompany'], $row['nameUserGroup']);
+            $userGroup->setId($row['idUserGroup']);
+            $userGroup->setCreationDate(new DateTime($row['creationDate']));
+            return $userGroup;
+        }
+        return null;
+    }
+
+    public function updateUserGroup(UserGroup $userGroup): bool {
+        $query = "UPDATE UserGroup SET nameCompany = ?, nameUserGroup = ? WHERE idUserGroup = ?";
+        $stmt = $this->db->prepare($query);
+
+        $companyName = $userGroup->getNameCompany();
+        $userGroupName = $userGroup->getName();
+        $userGroupId = $userGroup->getId();
+
+
+        $stmt->bind_param(
+            'ssi',
+            $companyName,
+            $userGroupName,
+            $userGroupId
+        );
+        return $stmt->execute();
+    }
+
+    public function deleteUserGroup(int $id): bool {
+        $query = "DELETE FROM UserGroup WHERE idUserGroup = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $id);
+        return $stmt->execute();
+    }
+    //USER
     public function insertUser(User $user): bool
     {
         try {
@@ -507,7 +564,7 @@ class MyDataBase
 
     }
 
-    public function getUser(User $user): User|null
+    public function selectUser(User $user): User|null
     {
         try {
 
@@ -537,6 +594,35 @@ class MyDataBase
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public function updateUser(User $user): bool {
+        $query = "UPDATE MyUser 
+                  SET realName = ?, realSurname = ?, password = ?, idUserGroup = ?, nameCompany = ? 
+                  WHERE email = ?";
+        
+        $stmt = $this->db->prepare($query);
+        if (!$stmt) {
+            die("Prepare failed: " . $this->db->error);
+        }
+        
+        $realName = $user->getRealName();
+        $realSurname = $user->getRealSurname();
+        $password = $user->getPassword();
+        $idUserGroup = $user->getIdUserGroup();
+        $nameCompany = $user->getNameCompany();
+        $email = $user->getEmail();
+        
+        $stmt->bind_param("sssiss", $realName, $realSurname, $password, $idUserGroup, $nameCompany, $email);
+        
+        if (!$stmt->execute()) {
+            die("Execute failed: " . $stmt->error);
+        }
+        
+        $affectedRows = $stmt->affected_rows;
+        $stmt->close();
+        
+        return $affectedRows > 0;
     }
 
     public function selectRegions(): array

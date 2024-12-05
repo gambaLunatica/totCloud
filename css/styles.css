@@ -169,6 +169,7 @@ select {
 .myAccountMain {
   padding-left:20px;
   padding-right:20px;
+  padding-bottom: 20px;
   flex-grow: 1;
   max-width: 1000px;
   color: white;
@@ -375,103 +376,6 @@ select {
   display: none;
 }
 
-.checkbox-wrapper {
-  display: inline-block;
-  position: relative;
-  margin-left:20px;
-  margin-right:20px;
-}
-
-.checkbox-input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.checkbox-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 7rem;
-  min-height: 7rem;
-  border-radius: 0.5rem;
-  border: 2px solid #424549;
-  background-color: #36393e;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  position: relative;
-}
-
-.checkbox-icon img {
-  width: 5rem;
-  height: 5rem;
-  transition: filter 0.375s ease;
-}
-
-.checkbox-label {
-  color: #707070;
-  text-align: center;
-  transition: color 0.375s ease;
-}
-
-/* Hover State */
-.checkbox-tile:hover {
-  border-color: #7289da;
-}
-
-/* Before Pseudo-element for Checkmark */
-.checkbox-tile::before {
-  content: "";
-  position: absolute;
-  width: 1.25rem;
-  height: 1.25rem;
-  top: 0.25rem;
-  left: 0.25rem;
-  background-size: 100%;
-  background-repeat: no-repeat;
-  opacity: 0;
-  transform: scale(0);
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-/* Show Checkmark on Hover */
-.checkbox-tile:hover::before {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Checked State */
-.checkbox-input:checked + .checkbox-tile {
-  border-color: #ffffff;
-  background-color: #7289da; /* Background color changes on click */
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Show Checkmark when Checked */
-.checkbox-input:checked + .checkbox-tile::before {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Change Icon Color when Checked */
-.checkbox-input:checked + .checkbox-tile .checkbox-icon img {
-  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.3));
-}
-
-/* Change Label Color when Checked */
-.checkbox-input:checked + .checkbox-tile .checkbox-label {
-  color: #ffffff; /* Changes text color to white */
-}
-
-/* Focus State */
-.checkbox-input:focus + .checkbox-tile {
-  border-color: #7289da;
-  box-shadow: 0 0 0 4px rgba(114, 137, 218, 0.5);
-}
-
 .toggle-checkbox {
   appearance: none;
   background-color: #dfe1e4;
@@ -526,4 +430,20 @@ select {
 
 .toggle-checkbox:focus:not(.focus-visible) {
   outline: 0;
+}
+
+.icon-circle {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #36393e; /* Light gray background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-circle i {
+  font-size: 99px; /* Adjust size as needed */
+  color: white; /* Icon color */
 }

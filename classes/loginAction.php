@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $user = new User("", "", $email, $password, -1, null);
 
-    $user = $dataBase->getUser($user);
+    $user = $dataBase->selectUser($user);
     if($user == null){
         $_SESSION["error"] = 1;
         $_SESSION["message"] = "Wrong email or password.";

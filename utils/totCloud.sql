@@ -431,6 +431,7 @@ Insert into Privilege(namePrivilege) VALUES
 
 DELIMITER $$
 
+-- Funcion para registrar una compañia y crear el usuario Master
 CREATE FUNCTION RegisterCompany(
     nameCompanyPar VARCHAR(32), 
     nameRegionPar VARCHAR(32),
@@ -478,10 +479,7 @@ BEGIN
     RETURN groupId;
 END$$
 
-DELIMITER ;
-
-DELIMITER $$
-
+-- procedure para añadir a un grupo de usuario todos o ningun permiso;
 CREATE PROCEDURE InsertPrivilegeStatus(
     IN idUserGroupPar INT UNSIGNED,
     IN valuePar BIT
@@ -546,6 +544,8 @@ VALUES
 
     DELIMITER $$
 
+--Funcion que añade un setting a un tipo de base de datios (Postgre y/o mysql) y actualiza todas las bases
+--de datos existentes para que tengan el mismo permiso con el valor por defecto
 CREATE PROCEDURE AddSetting(
     IN in_nameSetting VARCHAR(32),
     IN in_statusName VARCHAR(16),
@@ -581,6 +581,7 @@ BEGIN
     END IF;
 END$$
 
+--Funcion para eliminar un setting y todas las configuraciones relacionadas a ese setting
 CREATE PROCEDURE DeleteSetting(
     IN in_nameSetting VARCHAR(32)
 )
@@ -594,6 +595,7 @@ BEGIN
     WHERE nameSetting = in_nameSetting;
 END$$
 
+--Funcion para crear una base de datos y obtener todos los settings con los valores por defecto
 CREATE PROCEDURE createDatabase(
     IN p_nameCompany VARCHAR(32),
     IN p_idSubnet INT UNSIGNED,
@@ -653,8 +655,7 @@ BEGIN
     END IF;
 END$$
 
-DELIMITER $$
-
+--procedure para elminar una base de datos correctamente
 CREATE PROCEDURE deleteDatabase(
     IN p_idDataBase INT UNSIGNED
 )
