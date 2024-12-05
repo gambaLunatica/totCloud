@@ -38,6 +38,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if($dataBase->updateUser($user)){
         $_SESSION["user"] = serialize($user);
+    } else{
+        $_SESSION["error"] = 1;
+        $_SESSION["message"] = "Severe error when updating the user.";
+        header("Location: ../index.php");
+        exit;
     }
 
 

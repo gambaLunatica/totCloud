@@ -17,7 +17,7 @@ $email = $user->getEmail();
                 <i class="fa-solid fa-user"></i>
             </div>
             <p><i class="fa-solid fa-building"></i>&nbsp
-                Company:<?php echo "&nbsp" . $userGroup->getNameCompany() . "<br><br><i class='fa-solid fa-layer-group'></i> &nbsp  User Group: " . $userGroup->getName(); ?>
+                Company:<?php echo "&nbsp" . $userGroup->getNameCompany() . "<br><br><i class='fa-solid fa-layer-group'></i> &nbsp  User Group: " . $userGroup->getName(); ?></p>
         </div>
 
         <div>

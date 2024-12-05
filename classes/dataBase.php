@@ -428,6 +428,45 @@ class MyDataBase
         }
     }
 
+    function updateCompany(Company $company): bool {
+        $query = "UPDATE Company SET nameRegion = ? WHERE nameCompany = ?";
+        $stmt = $this->db->prepare($query);
+    
+        if ($stmt === false) {
+            return false; // Handle error if statement preparation fails
+        }
+    
+        $nameRegion = $company->getNameRegion();
+        $name = $company->getName();
+    
+        $stmt->bind_param("ss", $nameRegion, $name);
+        $result = $stmt->execute();
+        $stmt->close();
+    
+        return $result;
+    }
+    
+    function selectCompany(string $name): ?Company {
+        $query = "SELECT nameCompany, nameRegion FROM Company WHERE nameCompany = ?";
+        $stmt = $this->db->prepare($query);
+    
+        if ($stmt === false) {
+            return null; // Handle error if statement preparation fails
+        }
+    
+        $stmt->bind_param("s", $name);
+        $stmt->execute();
+        $stmt->bind_result($fetchedName, $fetchedRegion);
+    
+        if ($stmt->fetch()) {
+            $stmt->close();
+            return new Company($fetchedName, $fetchedRegion);
+        }
+    
+        $stmt->close();
+        return null; // Return null if no company is found
+    }
+
     //USER GROUP
     public function insertUserGroup(UserGroup $userGroup): bool
     {
