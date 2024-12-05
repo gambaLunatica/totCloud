@@ -91,6 +91,7 @@ create table Subnet(
     idVCN INT UNSIGNED NOT NULL,
     IP BINARY(4) NOT NULL,
     nameSubnet VARCHAR(32) NOT NULL,
+    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(idSubnet),
     FOREIGN KEY(idVCN) REFERENCES VCN(idVCN)
@@ -98,7 +99,6 @@ create table Subnet(
 create table Public(
     idSubnet INT UNSIGNED NOT NULL AUTO_INCREMENT,
     publicIP BINARY(4) NOT NULL UNIQUE,
-    creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(idSubnet),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet)
