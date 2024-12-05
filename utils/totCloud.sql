@@ -89,7 +89,7 @@ create table Subnet(
     cidr TINYINT UNSIGNED NOT NULL,
     idSubnet INT UNSIGNED NOT NULL AUTO_INCREMENT,
     idVCN INT UNSIGNED NOT NULL,
-    privateIP BINARY(4) NOT NULL,
+    IP BINARY(4) NOT NULL,
     nameSubnet VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idSubnet),
@@ -97,7 +97,7 @@ create table Subnet(
 );
 create table Public(
     idSubnet INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    privateIP BINARY(4) NOT NULL UNIQUE,
+    publicIP BINARY(4) NOT NULL UNIQUE,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(idSubnet),
@@ -406,19 +406,6 @@ create table MyUsage(
     FOREIGN KEY(idVCN) REFERENCES VCN(idVCN),
     FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase),
     FOREIGN KEY(idStorageUnit) REFERENCES StorageUnit(idStorageUnit)
-);
-
-create table StorageCost(
-    idStorageCost INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    IOSpeed FLOAT UNSIGNED NOT NULL,
-    totalCapacity FLOAT UNSIGNED NOT NULL,
-    cost FLOAT UNSIGNED NOT NULL,
-    typeName VARCHAR(16) NOT NULL,
-
-    PRIMARY KEY(idStorageCost),
-    FOREIGN KEY(IOSpeed) REFERENCES Speed(IOSpeed),
-    FOREIGN KEY(typeName) REFERENCES Type(typeName),
-    FOREIGN KEY(totalCapacity) REFERENCES Size(totalCapacity)
 );
 
 Insert into Privilege(namePrivilege) VALUES
