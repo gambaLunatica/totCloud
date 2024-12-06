@@ -1407,7 +1407,7 @@ class MyDataBase
 
     //PRIVILEGES
 
-    public function insertPrivileges(int $idUserGroup, bool $value)
+    public function insertPrivileges(int $idUserGroup, bool $value): bool
     {
         $sql = "CALL InsertPrivilegeStatus(?, ?)";
         if ($value) {
@@ -1418,8 +1418,28 @@ class MyDataBase
 
         if ($stmt = $this->db->prepare($sql)) {
             $stmt->bind_param("is", $idUserGroup, $value);
-            $stmt->execute();
+            return $stmt->execute();
         }
+        return false;
+    }
+
+    public function insertPrivilege(int $idUserGroup, string $privilege, bool $value): bool{
+        if ($value) {
+            $value = 1;
+        } else {
+            $value = 0;
+        }
+
+        $sql = "insert into privilegestatus (idUserGroup, namePrivilege, value) values (?, ?, ?)";
+        if ($stmt = $this->db->prepare($sql)) {
+            $stmt->bind_param(
+                "isi", 
+                $idUserGroup, 
+                $privilege,
+                $value);
+            return $stmt->execute();
+        }
+        return false;
     }
 
     public function getPrivilegesByUserGroupId(int $userGroupId): array|null
@@ -2550,6 +2570,14 @@ class MyDataBase
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("View VCNs", $privileges) || $this->isSuperAdmin() || $this->isMaster();
+    }
+
+    //USEFUL
+    function getCompany():string{
+        $user = unserialize($_SESSION["user"]);
+        $idUserGroup = $user->getIdUserGroup();
+        $userGroup = $this->selectUserGroup($idUserGroup);
+        return $userGroup->getNameCompany();
     }
 
 }

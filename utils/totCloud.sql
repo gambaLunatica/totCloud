@@ -41,7 +41,8 @@ create table UserGroup(
     nameUserGroup VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idUserGroup),
-    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany)
+    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
+    UNIQUE(nameUserGroup, nameCompany);
 );
 create table PrivilegeStatus(
     namePrivilege VARCHAR(32) NOT NULL,
