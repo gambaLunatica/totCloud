@@ -2579,7 +2579,92 @@ class MyDataBase
         $userGroup = $this->selectUserGroup($idUserGroup);
         return $userGroup->getNameCompany();
     }
+    // Consulta para obtener los VCNs de un usuario
+    public function getUserVCN()
+    {
+        $user = unserialize($_SESSION["user"]);
+        $email = $user->getEmail();
+        $query = "
+            SELECT v.idVCN, v.nameVCN, v.privateIP, v.creationDate, v.cidr
+            FROM MYUSER u
+            JOIN COMPANY co ON u.nameCompany = co.nameCompany
+            LEFT JOIN VCN v ON v.nameCompany = co.nameCompany
+            WHERE u.email = '$email'";
 
+        $result = mysqli_query($this->db, $query);
+
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    // Consulta para obtener las instancias de Compute de un usuario
+    public function getUserComputeInstances()
+    {
+        $user = unserialize($_SESSION["user"]);
+        $email = $user->getEmail();
+        $query = "
+            SELECT ci.idComputeInstance, ci.creationDate, ci.sshKey, ci.name, ci.idSubnet, ci.nameCompany, ci.idMemory, ci.model, ci.idImage
+            FROM MYUSER u
+            JOIN COMPANY co ON u.nameCompany = co.nameCompany
+            LEFT JOIN ComputeInstance ci ON ci.nameCompany = co.nameCompany
+            WHERE u.email = '$email'
+            AND ci.statusName = 'Live'";
+
+        $result = mysqli_query($this->db, $query);
+
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    // Consulta para obtener los Storage Units de un usuario
+    public function getUserStorageUnits()
+    {
+        $user = unserialize($_SESSION["user"]);
+        $email = $user->getEmail();
+        $query = "
+            SELECT s.idStorageUnit, s.name, s.usedSpace, s.creationDate, s.nameCompany, s.idSubnet, s.idComputeInstance, s.nameStorage
+            FROM MYUSER u
+            JOIN COMPANY co ON u.nameCompany = co.nameCompany
+            LEFT JOIN StorageUnit s ON s.nameCompany = co.nameCompany
+            WHERE u.email = '$email'
+            AND s.statusName = 'Live'";
+
+        $result = mysqli_query($this->db, $query);
+
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    // Consulta para obtener las bases de datos de un usuario
+    public function getUserDatabases()
+    {
+        $user = unserialize($_SESSION["user"]);
+        $email = $user->getEmail();
+        $query = "
+            SELECT db.idDataBase, db.nameDatabase, db.description, db.creationDate, db.nameCompany, db.idSubnet, db.idComputeInstance, db.idDBTypeMySQL, db.idDBTypePostgrade
+            FROM MYUSER u
+            JOIN COMPANY co ON u.nameCompany = co.nameCompany
+            LEFT JOIN MyDataBase db ON db.nameCompany = co.nameCompany
+            WHERE u.email = '$email'
+            AND db.statusName = 'Live'";
+
+        $result = mysqli_query($this->db, $query);
+
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
 }
 
 $dataBase = new MyDataBase($con);
