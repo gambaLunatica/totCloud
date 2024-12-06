@@ -42,7 +42,7 @@ create table UserGroup(
 
     PRIMARY KEY(idUserGroup),
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
-    UNIQUE(nameUserGroup, nameCompany);
+    UNIQUE(nameUserGroup, nameCompany)
 );
 create table PrivilegeStatus(
     namePrivilege VARCHAR(32) NOT NULL,
