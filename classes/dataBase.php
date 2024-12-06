@@ -428,41 +428,43 @@ class MyDataBase
         }
     }
 
-    function updateCompany(Company $company): bool {
+    function updateCompany(Company $company): bool
+    {
         $query = "UPDATE Company SET nameRegion = ? WHERE nameCompany = ?";
         $stmt = $this->db->prepare($query);
-    
+
         if ($stmt === false) {
             return false; // Handle error if statement preparation fails
         }
-    
+
         $nameRegion = $company->getNameRegion();
         $name = $company->getName();
-    
+
         $stmt->bind_param("ss", $nameRegion, $name);
         $result = $stmt->execute();
         $stmt->close();
-    
+
         return $result;
     }
-    
-    function selectCompany(string $name): ?Company {
+
+    function selectCompany(string $name): ?Company
+    {
         $query = "SELECT nameCompany, nameRegion FROM Company WHERE nameCompany = ?";
         $stmt = $this->db->prepare($query);
-    
+
         if ($stmt === false) {
             return null; // Handle error if statement preparation fails
         }
-    
+
         $stmt->bind_param("s", $name);
         $stmt->execute();
         $stmt->bind_result($fetchedName, $fetchedRegion);
-    
+
         if ($stmt->fetch()) {
             $stmt->close();
             return new Company($fetchedName, $fetchedRegion);
         }
-    
+
         $stmt->close();
         return null; // Return null if no company is found
     }
@@ -503,7 +505,8 @@ class MyDataBase
         }
     }
 
-    public function selectUserGroups(): array {
+    public function selectUserGroups(): array
+    {
         $query = "SELECT * FROM UserGroup";
         $result = $this->db->query($query);
 
@@ -518,7 +521,8 @@ class MyDataBase
         return $userGroups;
     }
 
-    public function selectUserGroup(int $id): ?UserGroup {
+    public function selectUserGroup(int $id): ?UserGroup
+    {
         $query = "SELECT * FROM UserGroup WHERE idUserGroup = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $id);
@@ -534,7 +538,8 @@ class MyDataBase
         return null;
     }
 
-    public function updateUserGroup(UserGroup $userGroup): bool {
+    public function updateUserGroup(UserGroup $userGroup): bool
+    {
         $query = "UPDATE UserGroup SET nameCompany = ?, nameUserGroup = ? WHERE idUserGroup = ?";
         $stmt = $this->db->prepare($query);
 
@@ -552,7 +557,8 @@ class MyDataBase
         return $stmt->execute();
     }
 
-    public function deleteUserGroup(int $id): bool {
+    public function deleteUserGroup(int $id): bool
+    {
         $query = "DELETE FROM UserGroup WHERE idUserGroup = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $id);
@@ -635,32 +641,33 @@ class MyDataBase
         }
     }
 
-    public function updateUser(User $user): bool {
+    public function updateUser(User $user): bool
+    {
         $query = "UPDATE MyUser 
                   SET realName = ?, realSurname = ?, password = ?, idUserGroup = ?, nameCompany = ? 
                   WHERE email = ?";
-        
+
         $stmt = $this->db->prepare($query);
         if (!$stmt) {
             die("Prepare failed: " . $this->db->error);
         }
-        
+
         $realName = $user->getRealName();
         $realSurname = $user->getRealSurname();
         $password = $user->getPassword();
         $idUserGroup = $user->getIdUserGroup();
         $nameCompany = $user->getNameCompany();
         $email = $user->getEmail();
-        
+
         $stmt->bind_param("sssiss", $realName, $realSurname, $password, $idUserGroup, $nameCompany, $email);
-        
+
         if (!$stmt->execute()) {
             die("Execute failed: " . $stmt->error);
         }
-        
+
         $affectedRows = $stmt->affected_rows;
         $stmt->close();
-        
+
         return $affectedRows > 0;
     }
 
@@ -1090,7 +1097,7 @@ class MyDataBase
 
 
             $stmt->bind_param(
-                "sidddddss",
+                "sidddddsss",
                 $statusName,
                 $coreCount,
                 $cacheL1,
@@ -1099,7 +1106,8 @@ class MyDataBase
                 $frequency,
                 $cost,
                 $model,
-                $series
+                $series,
+                $model
             );
 
             $returnValue = $stmt->execute();
@@ -2162,7 +2170,7 @@ class MyDataBase
     }
 
     //SETTING
-    function insertSetting(Setting $setting):bool
+    function insertSetting(Setting $setting): bool
     {
         // Prepare the SQL statement for calling the stored procedure
         $stmt = $this->db->prepare("CALL AddSetting(?, ?, ?, ?, ?, ?, ?)");
@@ -2198,7 +2206,7 @@ class MyDataBase
     }
 
 
-    function deleteSetting(string $nameSetting):bool
+    function deleteSetting(string $nameSetting): bool
     {
         // Prepare the SQL statement for calling the stored procedure
         $stmt = $this->db->prepare("CALL DeleteSetting(?)");
@@ -2315,6 +2323,147 @@ class MyDataBase
         $stmt->close();
 
         return $setting;
+    }
+
+    //COSTS
+    function selectComputeInstanceCosts($companyName): array|null
+    {
+        // Prepare the SQL query
+        $sql = "SELECT 
+                    ci.name AS ComputeInstanceName,
+                    (cpu.cost + i.cost + m.cost) AS TotalCost
+                FROM ComputeInstance ci
+                JOIN CPU cpu ON ci.model = cpu.model
+                JOIN Image i ON ci.idImage = i.idImage
+                JOIN Memory m ON ci.idMemory = m.idMemory
+                WHERE ci.nameCompany = ?";
+
+        // Prepare the statement
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            die("Statement preparation failed: " . $this->db->error);
+        }
+
+        // Bind the parameter
+        $stmt->bind_param("s", $companyName);
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        // Fetch data into an array
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = [
+                'ComputeInstanceName' => $row['ComputeInstanceName'],
+                'TotalCost' => $row['TotalCost']
+            ];
+        }
+
+        if (empty($data)) {
+            return null;
+        }
+
+        // Return the data
+        return $data;
+    }
+
+    function selectVCNCosts($companyName): array|null
+    {
+        // Prepare the SQL query
+        $query = "SELECT VCN.nameVCN AS subnetName, Mask.cost AS subnetCost 
+                  FROM VCN 
+                  INNER JOIN Mask ON VCN.cidr = Mask.cidr 
+                  WHERE VCN.nameCompany = ?";
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt) {
+            die("Prepare failed: " . $this->db->error);
+        }
+
+        // Bind the parameter
+        $stmt->bind_param('s', $companyName);
+
+        // Execute the statement
+        if (!$stmt->execute()) {
+            die("Execution failed: " . $stmt->error);
+        }
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        // Fetch the data
+        $subnets = [];
+        while ($row = $result->fetch_assoc()) {
+            $subnets[] = [
+                'vcn' => $row['subnetName'],
+                'cost' => $row['subnetCost']
+            ];
+        }
+        if (empty($subnets)) {
+            return null;
+        }
+
+        return $subnets;
+    }
+
+    function selectStorageCosts($companyName): array|null
+    {
+        $sql = "SELECT su.nameStorageU, s.cost 
+                FROM StorageUnit su
+                JOIN Storage s ON su.nameStorage = s.nameStorage
+                WHERE su.nameCompany = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("s", $companyName);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $storageUnits = array();
+        while ($row = $result->fetch_assoc()) {
+            $storageUnits[] = [
+                'storage' => $row['nameStorageU'],
+                'cost' => $row['cost']
+            ];
+        }
+        if (empty($storageUnits)) {
+            return null;
+        }
+        return $storageUnits;
+    }
+
+    function selectDatabaseCosts($companyName): array|null {
+        // Prepare the statement to call the stored procedure
+        $stmt = $this->db->prepare("CALL get_databases_costs(?)");
+        if (!$stmt) {
+            die("Failed to prepare statement: " . $this->db->error);
+        }
+    
+        // Bind the parameter
+        $stmt->bind_param("s", $companyName);
+    
+        // Execute the stored procedure
+        $stmt->execute();
+    
+        // Get the result set from the executed statement
+        $result = $stmt->get_result();
+        $output = [];
+    
+        // Fetch all rows into the output array
+        while ($row = $result->fetch_assoc()) {
+            $output[] = array(
+                'db' => $row['nameDataBase'],
+                'cost' => $row['cost']
+            );
+        }
+
+        if (empty($output)) {
+            return null;
+        }
+    
+        // Return the array with database names and costs
+        return $output;
     }
 
 }

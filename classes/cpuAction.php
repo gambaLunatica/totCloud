@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $queryMemories = http_build_query(['idMemories' => $memories]);
         $queryImages = http_build_query(['idImages' => $images]);
 
-        header("Location: ../myAccount.php?page=myConsole.php&cpu=$model&model=$model&serie=$series&coreCount=$coreCount&frequency=$frequency&cachel1=$cacheL1&cachel2=$cacheL2&cachel3=$cacheL3&status=$statusName&cost=$cost&$queryMemories&$queryImages");
+        header("Location: ../myAccount.php?page=myConsole.php&cpu=$model&model='$model'&serie=$series&coreCount=$coreCount&frequency=$frequency&cachel1=$cacheL1&cachel2=$cacheL2&cachel3=$cacheL3&status=$statusName&cost=$cost&$queryMemories&$queryImages");
         exit;
 
     } else if ($_POST["action"] === "remove") {

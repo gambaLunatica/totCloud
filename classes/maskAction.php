@@ -36,8 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
 
     } else if ($_POST["action"] === "add") {
+        $mask = new Mask($_POST["cost"], $_POST["cidr"]);
         if (($_POST["cidrId"] === "--New--") == false) {
-            $mask = new Mask($_POST["cost"], $_POST["cidr"]);
+            
 
             if (!$dataBase->updateMask($mask)) {
                 $_SESSION["error"] = 1;
@@ -49,7 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: ../myAccount.php?page=myConsole.php");
             exit;
         } else {
-            $mask = new Mask($_POST["cidr"], $_POST["cost"]);
 
             if (!$dataBase->insertMask($mask)) {
                 $_SESSION["error"] = 1;

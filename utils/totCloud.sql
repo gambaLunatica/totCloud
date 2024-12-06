@@ -266,7 +266,6 @@ create table StorageUnit(
     FOREIGN KEY(idComputeInstance) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
     FOREIGN KEY(nameStorage) REFERENCES Storage(nameStorage)
-
 );
 
 create table DBTypePostgrade(
@@ -296,8 +295,8 @@ create table MyDataBase(
     nameCompany VARCHAR(32) NOT NULL,
     idSubnet INT UNSIGNED NOT NULL,
     idComputeInstance INT UNSIGNED NOT NULL,
-    idDBTypeMySQL INT UNSIGNED NOT NULL,
-    idDBTypePostgrade INT UNSIGNED NOT NULL,
+    idDBTypeMySQL INT UNSIGNED NULL,
+    idDBTypePostgrade INT UNSIGNED NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     nameDataBase VARCHAR(32) NOT NULL,
     description VARCHAR(512) NULL,
@@ -531,8 +530,8 @@ VALUES
 
     DELIMITER $$
 
---Funcion que añade un setting a un tipo de base de datios (Postgre y/o mysql) y actualiza todas las bases
---de datos existentes para que tengan el mismo permiso con el valor por defecto
+-- Funcion que añade un setting a un tipo de base de datios (Postgre y/o mysql) y actualiza todas las bases
+-- de datos existentes para que tengan el mismo permiso con el valor por defecto
 CREATE PROCEDURE AddSetting(
     IN in_nameSetting VARCHAR(32),
     IN in_statusName VARCHAR(16),
@@ -568,7 +567,7 @@ BEGIN
     END IF;
 END$$
 
---Funcion para eliminar un setting y todas las configuraciones relacionadas a ese setting
+-- Funcion para eliminar un setting y todas las configuraciones relacionadas a ese setting
 CREATE PROCEDURE DeleteSetting(
     IN in_nameSetting VARCHAR(32)
 )
@@ -582,7 +581,7 @@ BEGIN
     WHERE nameSetting = in_nameSetting;
 END$$
 
---Funcion para crear una base de datos y obtener todos los settings con los valores por defecto
+-- Funcion para crear una base de datos y obtener todos los settings con los valores por defecto
 CREATE PROCEDURE createDatabase(
     IN p_nameCompany VARCHAR(32),
     IN p_idSubnet INT UNSIGNED,
@@ -642,7 +641,7 @@ BEGIN
     END IF;
 END$$
 
---procedure para elminar una base de datos correctamente
+-- procedure para elminar una base de datos correctamente
 CREATE PROCEDURE deleteDatabase(
     IN p_idDataBase INT UNSIGNED
 )
@@ -654,4 +653,43 @@ BEGIN
     DELETE FROM MyDataBase WHERE idDataBase = p_idDataBase;
 END$$
 
+CREATE PROCEDURE get_databases_costs(IN cCompanyName VARCHAR(32))
+BEGIN
+    SELECT 
+        m.nameDataBase,
+        CASE
+            WHEN m.idDBTypeMySQL IS NOT NULL THEN 
+                (SELECT cost FROM DBTypeMySql WHERE idDBType = m.idDBTypeMySQL)
+            WHEN m.idDBTypePostgrade IS NOT NULL THEN 
+                (SELECT cost FROM DBTypePostgrade WHERE idDBType = m.idDBTypePostgrade)
+            ELSE 
+                NULL
+        END AS cost
+    FROM MyDataBase m
+    WHERE m.nameCompany = cCompanyName;
+END $$
+
 DELIMITER ;
+
+insert into speed (IOSpeed) values (10);
+insert into size (TotalCapacity) values (32);
+insert into generation (generation) values ("DDR5");
+insert into image (statusName, cost, osName, build) values ("Live", 5, "Windows", "22H2");
+insert into memory (statusName, totalCapacity, IOSpeed, generation, cost) VALUES ("Live", 32, 10, "DDR5", 67);
+insert into mask (cidr, cost) values (16, 15);
+insert into vcn (cidr, nameCompany, nameRegion, privateIP, nameVCN) values (16, "TotCloud", "Argentina", INET_ATON('10.0.0.0'), "BaseVCN");
+insert into cpu (statusName, coreCount, cacheL1, cacheL2, cacheL3, frequency, cost, model, series) values ("Live", 6, 10, 0, 0, 3.6, 250, "Ryzen 6 1600Z", "AMD");
+insert into compatibilitycpuimage (model, idImage) values ("Ryzen 6 1600Z", 1);
+insert into compatibilitymemorycpu (model, idMemory) values ("Ryzen 6 1600Z", 1);
+insert into subnet (cidr, idVCN, IP, nameSubnet) values (16,1, INET_ATON('10.0.0.0'), "Public");
+INSERT INTO ComputeInstance (idSubnet, nameCompany, idMemory, idImage, model, name) values (1, "TotCloud", 1, 1, "Ryzen 6 1600Z", "Test CI");
+
+INSERT INTO Speed (IOSpeed) VALUES (0.5);
+INSERT INTO Size (totalCapacity) VALUES (2000);
+INSERT INTO Type (typeName) VALUES ('SSD');
+INSERT INTO Storage (totalCapacity,IOSpeed,typeName,nameStorage,cost,statusName) VALUES (2000, 0.5, 'SSD', '2TB SSD', 78, 'Live');
+insert into storageunit (nameCompany, idSubnet, idComputeInstance, usedSpace, nameStorageU, idUserGroup, nameStorage) values ("TotCloud", 1, 1, 0, "Basic SU", 1, "2TB SSD");
+
+INSERT INTO DBTypeMySql (statusName,cost,releaseDate,version) VALUES ('Live', 32, '2024-12-06', '1.0.0');
+INSERT INTO DBTypePostgrade (statusName,cost,releaseDate,build)  VALUES ('Live', 40, '2024-12-06', 'dfsgs');
+insert into MyDataBase (nameCompany, idSubnet, idComputeInstance, idDBTypeMySQL, nameDatabase) values ("TotCloud", 1, 1, 1, "MySQL TST");
