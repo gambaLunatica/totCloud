@@ -2469,8 +2469,8 @@ class MyDataBase
     //Privileges
     function isSuperAdmin():bool{
         $user = unserialize($_SESSION["user"]);
-
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $idUserGroup = $user->getIdUserGroup();
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("Super Admin", $privileges);
     }
@@ -2482,40 +2482,40 @@ class MyDataBase
 
     function canViewPayments():bool{
         $user = unserialize($_SESSION["user"]);
-
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $idUserGroup = $user->getIdUserGroup();
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("View Payments", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
     function canEditPrivileges():bool{
         $user = unserialize($_SESSION["user"]);
-
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
-
+        $idUserGroup = $user->getIdUserGroup();
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
+        $idUserGroup = $user->getIdUserGroup();
         return in_array("Edit Privilegies", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
     function canEditUserGroup():bool{
         $user = unserialize($_SESSION["user"]);
-
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $idUserGroup = $user->getIdUserGroup();
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("Edit User Groups", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
     function canEditUsers():bool{
         $user = unserialize($_SESSION["user"]);
-
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $idUserGroup = $user->getIdUserGroup();
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("Edit Users", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
     function canEditCompany():bool{
         $user = unserialize($_SESSION["user"]);
-
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $idUserGroup = $user->getIdUserGroup();
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("Edit Company", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
@@ -2523,7 +2523,7 @@ class MyDataBase
     function canViewComputeInstances():bool{
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("View Compute Instances", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
@@ -2531,7 +2531,7 @@ class MyDataBase
     function canViewDataBases():bool{
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("View Data Bases", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
@@ -2539,7 +2539,7 @@ class MyDataBase
     function canViewStorageUnits():bool{
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("View Storage Units", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
@@ -2547,7 +2547,7 @@ class MyDataBase
     function canViewVCNs():bool{
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
-        $privileges = $this->getPrivilegesByUserGroupId($user->group_id);
+        $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
 
         return in_array("View VCNs", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
