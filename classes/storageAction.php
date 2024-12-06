@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $nameStorage = $storage->getNameStorage();
         $typeName = $storage->getTypeName();
 
-        header("Location: ../myAccount.php?page=myConsole.php&nameStorage=$nameStorage&idStorage=$nameStorage&status=$statusName&totalCapacity=$totalCapacity&cost=$cost&IOSpeed=$IOSpeed&typeName=$typeName");
+        header("Location: ../myAccount.php?page=myConsole.php&nameStorage='$nameStorage'&idStorage=$nameStorage&status=$statusName&totalCapacity=$totalCapacity&cost=$cost&IOSpeed=$IOSpeed&typeName=$typeName");
         exit;
 
     } else if ($_POST["action"] === "remove") {

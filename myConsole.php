@@ -843,11 +843,11 @@ if (isset($_GET['cpu'])) {
                             $postgre = $setting->getIdDBTypePostgrade();
                             $mySQL = $setting->getIdDBTypeMySQL();
 
-                            if ($postgre != null && $mySQL != null) {
+                            if ($postgre > 0 && $mySQL >0) {
                                 $displayName = "(MySQL | Postgre)";
-                            } else if ($postgre != null) {
+                            } else if ($postgre > 0) {
                                 $displayName = "(Postgre)";
-                            } else if ($mySQL != null) {
+                            } else if ($mySQL > 0) {
                                 $displayName = "(MySQL)";
                             }
 

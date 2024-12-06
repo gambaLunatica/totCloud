@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $build = $postgrade->getBuild();
         $idDBType = $postgrade->getIdDBType();
 
-        header("Location: ../myAccount.php?page=myConsole.php&idDBTypePostgrade=$idDBType&status=$statusName&releaseDate=$releaseDate&cost=$cost&build=$build");
+        header("Location: ../myAccount.php?page=myConsole.php&idDBTypePostgrade=$idDBType&status=$statusName&releaseDate=$releaseDate&cost=$cost&build='$build'");
         exit;
 
     } else if ($_POST["action"] === "remove") {

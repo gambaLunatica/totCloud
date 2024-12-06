@@ -66,11 +66,6 @@ create table MyUser(
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany)
 );
 
-create table PaymentMethod(
-    nameMethod VARCHAR(32) NOT NULL,
-
-    PRIMARY KEY(nameMethod)
-);
 create table VCN(
     cidr TINYINT UNSIGNED NOT NULL,
     idVCN INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -103,18 +98,6 @@ create table Public(
     PRIMARY KEY(idSubnet),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet)
 );
-create table Payment(
-    idPayment INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    nameCompany VARCHAR(32) NOT NULL,
-    nameMethod VARCHAR(32) NOT NULL,
-    quantity FLOAT NOT NULL,
-    paymentDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    PRIMARY KEY(idPayment),
-    FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
-    FOREIGN KEY(nameMethod) REFERENCES PaymentMethod(nameMethod)
-);
-
 
 create table Generation(
     generation VARCHAR(32) NOT NULL,
@@ -693,3 +676,4 @@ insert into storageunit (nameCompany, idSubnet, idComputeInstance, usedSpace, na
 INSERT INTO DBTypeMySql (statusName,cost,releaseDate,version) VALUES ('Live', 32, '2024-12-06', '1.0.0');
 INSERT INTO DBTypePostgrade (statusName,cost,releaseDate,build)  VALUES ('Live', 40, '2024-12-06', 'dfsgs');
 insert into MyDataBase (nameCompany, idSubnet, idComputeInstance, idDBTypeMySQL, nameDatabase) values ("TotCloud", 1, 1, 1, "MySQL TST");
+insert into MyDataBase (nameCompany, idSubnet, idComputeInstance, idDBTypePostgrade, nameDatabase) values ("TotCloud", 1, 1, 1, "Postgre TST");

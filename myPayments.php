@@ -8,6 +8,94 @@ $computeInstanceCosts = $dataBase->selectComputeInstanceCosts($company);
 $vcnCosts = $dataBase->selectVCNCosts($company);
 $storageCosts = $dataBase->selectStorageCosts($company);
 $dbCosts = $dataBase->selectDatabaseCosts($company);
+
+$costDropdown = "";
+$totalCost = 0;
+
+if ($computeInstanceCosts != null) {
+    $costDropdown = $costDropdown . '<tr>
+            <td style="text-align: left; white-space: nowrap;"><h3>Compute Instances</h3></td>
+            <td style="text-align: center; width: 100%; padding: 0px 10px"></td>
+            <td style="text-align: right; white-space: nowrap;"></td>
+        </tr>';
+
+    foreach ($computeInstanceCosts as $computeInstanceCost) {
+        $name = $computeInstanceCost["ComputeInstanceName"];
+        $cost = $computeInstanceCost["TotalCost"];
+        $totalCost += $cost;
+        $costDropdown = $costDropdown . "<tr>
+                <td style='text-align: left; white-space: nowrap;'>&nbsp $name</td>
+                <td style='text-align: center; width: 100%; padding: 0px 10px'>
+                    <div style='border-bottom: 1px dashed #424549; padding-top: 10px; width: 100%; text-align: center;'></div>
+                </td>
+                <td style='text-align: right; white-space: nowrap;'>$cost €</td>
+            </tr>";
+    }
+}
+
+if ($vcnCosts != null) {
+    $costDropdown = $costDropdown . '<tr>
+            <td style="text-align: left; white-space: nowrap;"><h3>Virtual Networks</h3></td>
+            <td style="text-align: center; width: 100%; padding: 0px 10px"></td>
+            <td style="text-align: right; white-space: nowrap;"></td>
+        </tr>';
+
+    foreach ($vcnCosts as $vcnCost) {
+        $name = $vcnCost["vcn"];
+        $cost = $vcnCost["cost"];
+        $totalCost += $cost;
+        $costDropdown = $costDropdown . "<tr>
+                <td style='text-align: left; white-space: nowrap;'>&nbsp $name</td>
+                <td style='text-align: center; width: 100%; padding: 0px 10px'>
+                    <div style='border-bottom: 1px dashed #424549; padding-top: 10px; width: 100%; text-align: center;'></div>
+                </td>
+                <td style='text-align: right; white-space: nowrap;'>$cost €</td>
+            </tr>";
+    }
+}
+
+if ($storageCosts != null) {
+    $costDropdown = $costDropdown .  '<tr>
+            <td style="text-align: left; white-space: nowrap;"><h3>Storages</h3></td>
+            <td style="text-align: center; width: 100%; padding: 0px 10px"></td>
+            <td style="text-align: right; white-space: nowrap;"></td>
+        </tr>';
+
+    foreach ($storageCosts as $storageCost) {
+        $name = $storageCost["storage"];
+        $cost = $storageCost["cost"];
+        $totalCost += $cost;
+        $costDropdown = $costDropdown .  "<tr>
+                <td style='text-align: left; white-space: nowrap;'>&nbsp $name</td>
+                <td style='text-align: center; width: 100%; padding: 0px 10px'>
+                    <div style='border-bottom: 1px dashed #424549; padding-top: 10px; width: 100%; text-align: center;'></div>
+                </td>
+                <td style='text-align: right; white-space: nowrap;'>$cost €</td>
+            </tr>";
+    }
+}
+
+if ($dbCosts != null) {
+    $costDropdown = $costDropdown .  '<tr>
+            <td style="text-align: left; white-space: nowrap;"><h3>Data Bases</h3></td>
+            <td style="text-align: center; width: 100%; padding: 0px 10px"></td>
+            <td style="text-align: right; white-space: nowrap;"></td>
+        </tr>';
+
+    foreach ($dbCosts as $dbCost) {
+        $name = $dbCost["db"];
+        $cost = $dbCost["cost"];
+        $totalCost += $cost;
+        $costDropdown = $costDropdown .  "<tr>
+                <td style='text-align: left; white-space: nowrap;'>&nbsp $name</td>
+                <td style='text-align: center; width: 100%; padding: 0px 10px'>
+                    <div style='border-bottom: 1px dashed #424549; padding-top: 10px; width: 100%; text-align: center;'></div>
+                </td>
+                <td style='text-align: right; white-space: nowrap;'>$cost €</td>
+            </tr>";
+    }
+}
+
 ?>
 <div>
     <h1>My Payments</h1>
@@ -38,7 +126,7 @@ $dbCosts = $dataBase->selectDatabaseCosts($company);
 
                         </div>
                     </td>
-                    <td style="text-align: right; white-space: nowrap;">Right Column</td>
+                    <td style="text-align: right; white-space: nowrap;"><b><?=$totalCost?> €</b></td>
                 </tr>
             </table>
         </summary>
@@ -46,89 +134,12 @@ $dbCosts = $dataBase->selectDatabaseCosts($company);
             <table style="width: 100%; border-collapse: collapse;">
 
                 <?php
-                if ($computeInstanceCosts != null) {
-                    echo '<tr>
-                            <td style="text-align: left; white-space: nowrap;"><h3>Compute Instances</h3></td>
-                            <td style="text-align: center; width: 100%; padding: 0px 10px"></td>
-                            <td style="text-align: right; white-space: nowrap;"></td>
-                        </tr>';
-
-                    foreach ($computeInstanceCosts as $computeInstanceCost) {
-                        $name = $computeInstanceCost["ComputeInstanceName"];
-                        $cost = $computeInstanceCost["TotalCost"];
-                        echo "<tr>
-                                <td style='text-align: left; white-space: nowrap;'>&nbsp $name</td>
-                                <td style='text-align: center; width: 100%; padding: 0px 10px'>
-                                    <div style='border-bottom: 1px dashed #424549; padding-top: 10px; width: 100%; text-align: center;'></div>
-                                </td>
-                                <td style='text-align: right; white-space: nowrap;'>$cost €</td>
-                            </tr>";
-                    }
-                }
-
-                if ($vcnCosts != null) {
-                    echo '<tr>
-                            <td style="text-align: left; white-space: nowrap;"><h3>Virtual Networks</h3></td>
-                            <td style="text-align: center; width: 100%; padding: 0px 10px"></td>
-                            <td style="text-align: right; white-space: nowrap;"></td>
-                        </tr>';
-
-                    foreach ($vcnCosts as $vcnCost) {
-                        $name = $vcnCost["vcn"];
-                        $cost = $vcnCost["cost"];
-                        echo "<tr>
-                                <td style='text-align: left; white-space: nowrap;'>&nbsp $name</td>
-                                <td style='text-align: center; width: 100%; padding: 0px 10px'>
-                                    <div style='border-bottom: 1px dashed #424549; padding-top: 10px; width: 100%; text-align: center;'></div>
-                                </td>
-                                <td style='text-align: right; white-space: nowrap;'>$cost €</td>
-                            </tr>";
-                    }
-                }
-
-                if ($storageCosts != null) {
-                    echo '<tr>
-                            <td style="text-align: left; white-space: nowrap;"><h3>Storages</h3></td>
-                            <td style="text-align: center; width: 100%; padding: 0px 10px"></td>
-                            <td style="text-align: right; white-space: nowrap;"></td>
-                        </tr>';
-
-                    foreach ($storageCosts as $storageCost) {
-                        $name = $storageCost["storage"];
-                        $cost = $storageCost["cost"];
-                        echo "<tr>
-                                <td style='text-align: left; white-space: nowrap;'>&nbsp $name</td>
-                                <td style='text-align: center; width: 100%; padding: 0px 10px'>
-                                    <div style='border-bottom: 1px dashed #424549; padding-top: 10px; width: 100%; text-align: center;'></div>
-                                </td>
-                                <td style='text-align: right; white-space: nowrap;'>$cost €</td>
-                            </tr>";
-                    }
-                }
-
-                if ($dbCosts != null) {
-                    echo '<tr>
-                            <td style="text-align: left; white-space: nowrap;"><h3>Data Bases</h3></td>
-                            <td style="text-align: center; width: 100%; padding: 0px 10px"></td>
-                            <td style="text-align: right; white-space: nowrap;"></td>
-                        </tr>';
-
-                    foreach ($dbCosts as $dbCost) {
-                        $name = $dbCost["db"];
-                        $cost = $dbCost["cost"];
-                        echo "<tr>
-                                <td style='text-align: left; white-space: nowrap;'>&nbsp $name</td>
-                                <td style='text-align: center; width: 100%; padding: 0px 10px'>
-                                    <div style='border-bottom: 1px dashed #424549; padding-top: 10px; width: 100%; text-align: center;'></div>
-                                </td>
-                                <td style='text-align: right; white-space: nowrap;'>$cost €</td>
-                            </tr>";
-                    }
-                }
+                echo $costDropdown;
                 ?>
 
             </table>
         </div>
     </details>
-
+    <br><br>
+    <p>Payments are automatically charged on the due date.</p>
 </div>

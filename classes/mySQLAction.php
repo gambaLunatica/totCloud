@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $version = $mySQL->getVersion();
         $idDBType = $mySQL->getIdDBType();
 
-        header("Location: ../myAccount.php?page=myConsole.php&idDBTypeSQL=$idDBType&status=$statusName&releaseDate=$releaseDate&cost=$cost&version=$version");
+        header("Location: ../myAccount.php?page=myConsole.php&idDBTypeSQL=$idDBType&status=$statusName&releaseDate=$releaseDate&cost=$cost&version='$version'");
         exit;
 
     } else if ($_POST["action"] === "remove") {
