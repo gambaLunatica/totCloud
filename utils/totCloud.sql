@@ -301,42 +301,6 @@ create table MyTable(
     FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase)
 );
 
-create table PermissionGroupDB(
-    idUserGroup INT UNSIGNED NOT NULL,
-    idDataBase INT UNSIGNED NOT NULL,
-
-    PRIMARY KEY(idUserGroup, idDataBase),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(idDataBase) REFERENCES MyDataBase(idDataBase)
-);
-
-create table PermissionGroupStorage(
-    idUserGroup INT UNSIGNED NOT NULL,
-    idStorageUnit INT UNSIGNED NOT NULL,
-
-    PRIMARY KEY(idUserGroup, idStorageUnit),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(idStorageUnit) REFERENCES StorageUnit(idStorageUnit)
-);
-
-create table PermissionGroupCompute(
-    idUserGroup INT UNSIGNED NOT NULL,
-    idComputeInstance INT UNSIGNED NOT NULL,
-
-    PRIMARY KEY(idUserGroup, idComputeInstance),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(idComputeInstance) REFERENCES ComputeInstance(idComputeInstance)
-);
-
-create table PermissionGroupVCN(
-    idUserGroup INT UNSIGNED NOT NULL,
-    idVCN INT UNSIGNED NOT NULL,
-
-    PRIMARY KEY(idUserGroup, idVCN),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
-    FOREIGN KEY(idVCN) REFERENCES VCN(idVCN)
-);
-
 create table Instruction(
     idInstruction INT UNSIGNED NOT NULL AUTO_INCREMENT,
     idTable INT UNSIGNED NOT NULL,
@@ -396,7 +360,11 @@ Insert into Privilege(namePrivilege) VALUES
 ("Edit Privilegies"),
 ("Edit User Groups"),
 ("Edit Users"),
-("Edit Company");
+("Edit Company"),
+("View Data Bases"),
+("View Compute Instances"),
+("View Storage Units"),
+("View VCNs");
 
 DELIMITER $$
 
@@ -459,7 +427,11 @@ BEGIN
     ("Edit Privilegies", idUserGroupPar, valuePar),
     ("Edit User Groups", idUserGroupPar, valuePar),
     ("Edit Users", idUserGroupPar, valuePar),
-    ("Edit Company", idUserGroupPar, valuePar);
+    ("Edit Company", idUserGroupPar, valuePar),
+    ("View Data Bases", idUserGroupPar, valuePar),
+    ("View Compute Instances", idUserGroupPar, valuePar),
+    ("View Storage Units", idUserGroupPar, valuePar),
+    ("View VCNs", idUserGroupPar, valuePar);
 END$$
 
 DELIMITER ;

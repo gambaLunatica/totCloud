@@ -1,5 +1,6 @@
 
 <?php
+
 class User{
     private $realName;
     private $realSurname;
@@ -55,5 +56,4 @@ class User{
     public function setRealSurname(String $realSurname):void{
         $this->realSurname = $realSurname;
     }
-    
 }

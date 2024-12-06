@@ -111,7 +111,7 @@ form {
   /* Ensure forms and their contents are not affected by flex */
 }
 
-input,
+input:not([type="checkbox"]),
 select {
   background: #424549;
   border: 2px solid #36393e;
@@ -128,6 +128,12 @@ select {
   box-sizing: border-box;
   /* Include padding and borders in size */
 }
+
+input[type="checkbox"]{
+  margin:10px 0px 10px 20px;
+}
+
+
 
 .goButton {
   background: #424549;
@@ -362,9 +368,7 @@ select {
   cursor: pointer;
 }
 
-.dropdown-menu input[type="checkbox"] {
-  margin-right: 10px;
-}
+
 
 /* Make the dropdown appear when `details` is open */
 .dropdown[open] .dropdown-menu {
@@ -376,61 +380,6 @@ select {
   display: none;
 }
 
-.toggle-checkbox {
-  appearance: none;
-  background-color: #dfe1e4;
-  border: none;
-  border-radius: 72px;
-  width: 30px;
-  height: 20px;
-  position: relative;
-  margin: 0;
-  flex-shrink: 0;
-  cursor: default;
-  transition: all 100ms ease-out;
-}
-
-.toggle-checkbox::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  bottom: -6px;
-  left: -6px;
-  right: -6px;
-}
-
-.toggle-checkbox::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
-  background-color: #fff;
-  border-radius: 50%;
-  transition: all 100ms ease-out;
-}
-
-.toggle-checkbox:hover {
-  background-color: #c9cbcd;
-  transition-duration: 0s;
-}
-
-.toggle-checkbox:checked {
-  background-color: #6e79d6;
-}
-
-.toggle-checkbox:checked::after {
-  left: 13px;
-}
-
-.toggle-checkbox:checked:hover {
-  background-color: #535db3;
-}
-
-.toggle-checkbox:focus:not(.focus-visible) {
-  outline: 0;
-}
 
 .icon-circle {
   display: inline-block;
