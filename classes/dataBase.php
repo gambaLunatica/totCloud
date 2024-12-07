@@ -522,7 +522,7 @@ class MyDataBase
         $result = $stmt->get_result();
         $userGroups = [];
         while ($row = $result->fetch_assoc()) {
-            $userGroup = new UserGroup($nameCompany,$row['nameUserGroup']);
+            $userGroup = new UserGroup($nameCompany, $row['nameUserGroup']);
             $userGroup->setId($row['idUserGroup']);
             $userGroups[] = $userGroup;
         }
@@ -580,45 +580,36 @@ class MyDataBase
     //USER
     public function insertUser(User $user): bool
     {
-        try {
-            $sql = "INSERT INTO MyUser (realName, realSurname, email, password, idUserGroup, nameCompany)
+
+        $sql = "INSERT INTO MyUser (realName, realSurname, email, password, idUserGroup, nameCompany)
                     VALUES (?, ?, ?, ?, ?, ?)";
 
-            $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
 
-            if (!$stmt) {
-                throw new Exception("Error preparing statement: " . $this->db->error);
-            }
-
-            $realName = $user->getRealName();
-            $realSurname = $user->getRealSurname();
-            $email = $user->getEmail();
-            $password = $user->getPassword();
-            $idUserGroup = $user->getIdUserGroup();
-            $idCompany = $user->getNameCompany();
-
-
-            $stmt->bind_param(
-                "ssssis",
-                $username,
-                $realName,
-                $realSurname,
-                $email,
-                $password,
-                $idUserGroup,
-                $idCompany
-            );
-
-            $returnValue = $stmt->execute();
-
-            if (!$returnValue) {
-                throw new Exception("Error executing statement: " . $stmt->error);
-            }
-
-            return $returnValue;
-        } catch (Exception $e) {
-            return false;
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
         }
+
+        $realName = $user->getRealName();
+        $realSurname = $user->getRealSurname();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+        $idUserGroup = $user->getIdUserGroup();
+        $idCompany = $user->getNameCompany();
+
+
+        $stmt->bind_param(
+            "ssssis",
+            $realName,
+            $realSurname,
+            $email,
+            $password,
+            $idUserGroup,
+            $idCompany
+        );
+
+        return $stmt->execute();
+
 
     }
 
@@ -645,6 +636,38 @@ class MyDataBase
                     $user->setNameCompany($row["nameCompany"]);
                     return $user;
                 }
+            }
+
+
+            return null;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    public function selectUsers(string $nameCompany): array|null
+    {
+        try {
+
+            $stmt = $this->db->prepare("SELECT realName, realSurname, email, idUserGroup, nameCompany FROM MyUser WHERE nameCompany= ?");
+            $stmt->bind_param("s", $nameCompany);
+
+            if (!$stmt) {
+                throw new Exception("Error preparing statement: " . $this->db->error);
+            }
+
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+
+                $users = [];
+                while ($row = $result->fetch_assoc()) {
+                    $users[] = new User($row["realName"], $row["realSurname"], $row["email"], null, $row["idUserGroup"], $row["nameCompany"]);
+                }
+
+                if (empty($users)) {
+                    return null;
+                }
+                return $users;
             }
 
 
@@ -1457,7 +1480,8 @@ class MyDataBase
         return false;
     }
 
-    public function updatePrivilege(int $idUserGroup, string $privilege, bool $value): bool{
+    public function updatePrivilege(int $idUserGroup, string $privilege, bool $value): bool
+    {
         if ($value) {
             $value = 1;
         } else {
@@ -1471,7 +1495,7 @@ class MyDataBase
                 $value,
                 $idUserGroup,
                 $privilege,
-                
+
             );
             return $stmt->execute();
         }

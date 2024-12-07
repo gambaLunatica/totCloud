@@ -392,8 +392,24 @@ input[type="checkbox"]{
   justify-content: center;
 }
 
+.icon-circle-mid {
+  display: inline-block;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background-color: #424549; /* Light gray background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .icon-circle i {
   font-size: 99px; /* Adjust size as needed */
+  color: white; /* Icon color */
+}
+
+.icon-circle-mid i {
+  font-size: 54px; /* Adjust size as needed */
   color: white; /* Icon color */
 }
 

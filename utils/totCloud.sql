@@ -60,7 +60,7 @@ create table MyUser(
     email VARCHAR(64) NOT NULL UNIQUE,
     password VARCHAR(256) NOT NULL,
     idUserGroup INT UNSIGNED NOT NULL,
-    nameCompany VARCHAR(32) NOT NULL,
+    nameCompany VARCHAR(32) NULL,
 
     PRIMARY KEY(email),
     FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
