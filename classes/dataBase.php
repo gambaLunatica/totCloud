@@ -505,19 +505,29 @@ class MyDataBase
         }
     }
 
-    public function selectUserGroups(): array
+    public function selectUserGroups(string $nameCompany): array
     {
-        $query = "SELECT * FROM UserGroup";
-        $result = $this->db->query($query);
+        $stmt = $this->db->prepare('SELECT nameUserGroup,idUserGroup FROM UserGroup WHERE nameCompany = ?');
+        if (!$stmt) {
+            die('Prepare failed: ' . $this->db->error);
+        }
 
+        // Bind parameters
+        $stmt->bind_param('s', $nameCompany);
+
+        // Execute the query
+        $stmt->execute();
+
+        // Fetch the results
+        $result = $stmt->get_result();
         $userGroups = [];
         while ($row = $result->fetch_assoc()) {
-            $userGroup = new UserGroup($row['nameCompany'], $row['nameUserGroup']);
+            $userGroup = new UserGroup($nameCompany,$row['nameUserGroup']);
             $userGroup->setId($row['idUserGroup']);
-            $userGroup->setCreationDate(new DateTime($row['creationDate']));
             $userGroups[] = $userGroup;
         }
 
+        // Return the list of user group names
         return $userGroups;
     }
 
@@ -559,9 +569,12 @@ class MyDataBase
 
     public function deleteUserGroup(int $id): bool
     {
-        $query = "DELETE FROM UserGroup WHERE idUserGroup = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $id);
+        $stmt = $this->db->prepare("CALL DeleteUserGroupAndPrivileges(?)");
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
     //USER
@@ -1423,7 +1436,8 @@ class MyDataBase
         return false;
     }
 
-    public function insertPrivilege(int $idUserGroup, string $privilege, bool $value): bool{
+    public function insertPrivilege(int $idUserGroup, string $privilege, bool $value): bool
+    {
         if ($value) {
             $value = 1;
         } else {
@@ -1433,10 +1447,32 @@ class MyDataBase
         $sql = "insert into privilegestatus (idUserGroup, namePrivilege, value) values (?, ?, ?)";
         if ($stmt = $this->db->prepare($sql)) {
             $stmt->bind_param(
-                "isi", 
-                $idUserGroup, 
+                "isi",
+                $idUserGroup,
                 $privilege,
-                $value);
+                $value
+            );
+            return $stmt->execute();
+        }
+        return false;
+    }
+
+    public function updatePrivilege(int $idUserGroup, string $privilege, bool $value): bool{
+        if ($value) {
+            $value = 1;
+        } else {
+            $value = 0;
+        }
+
+        $sql = "update privilegestatus set value=? where idUserGroup=? AND namePrivilege=?";
+        if ($stmt = $this->db->prepare($sql)) {
+            $stmt->bind_param(
+                "iis",
+                $value,
+                $idUserGroup,
+                $privilege,
+                
+            );
             return $stmt->execute();
         }
         return false;
@@ -2453,23 +2489,24 @@ class MyDataBase
         return $storageUnits;
     }
 
-    function selectDatabaseCosts($companyName): array|null {
+    function selectDatabaseCosts($companyName): array|null
+    {
         // Prepare the statement to call the stored procedure
         $stmt = $this->db->prepare("CALL get_databases_costs(?)");
         if (!$stmt) {
             die("Failed to prepare statement: " . $this->db->error);
         }
-    
+
         // Bind the parameter
         $stmt->bind_param("s", $companyName);
-    
+
         // Execute the stored procedure
         $stmt->execute();
-    
+
         // Get the result set from the executed statement
         $result = $stmt->get_result();
         $output = [];
-    
+
         // Fetch all rows into the output array
         while ($row = $result->fetch_assoc()) {
             $output[] = array(
@@ -2481,13 +2518,14 @@ class MyDataBase
         if (empty($output)) {
             return null;
         }
-    
+
         // Return the array with database names and costs
         return $output;
     }
 
     //Privileges
-    function isSuperAdmin():bool{
+    function isSuperAdmin(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2495,12 +2533,14 @@ class MyDataBase
         return in_array("Super Admin", $privileges);
     }
 
-    function isMaster():bool{
+    function isMaster(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         return $user->getNameCompany() != null;
     }
 
-    function canViewPayments():bool{
+    function canViewPayments(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2508,7 +2548,8 @@ class MyDataBase
         return in_array("View Payments", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
-    function canEditPrivileges():bool{
+    function canEditPrivileges(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2516,7 +2557,8 @@ class MyDataBase
         return in_array("Edit Privilegies", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
-    function canEditUserGroup():bool{
+    function canEditUserGroup(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2524,7 +2566,8 @@ class MyDataBase
         return in_array("Edit User Groups", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
-    function canEditUsers():bool{
+    function canEditUsers(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2532,7 +2575,8 @@ class MyDataBase
         return in_array("Edit Users", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
-    function canEditCompany():bool{
+    function canEditCompany(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2540,7 +2584,8 @@ class MyDataBase
         return in_array("Edit Company", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
-    function canViewComputeInstances():bool{
+    function canViewComputeInstances(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2548,7 +2593,8 @@ class MyDataBase
         return in_array("View Compute Instances", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
-    function canViewDataBases():bool{
+    function canViewDataBases(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2556,7 +2602,8 @@ class MyDataBase
         return in_array("View Data Bases", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
-    function canViewStorageUnits():bool{
+    function canViewStorageUnits(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2564,7 +2611,8 @@ class MyDataBase
         return in_array("View Storage Units", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
-    function canViewVCNs():bool{
+    function canViewVCNs(): bool
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $privileges = $this->getPrivilegesByUserGroupId($idUserGroup);
@@ -2573,7 +2621,8 @@ class MyDataBase
     }
 
     //USEFUL
-    function getCompany():string{
+    function getCompany(): string
+    {
         $user = unserialize($_SESSION["user"]);
         $idUserGroup = $user->getIdUserGroup();
         $userGroup = $this->selectUserGroup($idUserGroup);

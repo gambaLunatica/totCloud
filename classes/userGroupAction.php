@@ -5,43 +5,41 @@ require "dataBase.php";
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if ($_POST['action'] === "load") {
-        if ($_POST["imageId"] === "--New--") {
-            header("Location: ../myAccount.php?page=myConsole.php");
-            exit;
+    if ($_POST['action'] === "update") {
+        if($dataBase->canEditPrivileges()){
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "View Payments", isset($_POST["viewPayments"]) ? true:false);
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "Edit Privilegies", isset($_POST["editPrivileges"]) ? true:false);
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "Edit User Groups", isset($_POST["editUserGroups"]) ? true:false);
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "Edit Users", isset($_POST["editUsers"]) ? true:false);
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "Edit Company", isset($_POST["editCompany"]) ? true:false);
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "View Data Bases", isset($_POST["viewDataBases"]) ? true:false);
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "View Compute Instances", isset($_POST["viewComputeInstances"]) ? true:false);
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "View Storage Units", isset($_POST["viewStorages"]) ? true:false);
+            $dataBase->updatePrivilege($_POST['idUserGroup'], "View VCNs", isset($_POST["viewVirtualNetworks"]) ? true:false);
         }
-        $image = $dataBase->selectImage($_POST["imageId"]);
-
-        $statusName = $image->getStatusName();
-        $cost = $image->getCost();
-        $osName = $image->getOsName();
-        $build = $image->getBuild();
-        $idImage = $image->getIdImage();
-
-        header("Location: ../myAccount.php?page=myConsole.php&imageId=$idImage&status=$statusName&osName=$osName&cost=$cost&build=$build");
+        header("Location: ../myAccount.php?page=myUserGroups.php");
         exit;
 
     } else if ($_POST["action"] === "remove") {
-        if (($_POST["imageId"] === "--New--") == false) {
-            $image = new Image($_POST["imageId"], "", 0, "", "");
-
-            if (!$dataBase->deleteImage($image)) {
-                $_SESSION["error"] = 1;
-                $_SESSION["message"] = "The image could not be deleted.";
-                header("Location: ../index.php");
-                exit;
-            }
-
-            header("Location: ../myAccount.php?page=myConsole.php");
+        if(!$dataBase->deleteUserGroup($_POST['idUserGroup'])){
+            $_SESSION["error"] = 1;
+            $_SESSION["message"] = "The user group could not be deleted, might still have users assigned.";
+            header("Location: ../index.php");
             exit;
         }
 
-        header("Location: ../myAccount.php?page=myConsole.php");
+        header("Location: ../myAccount.php?page=myUserGroups.php");
         exit;
 
     } else if ($_POST["action"] === "add") {
         $userGroup = new UserGroup($dataBase->getCompany(),$_POST["nameUserGroup"]);
-        $dataBase->insertUserGroup($userGroup);
+
+        if (!$dataBase->insertUserGroup($userGroup)) {
+            $_SESSION["error"] = 1;
+            $_SESSION["message"] = "The user group could not be created.";
+            header("Location: ../index.php");
+            exit;
+        }
 
         if($dataBase->canEditPrivileges()){
             $dataBase->insertPrivilege($userGroup->getId(), "View Payments", isset($_POST["viewPayments"]) ? true:false);

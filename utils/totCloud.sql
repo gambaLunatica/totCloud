@@ -625,6 +625,18 @@ BEGIN
     WHERE m.nameCompany = cCompanyName;
 END $$
 
+-- Deletes the usergroup and the privileges
+CREATE PROCEDURE DeleteUserGroupAndPrivileges(IN p_idUserGroup INT UNSIGNED)
+BEGIN
+    -- First delete the PrivilegeStatus rows for this user group
+    DELETE FROM PrivilegeStatus
+    WHERE idUserGroup = p_idUserGroup;
+
+    -- Then delete the user group
+    DELETE FROM UserGroup
+    WHERE idUserGroup = p_idUserGroup;
+END$$
+
 DELIMITER ;
 
 insert into speed (IOSpeed) values (10);
