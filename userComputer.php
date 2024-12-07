@@ -4,35 +4,35 @@ if(!$dataBase->canViewComputeInstances()){
     exit();
 }
 
-$coputerServices = [];
-$coputerServices = $dataBase->getUserComputeInstances();
+$computerServices = [];
+$computerServices = $dataBase->getUserComputeInstances();
 ?>
-<h1>Computers Instances</h1>
-    <?php if ($coputerServices): ?>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>idSubnet</th>
-                    <th>nameCompany</th>
-                    <th>idMemory</th>
-                    <th>idImage</th>
-                    <th>model</th>
-                    <th>name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($coputerServices as $computer): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($computer['idSubnet']); ?></td>
-                        <td><?= htmlspecialchars($computer['nameCompany']); ?></td>
-                        <td><?= htmlspecialchars($computer['idMemory']); ?></td>
-                        <td><?= htmlspecialchars($computer['idImage']); ?></td>
-                        <td><?= htmlspecialchars($computer['model']); ?></td>
-                        <td><?= htmlspecialchars($computer['name']); ?></td>
-                    </tr>
+<div class="container-services">
+        <h1>Compute Instances</h1>
+        <?php if ($computerServices): ?>
+            <div class="card-container">
+                <?php foreach ($computerServices as $computer): ?>
+                    <div class="card">
+                        <div class="card-icon">
+                            <img src="iconos/ordenador-personal.png" alt="Compute Instance">
+                        </div>
+                        <h2><?= htmlspecialchars($computer['name']); ?></h2>
+                        <p>CPU: <?= htmlspecialchars($computer['model']); ?></p>
+                        <p>Memory: <?= htmlspecialchars($computer['idMemory']); ?></p>
+                        <p>Imagen: <?= htmlspecialchars($computer['idImage']); ?></p>
+                        <p>idSubnet: <?= htmlspecialchars($computer['idSubnet']); ?></p>
+                        <p>Company: <?= htmlspecialchars($computer['nameCompany']); ?></p>
+                    </div>
                 <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <p>No Computer services found for this user.</p>
-    <?php endif; ?>
+                <!-- Tarjeta para agregar nuevo -->
+                <div class="card new">
+                    <div class="icon">
+                        <img src="iconos/anadir.png" alt="Add">
+                    </div>
+                    <h2>NEW</h2>
+                </div>
+            </div>
+        <?php else: ?>
+            <p>No se encontraron servicios de Compute Instances para este usuario.</p>
+        <?php endif; ?>
+    </div>

@@ -2697,7 +2697,7 @@ class MyDataBase
         $user = unserialize($_SESSION["user"]);
         $email = $user->getEmail();
         $query = "
-            SELECT v.idVCN, v.nameVCN, v.privateIP, v.creationDate, v.cidr
+            SELECT v.idVCN, v.nameVCN, v.privateIP, v.creationDate, v.cidr, v.nameRegion
             FROM MYUSER u
             JOIN COMPANY co ON u.nameCompany = co.nameCompany
             LEFT JOIN VCN v ON v.nameCompany = co.nameCompany
