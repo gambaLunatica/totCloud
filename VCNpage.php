@@ -12,7 +12,7 @@
     
     <main>
         <?php
-        if (isset($_SESSION["user"])){
+        if (isset($_SESSION["user"])&& $dataBase->canViewVCNs()){
                 include "userVCN.php";
             } else{
                 include "guestVCN.php";

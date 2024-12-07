@@ -76,7 +76,7 @@ $userGroups = $dataBase->selectUserGroups($dataBase->getCompany());
                 </div>
                 <div>
                     <form action="classes/userAction.php" method="post">
-                        <input style="display:none;" type="text" id="email" name="email" value=<?= '"' . $user->getEmail() . '"' ?>>
+                        <input style="display:none;" type="text" id="emailV" name="emailV" value=<?= '"' . $user->getEmail() . '"' ?>>
 
                         <select id="userGroup" name="userGroup" style="width:200px; margin-top:10px;" required>
                             <?php

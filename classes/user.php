@@ -47,7 +47,7 @@ class User{
     public function setIdUserGroup(int $idUserGroup):void{
         $this->idUserGroup = $idUserGroup;
     }
-    public function setNameCompany(String $nameCompany):void{
+    public function setNameCompany(String|null $nameCompany):void{
         $this->nameCompany = $nameCompany;
     }
     public function setRealName(String $realName):void{

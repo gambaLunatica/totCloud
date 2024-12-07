@@ -649,7 +649,20 @@ class MyDataBase
     {
         try {
 
-            $stmt = $this->db->prepare("SELECT realName, realSurname, email, idUserGroup, nameCompany FROM MyUser WHERE nameCompany= ?");
+            $stmt = $this->db->prepare(
+                "SELECT 
+                        m.realName, 
+                        m.realSurname, 
+                        m.email,
+                        m.nameCompany,
+                        m.idUserGroup
+                    FROM 
+                        MyUser m
+                    JOIN 
+                        UserGroup u ON m.idUserGroup = u.idUserGroup
+                    WHERE 
+                        u.nameCompany = ?"
+            );
             $stmt->bind_param("s", $nameCompany);
 
             if (!$stmt) {
@@ -675,6 +688,32 @@ class MyDataBase
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public function updateUserUserGroup(string $email, int $idUserGroup):bool{
+        $sql = "UPDATE MyUser SET idUserGroup = ? WHERE email = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("is", $idUserGroup,$email);
+
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        return $stmt->execute();
+    }
+
+    public function deleteUser(string $email): bool
+    {
+        $stmt = $this->db->prepare(
+            "delete from MyUser where email =?"
+        );
+        $stmt->bind_param("s", $email);
+
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        return $stmt->execute();
     }
 
     public function updateUser(User $user): bool

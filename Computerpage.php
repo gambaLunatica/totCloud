@@ -12,7 +12,7 @@
     
     <main>
         <?php
-        if (isset($_SESSION["user"])){
+        if (isset($_SESSION["user"])&& $dataBase->canViewComputeInstances()){
                 include "userComputer.php";
             } else{
                 include "guestComputer.php";

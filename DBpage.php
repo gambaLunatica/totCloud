@@ -12,7 +12,7 @@
     
     <main>
         <?php
-        if (isset($_SESSION["user"])){
+        if (isset($_SESSION["user"] )&& $dataBase->canViewDataBases()){
                 include "userDB.php";
             } else{
                 include "guestDB.php";

@@ -7,19 +7,14 @@ require "dataBase.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($_POST['action'] === "update") {
-        
-        header("Location: ../myAccount.php?page=myUserGroups.php");
-        exit;
-
-    } else if ($_POST["action"] === "remove") {
-        if(!$dataBase->deleteUserGroup($_POST['idUserGroup'])){
+        if(!$dataBase->updateUserUserGroup($_POST['emailV'], $_POST['userGroup'])){
             $_SESSION["error"] = 1;
-            $_SESSION["message"] = "The user group could not be deleted, might still have users assigned.";
+            $_SESSION["message"] = "The user could not be updated.";
             header("Location: ../index.php");
             exit;
         }
-
-        header("Location: ../myAccount.php?page=myUserGroups.php");
+        
+        header("Location: ../myAccount.php?page=myUsers.php");
         exit;
 
     } else if ($_POST["action"] === "add") {
@@ -32,12 +27,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit;
         }
 
-        header("Location: ../myAccount.php?page=myUserGroups.php");
+        header("Location: ../myAccount.php?page=myUsers.php");
+        exit;
+    } else if ($_POST["action"] === "remove") {
+        if (!$dataBase->deleteUser($_POST['emailV'])) {
+            $_SESSION["error"] = 1;
+            $_SESSION["message"] = "The user could not be deleted.";
+            header("Location: ../index.php");
+            exit;
+        }
+
+        header("Location: ../myAccount.php?page=myUsers.php");
         exit;
     }
 
 
     $_SESSION["error"] = 1;
-    $_SESSION["message"] = "Severe error when handling the image.";
+    $_SESSION["message"] = "Severe error when handling the user.";
     header("Location: ../index.php");
 }
