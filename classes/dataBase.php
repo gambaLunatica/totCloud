@@ -2659,8 +2659,7 @@ class MyDataBase
             FROM MYUSER u
             JOIN COMPANY co ON u.nameCompany = co.nameCompany
             LEFT JOIN ComputeInstance ci ON ci.nameCompany = co.nameCompany
-            WHERE u.email = '$email'
-            AND ci.statusName = 'Live'";
+            WHERE u.email = '$email'";
 
         $result = mysqli_query($this->db, $query);
 
@@ -2677,12 +2676,11 @@ class MyDataBase
         $user = unserialize($_SESSION["user"]);
         $email = $user->getEmail();
         $query = "
-            SELECT s.idStorageUnit, s.name, s.usedSpace, s.creationDate, s.nameCompany, s.idSubnet, s.idComputeInstance, s.nameStorage
+            SELECT s.idStorageUnit, s.nameStorageU, s.usedSpace, s.creationDate, s.nameCompany, s.idSubnet, s.idComputeInstance, s.nameStorage, s.idUserGroup
             FROM MYUSER u
             JOIN COMPANY co ON u.nameCompany = co.nameCompany
             LEFT JOIN StorageUnit s ON s.nameCompany = co.nameCompany
-            WHERE u.email = '$email'
-            AND s.statusName = 'Live'";
+            WHERE u.email = '$email'";
 
         $result = mysqli_query($this->db, $query);
 
@@ -2699,12 +2697,11 @@ class MyDataBase
         $user = unserialize($_SESSION["user"]);
         $email = $user->getEmail();
         $query = "
-            SELECT db.idDataBase, db.nameDatabase, db.description, db.creationDate, db.nameCompany, db.idSubnet, db.idComputeInstance, db.idDBTypeMySQL, db.idDBTypePostgrade
+            SELECT db.idDataBase, db.nameDataBase, db.description, db.creationDate, db.nameCompany, db.idSubnet, db.idComputeInstance, db.idDBTypeMySQL, db.idDBTypePostgrade
             FROM MYUSER u
             JOIN COMPANY co ON u.nameCompany = co.nameCompany
             LEFT JOIN MyDataBase db ON db.nameCompany = co.nameCompany
-            WHERE u.email = '$email'
-            AND db.statusName = 'Live'";
+            WHERE u.email = '$email'";
 
         $result = mysqli_query($this->db, $query);
 

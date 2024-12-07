@@ -3,6 +3,7 @@
 
 <?php
     include 'head.php';
+    include 'classes/user.php';
     require "classes/dataBase.php";
 ?>
 
