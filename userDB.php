@@ -12,7 +12,7 @@ $databases = $dataBase->getUserDatabases();
     <?php if ($databases): ?>
         <div class="card-container">
             <?php foreach ($databases as $database): ?>
-                <div class="card">
+                <div class="card" onclick="openDBDetail('<?= urlencode(json_encode($database)) ?>')">
                     <div class="card-icon">
                         <img src="iconos/base-de-datos.png" alt="Database">
                     </div>
@@ -22,7 +22,7 @@ $databases = $dataBase->getUserDatabases();
                 </div>
             <?php endforeach; ?>
             <!-- Tarjeta para agregar nuevo -->
-            <div class="card new">
+            <div class="card new" onclick="openNewDBForm()">
                 <div class="icon">
                     <img src="iconos/anadir.png" alt="Add">
                 </div>
@@ -32,3 +32,17 @@ $databases = $dataBase->getUserDatabases();
     <?php else: ?>
         <p>No databases services found for this user.</p>
     <?php endif; ?>
+</div>
+<script>
+    // Función para abrir detalles de una base de datos
+    function openDBDetail(dbData) {
+        const url = `dbDetail.php?database=${encodeURIComponent(dbData)}`;
+        window.open(url, '_blank', 'width=800,height=600');
+    }
+
+    // Función para abrir formulario de nueva base de datos
+    function openNewDBForm() {
+        const url = 'index.php';
+        window.open(url, '_blank', 'width=800,height=600');
+    }
+</script>

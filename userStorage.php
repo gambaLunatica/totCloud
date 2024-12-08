@@ -12,7 +12,7 @@ $storageServices = $dataBase->getUserStorageUnits();
     <?php if ($storageServices): ?>
         <div class="card-container">
             <?php foreach ($storageServices as $storage): ?>
-                <div class="card">
+                <div class="card" onclick="openStorageDetail('<?= urlencode(json_encode($storage)) ?>')">
                     <div class="card-icon">
                         <img src="iconos/nube.png" alt="Storage Unit">
                     </div>
@@ -23,7 +23,7 @@ $storageServices = $dataBase->getUserStorageUnits();
                 </div>
             <?php endforeach; ?>
             <!-- Tarjeta para agregar nuevo -->
-            <div class="card new">
+            <div class="card new" onclick="openNewStorageForm()">
                 <div class="icon">
                     <img src="iconos/anadir.png" alt="Add">
                 </div>
@@ -33,3 +33,18 @@ $storageServices = $dataBase->getUserStorageUnits();
     <?php else: ?>
         <p>No storage services found for this user.</p>
     <?php endif; ?>
+</div>
+<script>
+    // Función para abrir detalles de una unidad de almacenamiento
+    function openStorageDetail(storageData) {
+        const url = `storageDetail.php?storage=${encodeURIComponent(storageData)}`;
+        //const url = `storageDetail.php?id=${storageId}`;
+        window.open(url, '_blank', 'width=800,height=600');
+    }
+
+    // Función para abrir formulario de nueva unidad de almacenamiento
+    function openNewStorageForm() {
+        const url = 'index.php';
+        window.open(url, '_blank', 'width=800,height=600');
+    }
+</script>
