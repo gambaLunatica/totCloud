@@ -31,6 +31,7 @@ if (!isset($_SESSION["user"])) {
                 if ($dataBase->canEditUsers()) {
                     echo '<a class="myAccountMenuItem" href="?page=myUsers.php"><i class="fa-solid fa-user-group"></i> &nbsp Users</a>';
                 }
+                echo '<a class="myAccountMenuItem" href="?page=myConsole.php" style="color:green;">TotCloud Pannel</a>';
 
                 ?>
             </div>

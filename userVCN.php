@@ -1,3 +1,4 @@
+<script src="functions.js"></script>
 <?php
 //$db = new MyDataBase($con);
 if(!$dataBase->canViewVCNs()){
@@ -25,7 +26,7 @@ $vcnServices = $dataBase->getUserVCN();
                 </div>
             <?php endforeach; ?>
             <!-- Tarjeta para agregar nuevo -->
-            <div class="card new">
+            <div class="card new" onclick="navigateTo('formDB.php')">
                 <div class="icon">
                     <img src="iconos/anadir.png" alt="Add">
                 </div>
