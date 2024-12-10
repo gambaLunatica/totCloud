@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<script src="functions.js"></script>
 <?php
     include 'head.php';
     include 'classes/user.php';
@@ -34,6 +32,8 @@
             <p> CPU model: <?=htmlspecialchars($computerDetails['model']); ?> </p>
             <p> CPU sries: <?=htmlspecialchars($computerDetails['cpuSeries']); ?> </p>
             <p> Download ssh key: <?=htmlspecialchars($computerDetails['sshKey']); ?> </p>
+            <button onclick="navigateTo('editStorageU.php')">Edit</button>
+
         </div>
     </div>
 </body>

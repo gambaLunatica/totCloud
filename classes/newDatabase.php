@@ -13,6 +13,7 @@ $postgrade = [];
 $user = unserialize($_SESSION["user"]);
 $email = $user->getEmail();
 
+
 $queryUserGroup = "
     SELECT UG.idUserGroup, UG.nameCompany
     FROM MYUSER AS MU

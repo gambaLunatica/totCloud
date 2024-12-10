@@ -1,3 +1,4 @@
+<script src="functions.js"></script>
 <?php
 include 'head.php';
 include 'classes/newDatabase.php';

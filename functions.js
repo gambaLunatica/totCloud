@@ -1,7 +1,6 @@
 function navigateTo(file) {
     window.location.href = file;
 }
-
 function validateBinaryInput(input) {
     const binaryPattern = /^[01]*$/; // Solo permite 0 y 1
     const errorElement = document.getElementById('ipError');

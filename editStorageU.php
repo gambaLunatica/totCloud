@@ -2,10 +2,12 @@
 include 'head.php';
 include 'classes/newStorageUnits.php';
 include 'navbar.php';
+$idStorageUnit = $_GET['id'];
 ?>
 
 <div class="create-container">
     <form method="POST" action="classes/newStorageUnits.php"> <!-- Acción del formulario -->
+    <input type="hidden" name="idStorageUnit" value="<?= htmlspecialchars($storage['idStorageUnit']); ?>">
         <div class="form-group">
                 <label for="storage_nameU">Nombre del almacenamiento:</label>
             <input type="text" id="storage_nameU" name="storage_nameU" placeholder="Storage Unit name:" required>
@@ -72,6 +74,6 @@ include 'navbar.php';
                 </select>
                 <br><br>
             </div>
-        <button type="submit" name="action" value="create" class="btn btn-success">Create Storage Unit</button>
+        <button type="submit" name="action" value="edit" class="btn btn-primary">Edit Storage Unit</button>
     </form>
 </div>

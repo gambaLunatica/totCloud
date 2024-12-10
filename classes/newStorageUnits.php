@@ -69,6 +69,7 @@ while ($stmtStorage->fetch()) {
 $_SESSION['storage'] = $storage;
 $stmtStorage->close();
 
+$action = $_POST['action'] ?? ''; // Valor del botón presionado
 //verificar si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nameSubnet = $_POST['nameSubnet'];
@@ -76,23 +77,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nameStorage = $_POST['nameStorage'];
     $nameStorageU = $_POST['storage_nameU'];
 
-    //verificar si los campos no estan vacios
-    if (empty($nameSubnet) || empty($nameComputeInstanece) || empty($nameStorage) || empty($nameCompany)) {
-        echo "Please fill all the fields";
-        exit;
-    }
-
     $creationDate = date("Y-m-d H:i:s"); // Fecha actual
-    $usedSpace = 0;
-    $queryStorage = "INSERT INTO StorageUnit (nameCompany, idSubnet, idComputeInstance, usedSpace, creationDate, nameStorageU, idUserGroup, nameStorage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    
-    $stmtStorage = $dataBase->prepare($queryStorage);
-    $stmtStorage->bind_param("ssssssss", $nameCompany, $nameSubnet, $nameComputeInstanece, $usedSpace, $creationDate, $nameStorageU, $idUserGroup, $nameStorage);
+    if ($action == 'create') {
+        //verificar si los campos no estan vacios
+        if (empty($nameSubnet) || empty($nameComputeInstanece) || empty($nameStorage) || empty($nameCompany)) {
+            echo "Please fill all the fields";
+            exit;
+        }
 
-    if ($stmtStorage->execute()) {
-        echo "Storage created successfully";
-    } else {
-        echo "Error: Storage not created";
+    
+        $usedSpace = 0;
+        $queryStorage = "INSERT INTO StorageUnit (nameCompany, idSubnet, idComputeInstance, usedSpace, creationDate, nameStorageU, idUserGroup, nameStorage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    
+        $stmtStorage = $dataBase->prepare($queryStorage);
+        $stmtStorage->bind_param("ssssssss", $nameCompany, $nameSubnet, $nameComputeInstanece, $usedSpace, $creationDate, $nameStorageU, $idUserGroup, $nameStorage);
+
+        if ($stmtStorage->execute()) {
+            echo "Storage created successfully";
+        } else {
+            echo "Error: Storage not created";
+        }
+    }elseif($action == 'edit'){
+        $idStorageU = $_POST['idStorageU'];
+        $queryStorage = "UPDATE StorageUnit SET nameCompany = ?, idSubnet = ?, idComputeInstance = ?, nameStorage = ? WHERE idStorageU = ?";
+        $stmtStorage = $dataBase->prepare($queryStorage);
+        $stmtStorage->bind_param("sssss", $nameCompany, $nameSubnet, $nameComputeInstanece, $nameStorage, $idStorageU);
+        if ($stmtStorage->execute()) {
+            echo "Storage updated successfully";
+        } else {
+            echo "Error: Storage not updated";
+        }
     }
 
 }
