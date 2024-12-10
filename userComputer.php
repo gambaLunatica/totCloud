@@ -1,5 +1,8 @@
 <?php
-if(!$dataBase->canViewComputeInstances()){
+include "classes/userGroup.php";
+include "classes/memory.php";
+include "classes/image.php";
+if (!$dataBase->canViewComputeInstances()) {
     header("Location: guestComputer.php");
     exit();
 }
@@ -11,17 +14,20 @@ $computerServices = $dataBase->getUserComputeInstances();
     <h1>Compute Instances</h1>
     <?php if ($computerServices): ?>
         <div class="card-container">
-            <?php foreach ($computerServices as $computer): ?>
-                <div class="card" onclick="openComputerInstanceDetail('<?= urlencode(json_encode($computer)) ?>')">
-                    <div class="card-icon">
-                        <img src="iconos/ordenador-personal.png" alt="Compute Instance">
+            <?php foreach ($computerServices as $computer): 
+                $memory = $dataBase->selectMemory($computer['idMemory']);
+                $image = $dataBase->selectImage($computer['idImage']);
+                ?>
+                <div class="card" onclick="openComputerInstanceDetail('<?= urlencode(json_encode($computer)) ?>')"
+                    style="width:220px; margin:10px; height:300px; background-color:#36393e; border-radius:6px;">
+                    <div class="icon-circle-mid">
+                        <i class="fa-solid fa-computer"></i>
                     </div>
                     <h2><?= htmlspecialchars($computer['name']); ?></h2>
                     <p>CPU: <?= htmlspecialchars($computer['model']); ?></p>
-                    <p>Memory: <?= htmlspecialchars($computer['idMemory']); ?></p>
-                    <p>Imagen: <?= htmlspecialchars($computer['idImage']); ?></p>
-                    <p>idSubnet: <?= htmlspecialchars($computer['idSubnet']); ?></p>
-                    <p>Company: <?= htmlspecialchars($computer['nameCompany']); ?></p>
+                    <p>Memory: <?= $memory->getTotalCapacity(); ?> GB</p>
+                    <p><?= $image->getOsName() ?></p>
+                    <p><?= (new DateTime($computer['creationDate']))->format('Y-m-d') ?></p>
                 </div>
             <?php endforeach; ?>
             <!-- Tarjeta para agregar nuevo -->
