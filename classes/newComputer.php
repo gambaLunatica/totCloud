@@ -91,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtener los valores enviados por el formulario
     $vmName = $_POST['vm_name'];
     $cpuModel = $_POST['cpu_model'];
+    
     $memoryId = $_POST['memory_capacity'];
     $imageId = $_POST['image_name'];
     $subnetId = $_POST['subnet_name']; // Asegúrate de que el formulario incluya este campo
