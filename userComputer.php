@@ -46,7 +46,7 @@ $computerServices = $dataBase->getUserComputeInstances();
 
     // Función para abrir formulario de nueva unidad de almacenamiento
     function openNewComputerInstance() {
-        const url = 'index.php';
+        const url = 'formComputer.php';
         window.open(url, '_blank', 'width=800,height=600');
     }
 </script>

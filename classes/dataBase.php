@@ -2862,6 +2862,10 @@ class MyDataBase
             return false;
         }
     }
+    // Método para ejecutar consultas preparadas
+    public function prepare($query) {
+        return $this->db->prepare($query);
+    }
 }
 
 $dataBase = new MyDataBase($con);

@@ -502,3 +502,60 @@ input[type="checkbox"]{
   font-size: 1.2rem;
   color: #333333;
 }
+.create-container{
+  max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    text-align: left; /* Alineación a la izquierda para mejor visualización */
+    display: flex;
+    flex-direction: column; /* Los elementos se apilan verticalmente */
+    gap: 20px; /* Espaciado entre los elementos */
+}
+/* Títulos del formulario */
+.create-container h1, h3 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 20px;
+}
+/* Estilo del contenedor de las opciones */
+.form-group {
+  display: flex;
+  flex-direction: column; /* Asegura que los elementos dentro estén en columna */
+  gap: 10px; /* Espacio entre las opciones */
+}
+/* Estilo del dropdown */
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #555555;
+}
+
+/* Botón de envío */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+/* Efecto al pasar el cursor sobre el botón */
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Mensajes de error o éxito */
+p {
+  color: #d9534f;
+  font-size: 1.2em;
+  text-align: center;
+}
