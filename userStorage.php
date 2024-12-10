@@ -44,7 +44,7 @@ $storageServices = $dataBase->getUserStorageUnits();
 
     // Función para abrir formulario de nueva unidad de almacenamiento
     function openNewStorageForm() {
-        const url = 'index.php';
+        const url = 'formStorageU.php';
         window.open(url, '_blank', 'width=800,height=600');
     }
 </script>
