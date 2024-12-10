@@ -53,6 +53,5 @@
                 </div>
             </div>
         </div>
-        <button type="submit"class="btn btn-success">Edit</button>
     </div>
 </body>

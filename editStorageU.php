@@ -2,7 +2,6 @@
 include 'head.php';
 include 'classes/newStorageUnits.php';
 include 'navbar.php';
-$idStorageUnit = $_GET['id'];
 ?>
 
 <div class="create-container">

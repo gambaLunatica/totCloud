@@ -33,7 +33,13 @@ if ($stmtUserGroup->fetch()) {
 $stmtUserGroup->close();
 
 // Paso 2: Obtener CPUs disponibles
-$queryCPUs = "SELECT model, coreCount, frequency, cost FROM CPU";
+$queryCPUs = "
+    SELECT c.model, c.coreCount, c.frequency, c.cost 
+    FROM CPU c
+    LEFT JOIN CompatibilityMemoryCPU cmc ON c.model = cmc.model
+    LEFT JOIN CompatibilityCPUImage cci ON c.model = cci.model
+    WHERE cmc.idMemory IS NOT NULL AND cci.idImage IS NOT NULL
+";
 $stmtCPUs = $dataBase->prepare($queryCPUs);
 $stmtCPUs->execute();
 $stmtCPUs->bind_result($model, $coreCount, $frequency, $cost);
@@ -45,7 +51,13 @@ $_SESSION['cpus'] = $cpus;
 $stmtCPUs->close();
 
 // Paso 3: Obtener memorias disponibles
-$queryMemorys = "SELECT totalCapacity, IOSpeed, generation, cost, idMemory FROM MEMORY";
+$queryMemorys = "
+    SELECT m.totalCapacity, m.IOSpeed, m.generation, m.cost, m.idMemory
+    FROM MEMORY m
+    LEFT JOIN CompatibilityMemoryCPU cmc ON m.idMemory = cmc.idMemory
+    LEFT JOIN CPU c ON cmc.model = c.model
+    WHERE c.model IS NOT NULL
+";
 $stmtMemorys = $dataBase->prepare($queryMemorys);
 $stmtMemorys->execute();
 $stmtMemorys->bind_result($totalCapacity, $IOSpeed, $generation, $cost, $idMemory);
@@ -63,7 +75,13 @@ $_SESSION['memorys'] = $memorys;
 $stmtMemorys->close();
 
 // Paso 4: Obtener imágenes disponibles
-$queryImage = "SELECT idImage, OSname, build, cost FROM IMAGE";
+$queryImage = "
+    SELECT i.idImage, i.OSname, i.build, i.cost
+    FROM IMAGE i
+    LEFT JOIN CompatibilityCPUImage cci ON i.idImage = cci.idImage
+    LEFT JOIN CPU c ON cci.model = c.model
+    WHERE c.model IS NOT NULL
+";
 $stmtImage = $dataBase->prepare($queryImage);
 $stmtImage->execute();
 $stmtImage->bind_result($idImage, $OSname, $build, $cost);
