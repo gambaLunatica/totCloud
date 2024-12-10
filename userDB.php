@@ -42,7 +42,7 @@ $databases = $dataBase->getUserDatabases();
 
     // Función para abrir formulario de nueva base de datos
     function openNewDBForm() {
-        const url = 'index.php';
+        const url = 'formDB.php';
         window.open(url, '_blank', 'width=800,height=600');
     }
 </script>
