@@ -662,3 +662,99 @@ INSERT INTO DBTypeMySql (statusName,cost,releaseDate,version) VALUES ('Live', 32
 INSERT INTO DBTypePostgrade (statusName,cost,releaseDate,build)  VALUES ('Live', 40, '2024-12-06', 'dfsgs');
 insert into MyDataBase (nameCompany, idSubnet, idComputeInstance, idDBTypeMySQL, nameDatabase) values ("TotCloud", 1, 1, 1, "MySQL TST");
 insert into MyDataBase (nameCompany, idSubnet, idComputeInstance, idDBTypePostgrade, nameDatabase) values ("TotCloud", 1, 1, 1, "Postgre TST");
+
+
+-- BACKUPS
+SET GLOBAL event_scheduler = ON;
+
+CREATE TABLE StorageUnitBackup (
+    backupID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    backupDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    idStorageUnit INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
+    idSubnet INT UNSIGNED NOT NULL,
+    idComputeInstance INT UNSIGNED NOT NULL,
+    usedSpace FLOAT UNSIGNED NOT NULL,
+    creationDate DATETIME NOT NULL,
+    nameStorageU VARCHAR(32) NOT NULL,
+    idUserGroup INT UNSIGNED NOT NULL,
+    nameStorage VARCHAR(32) NOT NULL,
+    PRIMARY KEY (backupID)
+);
+
+CREATE TABLE ComputeInstanceBackup (
+    backupID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    backupDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    idComputeInstance INT UNSIGNED NOT NULL,
+    idSubnet INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
+    idMemory INT UNSIGNED NOT NULL,
+    idImage INT UNSIGNED NOT NULL,
+    model VARCHAR(32) NOT NULL,
+    name VARCHAR(32) NOT NULL,
+    creationDate DATETIME NOT NULL,
+    sshKey BLOB(512),
+    PRIMARY KEY (backupID)
+);
+
+CREATE TABLE VCNBackup (
+    backupID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    backupDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    idVCN INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
+    nameRegion VARCHAR(32) NOT NULL,
+    cidr TINYINT UNSIGNED NOT NULL,
+    privateIP BINARY(4) NOT NULL,
+    creationDate DATETIME NOT NULL,
+    nameVCN VARCHAR(32) NOT NULL,
+    PRIMARY KEY (backupID)
+);
+
+CREATE TABLE SubnetBackup (
+    backupID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    backupDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    idSubnet INT UNSIGNED NOT NULL,
+    idVCN INT UNSIGNED NOT NULL,
+    cidr TINYINT UNSIGNED NOT NULL,
+    IP BINARY(4) NOT NULL,
+    nameSubnet VARCHAR(32) NOT NULL,
+    creationDate DATETIME NOT NULL,
+    PRIMARY KEY (backupID)
+);
+
+CREATE TABLE MyDataBaseBackup (
+    backupID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    backupDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    idDataBase INT UNSIGNED NOT NULL,
+    nameCompany VARCHAR(32) NOT NULL,
+    idSubnet INT UNSIGNED NOT NULL,
+    idComputeInstance INT UNSIGNED NOT NULL,
+    idDBTypeMySQL INT UNSIGNED NULL,
+    idDBTypePostgrade INT UNSIGNED NULL,
+    creationDate DATETIME NOT NULL,
+    nameDataBase VARCHAR(32) NOT NULL,
+    description VARCHAR(512),
+    PRIMARY KEY (backupID)
+);
+
+CREATE TABLE MyTableBackup (
+    backupID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    backupDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    idTable INT UNSIGNED NOT NULL,
+    nameTable VARCHAR(32) NOT NULL,
+    idDataBase INT UNSIGNED NOT NULL,
+    PRIMARY KEY (backupID)
+);
+
+CREATE TABLE SettingBackup (
+    backupID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    backupDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    nameSetting VARCHAR(32) NOT NULL,
+    statusName VARCHAR(16) NOT NULL,
+    idDBTypePostgrade INT UNSIGNED NULL,
+    idDBTypeMySQL INT UNSIGNED NULL,
+    booleanValue BOOLEAN NULL,
+    decimalValue FLOAT NULL,
+    stringValue VARCHAR(128) NULL,
+    PRIMARY KEY (backupID)
+);
