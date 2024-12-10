@@ -758,3 +758,88 @@ CREATE TABLE SettingBackup (
     stringValue VARCHAR(128) NULL,
     PRIMARY KEY (backupID)
 );
+
+-- EVENTOS DE BACKUP
+
+CREATE EVENT BackupComputeInstance
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+INSERT INTO ComputeInstanceBackup (
+    idComputeInstance, idSubnet, nameCompany, idMemory, idImage, model, 
+    name, creationDate, sshKey
+)
+SELECT
+    idComputeInstance, idSubnet, nameCompany, idMemory, idImage, model, 
+    name, creationDate, sshKey
+FROM ComputeInstance;
+
+CREATE EVENT BackupVCN
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+INSERT INTO VCNBackup (
+    idVCN, nameCompany, nameRegion, cidr, privateIP, creationDate, nameVCN
+)
+SELECT
+    idVCN, nameCompany, nameRegion, cidr, privateIP, creationDate, nameVCN
+FROM VCN;
+
+CREATE EVENT BackupSubnet
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+INSERT INTO SubnetBackup (
+    idSubnet, idVCN, cidr, IP, nameSubnet, creationDate
+)
+SELECT
+    idSubnet, idVCN, cidr, IP, nameSubnet, creationDate
+FROM Subnet;
+
+CREATE EVENT BackupMyDataBase
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+INSERT INTO MyDataBaseBackup (
+    idDataBase, nameCompany, idSubnet, idComputeInstance, idDBTypeMySQL, 
+    idDBTypePostgrade, creationDate, nameDataBase, description
+)
+SELECT
+    idDataBase, nameCompany, idSubnet, idComputeInstance, idDBTypeMySQL, 
+    idDBTypePostgrade, creationDate, nameDataBase, description
+FROM MyDataBase;
+
+CREATE EVENT BackupMyTable
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+INSERT INTO MyTableBackup (
+    idTable, nameTable, idDataBase
+)
+SELECT
+    idTable, nameTable, idDataBase
+FROM MyTable;
+
+CREATE EVENT BackupInstruction
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+INSERT INTO InstructionBackup (
+    idInstruction, idTable, nameInstruction, inputDate
+)
+SELECT
+    idInstruction, idTable, nameInstruction, inputDate
+FROM Instruction;
+
+CREATE EVENT BackupSetting
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+INSERT INTO SettingBackup (
+    nameSetting, statusName, idDBTypePostgrade, idDBTypeMySQL, 
+    booleanValue, decimalValue, stringValue
+)
+SELECT
+    nameSetting, statusName, idDBTypePostgrade, idDBTypeMySQL, 
+    booleanValue, decimalValue, stringValue
+FROM Setting;

@@ -2715,14 +2715,10 @@ class MyDataBase
     // Consulta para obtener las instancias de Compute de un usuario
     public function getUserComputeInstances()
     {
-        $user = unserialize($_SESSION["user"]);
-        $email = $user->getEmail();
         $query = "
             SELECT ci.idComputeInstance, ci.creationDate, ci.sshKey, ci.name, ci.idSubnet, ci.nameCompany, ci.idMemory, ci.model, ci.idImage
-            FROM MYUSER u
-            JOIN COMPANY co ON u.nameCompany = co.nameCompany
-            LEFT JOIN ComputeInstance ci ON ci.nameCompany = co.nameCompany
-            WHERE u.email = '$email'";
+            FROM ComputeInstance ci
+            WHERE ci.nameCompany = '".$this->getCompany()."'";
 
         $result = mysqli_query($this->db, $query);
 
