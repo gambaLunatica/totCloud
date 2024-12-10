@@ -1,88 +1,63 @@
+<script src="functions.js"></script>
 <?php
-// Incluir archivo con la clase de base de datos
-require "classes/dataBase.php";
-include "head.php";
-
-
-// Procesar el formulario si se envió
-$message = ""; // Variable para mostrar mensajes de éxito o error
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    try {
-        $dataBase->processForm(); // Método para procesar el formulario
-        $message = "New database created successfully!";
-    } catch (Exception $e) {
-        $message = "Error: " . $e->getMessage();
-    }
-}
-// Obtener opciones para los desplegables
-$companies = $dataBase->getCompanies(); // Método para obtener las compañías
-$subnets = $dataBase->getSubnets();     // Método para obtener las subredes
-$computeInstances = $dataBase->getComputeInstances(); // Método para obtener instancias
-$mysqlVersions = $dataBase->getMySQLVersions(); // Método para obtener versiones de MySQL
-$postgreVersions = $dataBase->getPostgreVersions(); // Método para obtener versiones de PostgreSQL
+include 'head.php';
+include 'classes/newVCN.php';
+include 'navbar.php';
 ?>
 
-<h1>Create New Database</h1>
-    <?php if ($message): ?>
-        <p class="message <?= strpos($message, 'Error') !== false ? 'error' : '' ?>"><?= htmlspecialchars($message) ?></p>
-    <?php endif; ?>
-
-    <form method="POST" action="dataBase.php">
-        <label for="nameCompany">Company:</label>
-        <select id="nameCompany" name="nameCompany" required>
-            <option value="" selected>Select a company</option>
-            <?php foreach ($companies as $company): ?>
-                <option value="<?= htmlspecialchars($company['nameCompany']) ?>">
-                    <?= htmlspecialchars($company['nameCompany']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <label for="idSubnet">Subnet:</label>
-        <select id="idSubnet" name="idSubnet" required>
-            <option value="" selected>Select a subnet</option>
-            <?php foreach ($subnets as $subnet): ?>
-                <option value="<?= htmlspecialchars($subnet['idSubnet']) ?>">
-                    <?= htmlspecialchars($subnet['subnetName']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <label for="idComputeInstance">Compute Instance:</label>
-        <select id="idComputeInstance" name="idComputeInstance" required>
-            <option value="" selected>Select a compute instance</option>
-            <?php foreach ($computeInstances as $instance): ?>
-                <option value="<?= htmlspecialchars($instance['idComputeInstance']) ?>">
-                    <?= htmlspecialchars($instance['instanceName']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <label for="idDBTypeMySQL">MySQL Version:</label>
-        <select id="idDBTypeMySQL" name="idDBTypeMySQL">
-            <option value="" selected>Select a MySQL version</option>
-            <?php foreach ($mysqlVersions as $mysql): ?>
-                <option value="<?= htmlspecialchars($mysql['idDBType']) ?>">
-                    <?= htmlspecialchars($mysql['version']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <label for="idDBTypePostgrade">PostgreSQL Version:</label>
-        <select id="idDBTypePostgrade" name="idDBTypePostgrade">
-            <option value="" selected>Select a PostgreSQL version</option>
-            <?php foreach ($postgreVersions as $postgre): ?>
-                <option value="<?= htmlspecialchars($postgre['idDBType']) ?>">
-                    <?= htmlspecialchars($postgre['build']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <label for="nameDataBase">Database Name:</label>
-        <input type="text" id="nameDataBase" name="nameDataBase" required>
-
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" rows="4"></textarea>
-
-        <button type="submit">Create Database</button>
+<div class="create-container">
+    <form method="POST" action="classes/newVCN.php"> <!-- Acción del formulario -->
+        <div class="form-group>
+                <label for="vcn_name">Nombre de la red virtual:</label>
+            <input type="text" id="vcn_name" name="vcn_name" placeholder="Escribe un nombre para tu VCN" required>
+        </div>
+        <h1>Choose a Region for your Virtual Cloud Network</h1>
+            <div class="form-group>            
+                <label for="nameRegion">Select a Region:</label>
+                <select name="nameRegion" id="nameRegion" required>
+                    <option value="">Select a Region</option>
+                    <?php
+                    if (isset($_SESSION['regions']) && !empty($_SESSION['regions'])) {
+                        foreach ($_SESSION['regions'] as $region) {
+                            echo "<option value='" . htmlspecialchars($region['nameRegion']) . "'>" . 
+                                htmlspecialchars($region['nameRegion']) . "</option>";
+                        }
+                    } else {
+                        echo "<option value=''>There not avilable Region .</option>";
+                    }
+                    ?>
+                </select>
+                <br><br>
+            </div>
+        
+        <h1>Choose a Mask for your Virtual Cloud Network</h1>
+            <div class="form-group>        
+                <label for="cidr">Select a Mask:</label>
+                <select name="cidr" id="cidr" required>
+                    <option value="">Select a Mask</option>
+                    <?php
+                    if (isset($_SESSION['masks']) && !empty($_SESSION['masks'])) {
+                        foreach ($_SESSION['masks'] as $mask) {
+                            echo "<option value='" . htmlspecialchars($mask['cidr']) . "'>" . 
+                                htmlspecialchars($mask['cost']) . " - $" .
+                                htmlspecialchars($mask['cidr']) . "</option>";
+                        }
+                    } else {
+                        echo "<option value=''>There not avilable Mask .</option>";
+                    }
+                    ?>
+                </select>
+                <br><br>
+            </div>
+        <h1>Choose a IP for your Virtual Cloud Network</h1>
+        <div class="form-group">
+            <label for="IP">IP:</label>
+            <input type="text" id="IP" name="IP" placeholder="Escribe una IP para tu VCN" 
+                maxlength="4" required 
+                oninput="validateBinaryInput(this)">
+            <small id="ipError" style="color: red; display: none;">Solo se permiten 1 y 0.</small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Crear VCN</button>
     </form>
+</div>
