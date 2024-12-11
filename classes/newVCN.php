@@ -63,7 +63,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $nameRegion = $_POST['nameRegion'];
     $privateIP = $_POST['IP'];
     $nameVCN = $_POST['vcn_name'];
-    $idVCN = $_POST['idVCN'];
+    
 
     //verificar si los campos no estan vacios
     if(empty($cidr) || empty($nameRegion) || empty($privateIP) || empty($nameVCN)){
@@ -81,12 +81,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $creationDate = date("Y-m-d H:i:s"); // Fecha actual
 
     if($mode === 'edit'){
+        $idVCN = $_POST['idVCN'];
         // Actualizar VCN
         $queryVCN = "UPDATE VCN SET cidr = ?, nameCompany = ?, nameRegion = ?, privateIP = ?, creationDate = ?, nameVCN = ? WHERE idVCN = ?";
         $stmtVCN = $dataBase->prepare($queryVCN);
         $stmtVCN->bind_param("ssssssi", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN, $idVCN);
         if($stmtVCN->execute()){
             echo "VCN updated successfully";
+            echo "<br>";
+            echo "Please, close this window and refresh the VVCN page.";
         }else{
             echo "Error updating VCN";
         }
@@ -99,6 +102,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         if($stmtVCN->execute()){
             echo "VCN created successfully";
+            echo "<br>";
+            echo "Please, close this window and refresh the VVCN page.";
         }else{
             echo "Error creating VCN";
         }
