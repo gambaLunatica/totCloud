@@ -3,6 +3,23 @@
 include 'head.php';
 include 'classes/newDatabase.php';
 include 'navbar.php';
+
+global $mode;  // Declaramos la variable $mode
+global $idDataBase; // Declaramos la variable $idDataBase
+
+// Establecemos valores por defecto
+$mode = 'create';  // Valor por defecto
+$idDataBase = null;     // Inicializamos $idDataBase como null
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // Establecemos el valor de $mode desde el formulario, si está presente
+    $mode = $_GET['mode'] ?? 'create';  // Si no existe, 'create' será el valor por defecto
+    $idDataBase = $_GET['idDataBase'] ?? null;    // ID de la base de datos a editar, si está presente
+}
+
+// Para depuración, mostrar los valores obtenidos
+echo $mode;
+echo $idDataBase;
 ?>
 
 <div class="create-container">
@@ -77,7 +94,13 @@ include 'navbar.php';
                 </select>
                 <br><br>
             </div>
-        <button type="submit" class="btn btn-primary">Create Database</button>
+            <input type="hidden" name="mode" value="<?= $mode; ?>"> <!-- Valor de $mode -->
+            <?php if ($mode === 'edit'): ?>
+                <input type="hidden" name="idDataBase" value="<?= $idDataBase; ?>"> <!-- ID de la base de datos -->
+                <button type="submit" class="btn btn-primary">Update Database</button>
+            <?php else: ?>
+                <button type="submit" class="btn btn-success">Create Database</button>
+            <?php endif; ?>
     </form>
 </div>
 

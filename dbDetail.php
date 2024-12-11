@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<script src="functions.js"></script>
 <?php
     include 'head.php';
     include 'classes/user.php';
@@ -79,6 +79,11 @@
                     <?php endif; ?>
                 </p>
             <?php endforeach; ?>
+            <form id="editDB" action="formDB.php" method="GET">
+                <input type="hidden" name="idDataBase" value="<?= htmlspecialchars($pkDB); ?>">
+                <input type="hidden" name="mode" value="edit">
+                <button type="submit" class="btn btn-primary">Edit Database</button>
+            </form>
         </div>
     </div>
 </body>

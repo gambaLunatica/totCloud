@@ -79,24 +79,38 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $postgrade = empty($_POST['namePostgrade']) ? null : $_POST['namePostgrade'];
     $nameDatabase = $_POST['db_name'];
     $description = $_POST['description'];
+    $mode = $_POST['mode'];
+    $idDataBase = $_POST['idDataBase'];
 
     //Verificar que lso campos estén llenos
-    if(empty($nameSubnet) || empty($nameComputeInstance) || empty($nameDatabase) || empty($description)||(empty($mySQl) && empty($postgrade))){
-        echo "Please fill all the fields";
-        exit;
-    }
+    
 
     $creationDate = date("Y-m-d H:i:s");
 
-    $query = "CALL createDatabase(?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $dataBase->prepare($query);
-    $stmt->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description);
+    if($mode === 'edit'){
+        $queryUpdate = "UPDATE MyDataBase SET creationDate = ?, idSubnet = ?, idComputeInstance = ?, idDBTypeMySQL = ?, idDBTypePostgrade = ?, nameDataBase = ?, description = ? WHERE idDataBase = ?";
+        $stmt = $dataBase->prepare($queryUpdate);
+        $stmt->bind_param("sssssssi", $creationDate, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description, $idDataBase);
 
-    if($stmt->execute()){
-        echo "Database created successfully";
+        if($stmt->execute()){
+            echo "Database updated successfully";
+        }else{
+            echo "Error updating database";
+        }
     }else{
-        echo "Error creating database";
-    }
+        if(empty($nameSubnet) || empty($nameComputeInstance) || empty($nameDatabase) || empty($description)||(empty($mySQl) && empty($postgrade))){
+            echo "Please fill all the fields";
+            exit;
+        }
+        $query = "CALL createDatabase(?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $dataBase->prepare($query);
+        $stmt->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description);
 
+        if($stmt->execute()){
+            echo "Database created successfully";
+        }else{
+            echo "Error creating database";
+        }
+    }
 
 }
