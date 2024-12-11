@@ -36,7 +36,7 @@
 ?>
 
 <body>
-    <h1 style="text-align: center;"><?= htmlspecialchars($storageDetails['nameStorage']); ?></h1>
+    <h1 style="text-align: center;"><?= htmlspecialchars($storage['nameStorageU']); ?></h1>
     <div class="container">
         <div class="feature">
             <p style="font-size: 16px; display: flex; align-items: center;"> 
@@ -64,6 +64,38 @@
                     <?= htmlspecialchars(number_format($usagePercentage, 0)); ?>%
                 </div>
             </div>
+
+            <form id="deleteStorageForm" action="classes/deleteStorage.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Storage?');">
+                <input type="hidden" name="idStorageUnit" value="<?= htmlspecialchars($storage['idStorageUnit']); ?>">
+                <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete Storage Unit</button>
+            </form>
         </div>
     </div>
 </body>
+
+<script>
+function deleteAndClose(event) {
+    event.preventDefault();
+    const form = document.getElementById('deleteStorageForm');
+    const formData = new FormData(form);
+
+    fetch('classes/deleteStorage.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert(data);
+        window.close();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert();
+    });
+}
+</script>
