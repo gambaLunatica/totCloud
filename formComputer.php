@@ -15,22 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $mode = $_GET['mode'] ?? 'create';  // Si no existe, 'create' será el valor por defecto
     $idComputeInstance = $_GET['idComputeInstance'] ?? null;    // ID del Compute Instance a editar, si está presente
 }
-
-// Para depuración, mostrar los valores obtenidos
-echo $mode;
-echo $idComputeInstance;
 ?>
 
-<h1><?php echo $mode === 'edit' ? "Edit Compute Instance" : "Create Compute Instance"; ?></h1>
+<h1><?php echo $mode === 'edit' ? "Edit Virtual Machine" : "Create a Virtual Machine"; ?></h1>
 <div class="create-container">
     <form method="POST" action="classes/newComputer.php"> <!-- Acción del formulario -->
+        <h1>Choose a name for your Virtual Machine</h1>
         <div class="form-group">
-                <label for="vm_name">Nombre de la máquina virtual:</label>
-            <input type="text" id="vm_name" name="vm_name" placeholder="Escribe un nombre para tu VM" required>
+            <input type="text" id="vm_name" name="vm_name" placeholder="VM name" required>
         </div>
         <h1>Choose a CPU for yout Virtual Machine</h1>
             <div class="form-group">            
-                <label for="cpu_model">Select a CPU:</label>
                 <select name="cpu_model" id="cpu_model" required>
                     <option value="">Select a CPU</option>
                     <?php
@@ -53,7 +48,6 @@ echo $idComputeInstance;
         <h1>Choose a Memory for your Virtual Machine</h1>
  
             <div class="form-group">        
-                <label for="memory_capacity">Select a Memory:</label>
                 <select name="memory_capacity" id="memory_capacity" required>
                     <option value="">Select a Memory</option>
                     <?php
@@ -75,7 +69,6 @@ echo $idComputeInstance;
 
         <h1>Choose a Image for your Virtual Machine</h1>         
             <div class="form-group">        
-                <label for="image_name">Select a Image:</label>
                 <select name="image_name" id="image_name" required>
                     <option value="">Select a Image</option>
                     <?php
@@ -97,7 +90,6 @@ echo $idComputeInstance;
         <h1>Choose a Subnet for your Virtual Machine</h1>
          
             <div class="form-group">        
-                <label for="subnet_name">Select a Subnet:</label>
                 <select name="subnet_name" id="subnet_name" required>
                     <option value="">Select a Subnet</option>
                     <?php
@@ -115,13 +107,15 @@ echo $idComputeInstance;
                 </select>
                 <br><br>
             </div>
-            <input type="hidden" name="mode" value="<?= $mode; ?>"> <!-- Campo oculto para enviar el modo -->
-            <?php if ($mode === 'edit'): ?>
-                <input type="hidden" name="idComputeInstance" value="<?= $idComputeInstance; ?>"> <!-- Campo oculto para enviar el ID -->
-                <button type="submit" class="btn btn-primary">Update Compute Instance</button>
-            <?php else: ?>
-                <button type="submit" class="btn btn-success">Create Compute Instance</button>
-            <?php endif; ?>
+            <div class="form-group">  
+                <input type="hidden" name="mode" value="<?= $mode; ?>"> <!-- Campo oculto para enviar el modo -->
+                <?php if ($mode === 'edit'): ?>
+                    <input type="hidden" name="idComputeInstance" value="<?= $idComputeInstance; ?>"> <!-- Campo oculto para enviar el ID -->
+                    <button type="submit" class="btn btn-primary">Update Virtual Machine</button>
+                <?php else: ?>
+                    <button type="submit" class="btn btn-success">Create Virtual Machine</button>
+                <?php endif; ?>
+            </div>
     </form>
 </div>
 

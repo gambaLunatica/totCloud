@@ -15,22 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $mode = $_GET['mode'] ?? 'create';  // Si no existe, 'create' será el valor por defecto
     $idStorageUnit = $_GET['idStorageU'] ?? null;    // ID del Storage Unit a editar, si está presente
 }
-
-// Para depuración, mostrar los valores obtenidos
-echo $mode;
-echo $idStorageUnit;
 ?>
 
 <h1><?php echo $mode === 'edit' ? "Edit Storage Unit" : "Create Storage Unit"; ?></h1>
 <div class="create-container">
     <form method="POST" action="classes/newStorageUnits.php"> <!-- Acción del formulario -->
+        <h1>Choose a name for your Storage Unit</h1>
         <div class="form-group">
-                <label for="storage_nameU">Nombre del almacenamiento:</label>
             <input type="text" id="storage_nameU" name="storage_nameU" placeholder="Storage Unit name:" required>
         </div>
         <h1>Choose a Subnet for your Storage Unit</h1>
             <div class="form-group">            
-                <label for="nameSubnet">Select a Subnet:</label>
                 <select name="nameSubnet" id="nameSubnet" required>
                     <option value="">Select a Subnet</option>
                     <?php
@@ -51,7 +46,6 @@ echo $idStorageUnit;
 
         <h1>Choose a Compute Instance for your Storage Unit</h1>
             <div class="form-group">        
-                <label for="nameComputeInstance">Select a Compute Instance:</label>
                 <select name="nameComputeInstance" id="nameComputeInstance" required>
                     <option value="">Select a Compute Instance</option>
                     <?php
@@ -70,7 +64,6 @@ echo $idStorageUnit;
 
         <h1>Choose a Storage for your Storage Unit</h1>
             <div class="form-group">        
-                <label for="nameStorage">Select a Storage:</label>
                 <select name="nameStorage" id="nameStorage" required>
                     <option value="">Select a Storage</option>
                     <?php
@@ -90,12 +83,14 @@ echo $idStorageUnit;
                 </select>
                 <br><br>
             </div>
-            <input type="hidden" name="mode" value="<?php echo htmlspecialchars($mode); ?>">
-            <?php if ($mode === 'edit'): ?>
-                <input type="hidden" name="idStorageUnit" value="<?php echo htmlspecialchars($idStorageUnit); ?>">
-                <button type="submit" class="btn btn-primary">Update Storage Unit</button>
-            <?php else: ?>
-                <button type="submit" class="btn btn-success">Create Storage Unit</button>
-            <?php endif; ?>
+            <div class="form-group">
+                <input type="hidden" name="mode" value="<?php echo htmlspecialchars($mode); ?>">
+                <?php if ($mode === 'edit'): ?>
+                    <input type="hidden" name="idStorageUnit" value="<?php echo htmlspecialchars($idStorageUnit); ?>">
+                    <button type="submit">Update Storage Unit</button>
+                <?php else: ?>
+                    <button type="submit">Create Storage Unit</button>
+                <?php endif; ?>
+            </div>
     </form>
 </div>

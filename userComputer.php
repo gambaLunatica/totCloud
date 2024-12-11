@@ -18,10 +18,9 @@ $computerServices = $dataBase->getUserComputeInstances();
                 $memory = $dataBase->selectMemory($computer['idMemory']);
                 $image = $dataBase->selectImage($computer['idImage']);
                 ?>
-                <div class="card" onclick="openComputerInstanceDetail('<?= urlencode(json_encode($computer)) ?>')"
-                    style="width:220px; margin:10px; height:300px; background-color:#36393e; border-radius:6px;">
-                    <div class="icon-circle-mid">
-                        <i class="fa-solid fa-computer"></i>
+                <div class="card" onclick="openComputerInstanceDetail('<?= urlencode(json_encode($computer)) ?>')">
+                    <div class="card-icon">
+                        <img src="iconos/ordenador-personal.png" alt="Compute Instance">
                     </div>
                     <h2><?= htmlspecialchars($computer['name']); ?></h2>
                     <p>CPU: <?= htmlspecialchars($computer['model']); ?></p>
@@ -53,6 +52,6 @@ $computerServices = $dataBase->getUserComputeInstances();
     // Función para abrir formulario de nueva unidad de almacenamiento
     function openNewComputerInstance() {
         const url = 'formComputer.php';
-        window.open(url, '_blank', 'width=800,height=600');
+        window.open(url, '_blank', 'width=900,height=700');
     }
 </script>
