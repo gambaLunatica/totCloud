@@ -7,18 +7,43 @@
     require "classes/dataBase.php";
 
     $database = json_decode(urldecode($_GET['database']), true);
-    $databasedata = $dataBase->getDbData(htmlspecialchars($database['idDataBase']));
+    $databasedata = $dataBase->getDb(htmlspecialchars($database['idDataBase']));
+
     //echo "<pre>";
     //print_r($databasedata);
     //echo "</pre>";
     if (!empty($databasedata)) {
+
         $databasedetails = $databasedata[0];
-        $statusName = $databasedetails['mysqlStatus'] ?? $databasedetails['postgreStatus'];
-        $releaseDate = $databasedetails['mysqlReleaseDate'] ?? $databasedetails['postgreReleaseDate'];
-        $cost = $databasedetails['mysqlCost'] ?? $databasedetails['postgreCost'];
+        $dbSettings = [];
+        $dbSettings = $dataBase->getDBSetting($databasedetails['idDataBase']);
+        
+        if($databasedetails['idDBTypeMySQL'] != null)
+        {
+            $hold = $dataBase->getDBMySQL(htmlspecialchars($databasedetails['idDBTypeMySQL']));
+            $dbmysql = $hold[0];
+            $statusName = $dbmysql['statusName'];
+            $releaseDate = $dbmysql['releaseDate'];
+            $var = $dbmysql['version'];
+        }
+        else if ($databasedetails['idDBTypePostgrade'] != null)
+        {
+            $hold = $dataBase->getDBPostgrade(htmlspecialchars($databasedetails['idDBTypePostgrade']));
+            $dbpostgrade = $hold[0];
+            $statusName = $dbpostgrade['statusName'];
+            $releaseDate = $dbpostgrade['releaseDate'];
+            $var = $dbpostgrade['build'];
+        }
     } else {
         $databasedetails = null;
     }
+    //-------------------------------PARA LUNA--------------------------------------------------------
+    // Te dejo aquí la clave primaria de la base de datos seleccionada
+    $pkDB = $database['idDataBase'];
+    echo "<pre>";
+    print_r("Primary Key Data Base: $pkDB \n");
+    echo "</pre>";
+    //------------------------------------------------------------------------------------------------
 ?>
 
 <body>
@@ -30,17 +55,30 @@
                     margin-right: 8px; 
                     background-color: <?= ($statusName === 'Live') ? 'green' : 'red'; ?>;">
                 </span>
-
                 Status: <?= htmlspecialchars($statusName); ?>
             </p>
             <p> Release Date: <?= htmlspecialchars($releaseDate);?> </p>
-            <p> Total Cost: <?= htmlspecialchars($cost);?> </p>
             <?php if ($databasedetails['idDBTypeMySQL'] != null): ?>
-                <p> MySQL Version: <?= htmlspecialchars($databasedetails['mysqlVersion']); ?> </p>
+                <p> MySQL Version: <?= htmlspecialchars($var); ?> </p>
             <?php elseif ($databasedetails['idDBTypePostgrade'] != null): ?>
-                <p> PostgreSQL Build: <?= htmlspecialchars($databasedetails['postgreBuild']); ?> </p>
+                <p> PostgreSQL Build: <?= htmlspecialchars($var); ?> </p>
             <?php endif; ?>
-
+            <p>Description : <?= htmlspecialchars($databasedetails['description']); ?></p>
+            <p>Settings: </p>
+            <?php foreach ($dbSettings as $ds): ?>
+                <p>Setting name: <?= htmlspecialchars($ds['nameSetting']); ?> 
+                    Value: 
+                    <?php if ($ds['booleanValue'] !== null): ?>
+                        <?= $ds['booleanValue'] ? 'True' : 'False'; ?>
+                    <?php elseif ($ds['decimalValue'] !== null): ?>
+                        <?= htmlspecialchars($ds['decimalValue']); ?>
+                    <?php elseif ($ds['stringValue'] !== null): ?>
+                        <?= htmlspecialchars($ds['stringValue']); ?>
+                    <?php else: ?>
+                        None
+                    <?php endif; ?>
+                </p>
+            <?php endforeach; ?>
         </div>
     </div>
 </body>

@@ -7,7 +7,9 @@
     require "classes/dataBase.php";
 
     $storage = json_decode(urldecode($_GET['storage']), true);
-    $storagedata = $dataBase->getStorageData(htmlspecialchars($storage['nameStorage']));
+    $storagedata = $dataBase ->getStorage(htmlspecialchars($storage['nameStorage']));
+    //$usCI = $dataBase->getUserComputeInstances();
+
     //echo "<pre>";
     //print_r($storagedata);
     //echo "</pre>";
@@ -21,6 +23,16 @@
     } else {
         $storageDetails = null;
     }
+
+    //-------------------------------PARA LUNA--------------------------------------------------------
+    // Te dejo aquí la clave primaria de Storage Unit y la clave primaria del Storage seleccionado
+    $pkSU = $storage['idStorageUnit'];
+    $pkS = $storageDetails['nameStorage'];
+    echo "<pre>";
+    print_r("Primary Key Storage Unit: $pkSU \n");
+    print_r("Primary Key Storage seleccionada: $pkS");
+    echo "</pre>";
+    //------------------------------------------------------------------------------------------------
 ?>
 
 <body>

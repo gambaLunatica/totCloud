@@ -2683,6 +2683,10 @@ class MyDataBase
         return in_array("View VCNs", $privileges) || $this->isSuperAdmin() || $this->isMaster();
     }
 
+    public function prepare($query) {
+        return $this->db->prepare($query);
+    }
+
     //USEFUL
     function getCompany(): string
     {
@@ -2715,10 +2719,14 @@ class MyDataBase
     // Consulta para obtener las instancias de Compute de un usuario
     public function getUserComputeInstances()
     {
+        $user = unserialize($_SESSION["user"]);
+        $email = $user->getEmail();
         $query = "
             SELECT ci.idComputeInstance, ci.creationDate, ci.sshKey, ci.name, ci.idSubnet, ci.nameCompany, ci.idMemory, ci.model, ci.idImage
-            FROM ComputeInstance ci
-            WHERE ci.nameCompany = '".$this->getCompany()."'";
+            FROM MYUSER u
+            JOIN COMPANY co ON u.nameCompany = co.nameCompany
+            LEFT JOIN ComputeInstance ci ON ci.nameCompany = co.nameCompany
+            WHERE u.email = '$email'";
 
         $result = mysqli_query($this->db, $query);
 
@@ -2771,16 +2779,158 @@ class MyDataBase
         }
     }
 
-    public function getStorageData($nameStorage = null)
+    public function getStorage($nameStorage = null)
+    {
+        $query= "
+            SELECT st.totalCapacity, st.IOSpeed, st.typeName, st.nameStorage, st.cost, st.statusName
+            FROM Storage st 
+            WHERE st.nameStorage = '$nameStorage'";
+
+        $result = mysqli_query($this->db, $query);
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getDB($idDataBase = null)
+    {
+        $query = "
+            SELECT db.idDataBase, db.nameDataBase, db.description, db.creationDate, db.nameCompany, db.idSubnet, db.idComputeInstance, db.idDBTypeMySQL, db.idDBTypePostgrade
+            FROM MyDataBase db
+            WHERE db.idDataBase = '$idDataBase'";
+
+        $result = mysqli_query($this->db, $query);
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getDBMySQL ($idDBTypeMySQL = null)
+    {
+        $query = "
+            SELECT mysql.idDBType, mysql.statusName, mysql.cost, mysql.releaseDate, mysql.version 
+            FROM DBTypeMySql mysql 
+            WHERE mysql.idDBType = '$idDBTypeMySQL'";
+
+        $result = mysqli_query($this->db, $query);
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getDBPostgrade ($idDBTypePostgrade = null)
+    {
+        $query = "
+            SELECT postgrade.idDBType, postgrade.statusName, postgrade.cost, postgrade.releaseDate, postgrade.build 
+            FROM DBTypePostgrade postgrade 
+            WHERE postgrade.idDBType = '$idDBTypePostgrade'";
+
+        $result = mysqli_query($this->db, $query);
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getDBSetting ($idDataBase = null)
+    {
+        $query = "
+            SELECT dbms.idDataBase, dbms.nameSetting, dbms.booleanValue, dbms.decimalValue, dbms.stringValue
+            FROM DBConfiguration dbms
+            WHERE dbms.idDataBase = '$idDataBase'";
+
+        $result = mysqli_query($this->db, $query);
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+
+    }
+
+    public function getComputeInstance($idComputeInstance = null)
+    {
+        $query = "
+            SELECT ci.idComputeInstance, ci.creationDate, ci.sshKey, ci.name, ci.idSubnet, ci.nameCompany, ci.idMemory, ci.model, ci.idImage
+            FROM ComputeInstance ci
+            WHERE ci.idComputeInstance = '$idComputeInstance'";
+
+        $result = mysqli_query($this->db, $query);
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getCPUComputeInstance($model = null)
+    {
+        $query = "
+            SELECT cpu.model, cpu.statusName, cpu.series
+            FROM CPU cpu
+            WHERE cpu.model = '$model'";
+
+        $result = mysqli_query($this->db, $query);
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getVCN($idVCN = null)
+    {
+        $query = "
+            SELECT vcn.idVCN, vcn.nameVCN, vcn.privateIP, vcn.cidr, vcn.creationDate, vcn.nameRegion, vcn.nameCompany
+            FROM VCN as vcn
+            WHERE vcn.idVCN = '$idVCN'";
+
+        $result = mysqli_query($this->db, $query);
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getSubnetVCN($idVCN = null)
+    {
+        $query = "
+            SELECT s.idSubnet, s.nameSubnet, s.idVCN, s.IP, s.cidr, s.creationDate
+            FROM Subnet as s
+            WHERE s.idVCN = '$idVCN'";
+
+        $result = mysqli_query($this->db, $query);
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    // ESTAS SE PUEDEN BORRAR |
+    //                        v
+    /*public function getStorageData($nameStorage = null)
     {
         $user = unserialize($_SESSION["user"]);
         $email = $user->getEmail();
         $query = "
-            SELECT st.totalCapacity, st.IOSpeed, st.typeName, st.nameStorage, st.cost, st.statusName
+            SELECT st.totalCapacity, st.IOSpeed, st.typeName, st.nameStorage, st.cost, st.statusName, 
+            su.nameStorageU, ci.name as computeInstanceName, sn.nameSubnet as subnetName
             FROM MYUSER u
             JOIN COMPANY co ON u.nameCompany = co.nameCompany
             LEFT JOIN StorageUnit su ON su.nameCompany = co.nameCompany
             LEFT JOIN Storage st ON su.nameStorage = st.nameStorage
+            LEFT JOIN ComputeInstance ci ON su.idComputeInstance = ci.idComputeInstance
+            LEFT JOIN Subnet sn ON su.idSubnet = sn.idSubnet
             WHERE u.email = '$email'";
 
         if ($nameStorage !== null) {
@@ -2795,16 +2945,16 @@ class MyDataBase
         } else {
             return false;
         }
-    }
-    
-    public function getDbData($idDataBase = null)
+    }*/
+
+    /*public function getDbData($idDataBase = null)
     {
         $user = unserialize($_SESSION["user"]);
         $email = $user->getEmail();
         $query = "
             SELECT db.idDataBase, db.nameDataBase, db.description, db.creationDate, db.nameCompany, db.idSubnet, db.idComputeInstance, db.idDBTypeMySQL, db.idDBTypePostgrade,
-            mysql.version AS mysqlVersion, mysql.cost AS mysqlCost, mysql.releaseDate AS mysqlReleaseDate, mysql.statusName AS mysqlStatus,
-            pgsql.build AS postgreBuild, pgsql.cost AS postgreCost, pgsql.releaseDate AS postgreReleaseDate, pgsql.statusName AS postgreStatus
+            mysql.version AS mysqlVersion, mysql.cost AS mysqlCost,
+            pgsql.build AS postgreBuild, pgsql.cost AS postgreCost
             FROM MYUSER u
             JOIN COMPANY co ON u.nameCompany = co.nameCompany
             LEFT JOIN MyDataBase db ON db.nameCompany = co.nameCompany
@@ -2824,24 +2974,20 @@ class MyDataBase
         } else {
             return false;
         }
-    }
+    }*/
 
-    public function getComputeData($idComputerInstance = null)
+    /*public function getComputeData($idComputerInstance = null)
     {
         $user = unserialize($_SESSION["user"]);
         $email = $user->getEmail();
         $query = "
             SELECT ci.idComputeInstance, ci.creationDate, ci.sshKey, ci.name, ci.idSubnet, ci.nameCompany, ci.idMemory, ci.model, ci.idImage,
-            cpu.statusName, cpu.coreCount, cpu.cacheL1, cpu.cacheL2, cpu.cacheL3, cpu.frequency, cpu.cost AS cpuCost, cpu.series AS cpuSeries,
-            mem.totalCapacity AS memoryCapacity, mem.IOSpeed AS memoryIOSpeed, mem.generation AS memoryGeneration, mem.cost AS memoryCost,
-            img.osName AS imageOS, img.build AS imageBuild, img.cost AS imageCost,
+            cpu.statusName, cpu.series AS cpuSeries,
             s.nameSubnet AS subnetName, s.IP AS subnetIP
             FROM MYUSER u
             JOIN COMPANY co ON u.nameCompany = co.nameCompany
             LEFT JOIN ComputeInstance ci ON ci.nameCompany = co.nameCompany
             LEFT JOIN CPU cpu ON ci.model = cpu.model
-            LEFT JOIN Memory mem ON ci.idMemory = mem.idMemory
-            LEFT JOIN Image img ON ci.idImage = img.idImage
             LEFT JOIN Subnet s ON ci.idSubnet = s.idSubnet
             WHERE u.email = '$email'";
 
@@ -2857,11 +3003,7 @@ class MyDataBase
         } else {
             return false;
         }
-    }
-    // Método para ejecutar consultas preparadas
-    public function prepare($query) {
-        return $this->db->prepare($query);
-    }
+    }*/
 }
 
 $dataBase = new MyDataBase($con);

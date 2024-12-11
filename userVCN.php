@@ -14,7 +14,7 @@ $vcnServices = $dataBase->getUserVCN();
     <?php if ($vcnServices): ?>
         <div class="card-container">
             <?php foreach ($vcnServices as $vcn): ?>
-                <div class="card">
+                <div class="card" onclick="openVCNDetail('<?= urlencode(json_encode($vcn)) ?>')">
                     <div class="card-icon">
                         <img src="iconos/internet.png" alt="VCN">
                     </div>
@@ -26,7 +26,7 @@ $vcnServices = $dataBase->getUserVCN();
                 </div>
             <?php endforeach; ?>
             <!-- Tarjeta para agregar nuevo -->
-            <div class="card new" onclick="navigateTo('formVCN.php')">
+            <div class="card new" onclick="openNewVCNForm()">
                 <div class="icon">
                     <img src="iconos/anadir.png" alt="Add">
                 </div>
@@ -36,3 +36,17 @@ $vcnServices = $dataBase->getUserVCN();
     <?php else: ?>
         <p>No VCN services found for this user.</p>
     <?php endif; ?>
+    </div>
+<script>
+    // Función para abrir detalles de una vcn
+    function openVCNDetail(vcn) {
+        const url = `vcnDetail.php?vcn=${encodeURIComponent(vcn)}`;
+        window.open(url, '_blank', 'width=800,height=600');
+    }
+
+    // Función para abrir formulario de nueva unidad de almacenamiento
+    function openNewVCNForm() {
+        const url = 'formVCN.php';
+        window.open(url, '_blank', 'width=800,height=600');
+    }
+</script>
