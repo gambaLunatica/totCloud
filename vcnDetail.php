@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<script src="functions.js"></script>
 <?php
     include 'head.php';
     include 'classes/user.php';
@@ -59,6 +59,13 @@
             <form id="deleteVCNForm" action="classes/deleteVCN.php" method="post" onsubmit="return confirm('Are you sure you want to delete this VCN?');">
                 <input type="hidden" name="idVCN" value="<?= htmlspecialchars($vcndetails['idVCN']); ?>">
                 <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete VCN</button>
+            </form>
+
+            <!-- Botón para editar -->
+            <form id="editVCNForm" action="formVCN.php" method="GET">
+                <input type="hidden" name="idVCN" value="<?= htmlspecialchars($pkVCN); ?>">
+                <input type="hidden" name="mode" value="edit">
+                <button type="submit" class="btn btn-primary">Edit VCN</button>
             </form>
         </div>
     </div>

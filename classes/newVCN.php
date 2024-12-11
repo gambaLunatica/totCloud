@@ -56,10 +56,14 @@ $stmtMask->close();
 
 //verificar si se ha enviado el formulario
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    $mode = $_POST['mode']; // Por defecto, es 'create'
+    echo $mode;
     $cidr = $_POST['cidr'];
+    echo $cidr;
     $nameRegion = $_POST['nameRegion'];
     $privateIP = $_POST['IP'];
     $nameVCN = $_POST['vcn_name'];
+    $idVCN = $_POST['idVCN'];
 
     //verificar si los campos no estan vacios
     if(empty($cidr) || empty($nameRegion) || empty($privateIP) || empty($nameVCN)){
@@ -71,19 +75,35 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         // Procesar la IP (por ejemplo, guardarla en la base de datos)
     } else {
         echo "Error: La IP debe tener 4 caracteres y solo contener 1 y 0.";
+        exit;
     }
 
     $creationDate = date("Y-m-d H:i:s"); // Fecha actual
-    $queryVCN = "INSERT INTO VCN (cidr, nameCompany, nameRegion, privateIP, creationDate, nameVCN) VALUES (?, ?, ?, ?, ?, ?)";
 
-    $stmtVCN = $dataBase->prepare($queryVCN);
-    $stmtVCN->bind_param("ssssss", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN);
-
-    if($stmtVCN->execute()){
-        echo "VCN created successfully";
+    if($mode === 'edit'){
+        // Actualizar VCN
+        $queryVCN = "UPDATE VCN SET cidr = ?, nameCompany = ?, nameRegion = ?, privateIP = ?, creationDate = ?, nameVCN = ? WHERE idVCN = ?";
+        $stmtVCN = $dataBase->prepare($queryVCN);
+        $stmtVCN->bind_param("ssssssi", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN, $idVCN);
+        if($stmtVCN->execute()){
+            echo "VCN updated successfully";
+        }else{
+            echo "Error updating VCN";
+        }
+        $stmtVCN->close();
     }else{
-        echo "Error creating VCN";
+        $queryVCN = "INSERT INTO VCN (cidr, nameCompany, nameRegion, privateIP, creationDate, nameVCN) VALUES (?, ?, ?, ?, ?, ?)";
+
+        $stmtVCN = $dataBase->prepare($queryVCN);
+        $stmtVCN->bind_param("ssssss", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN);
+
+        if($stmtVCN->execute()){
+            echo "VCN created successfully";
+        }else{
+            echo "Error creating VCN";
+        }
+        $stmtVCN->close();
     }
-    $stmtVCN->close();
+    
 }
 ?>
