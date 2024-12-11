@@ -55,6 +55,38 @@
                     <?php endforeach; ?>
                 </ul>
             <p>Create Subnet: </p>
+
+            <form id="deleteVCNForm" action="classes/deleteVCN.php" method="post" onsubmit="return confirm('Are you sure you want to delete this VCN?');">
+                <input type="hidden" name="idVCN" value="<?= htmlspecialchars($vcndetails['idVCN']); ?>">
+                <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete VCN</button>
+            </form>
         </div>
     </div>
 </body>
+
+<script>
+function deleteAndClose(event) {
+    event.preventDefault();
+    const form = document.getElementById('deleteVCNForm');
+    const formData = new FormData(form);
+
+    fetch('classes/deleteVCN.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert(data);
+        window.close();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert();
+    });
+}
+</script>
