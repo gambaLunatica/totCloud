@@ -44,7 +44,11 @@
             <p> CPU sries: <?=htmlspecialchars($series); ?> </p>
             <p> Download ssh key: <?=htmlspecialchars($computerDetails['sshKey']); ?> </p>
             <button onclick="navigateTo('editStorageU.php')">Edit</button>
-
+            <form id="editComputer" action="formComputer.php" method="GET">
+                <input type="hidden" name="idComputeInstance" value="<?= htmlspecialchars($pkCI); ?>">
+                <input type="hidden" name="mode" value="edit">
+                <button type="submit" class="btn btn-primary">Edit VCN</button>
+            </form>
         </div>
     </div>
 </body>

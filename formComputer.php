@@ -2,8 +2,26 @@
 include 'head.php';
 include 'classes/newComputer.php';
 include 'navbar.php';
+
+global $mode;  // Declaramos la variable $mode
+global $idComputeInstance; // Declaramos la variable $idComputeInstance
+
+// Establecemos valores por defecto
+$mode = 'create';  // Valor por defecto
+$idComputeInstance = null;     // Inicializamos $idComputeInstance como null
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // Establecemos el valor de $mode desde el formulario, si está presente
+    $mode = $_GET['mode'] ?? 'create';  // Si no existe, 'create' será el valor por defecto
+    $idComputeInstance = $_GET['idComputeInstance'] ?? null;    // ID del Compute Instance a editar, si está presente
+}
+
+// Para depuración, mostrar los valores obtenidos
+echo $mode;
+echo $idComputeInstance;
 ?>
 
+<h1><?php echo $mode === 'edit' ? "Edit Compute Instance" : "Create Compute Instance"; ?></h1>
 <div class="create-container">
     <form method="POST" action="classes/newComputer.php"> <!-- Acción del formulario -->
         <div class="form-group">
@@ -97,7 +115,13 @@ include 'navbar.php';
                 </select>
                 <br><br>
             </div>
-        <button type="submit" class="submit-btn">Select</button>
+            <input type="hidden" name="mode" value="<?= $mode; ?>"> <!-- Campo oculto para enviar el modo -->
+            <?php if ($mode === 'edit'): ?>
+                <input type="hidden" name="idComputeInstance" value="<?= $idComputeInstance; ?>"> <!-- Campo oculto para enviar el ID -->
+                <button type="submit" class="btn btn-primary">Update Compute Instance</button>
+            <?php else: ?>
+                <button type="submit" class="btn btn-success">Create Compute Instance</button>
+            <?php endif; ?>
     </form>
 </div>
 
