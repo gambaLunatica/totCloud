@@ -590,3 +590,55 @@ p {
   font-size: 1.2em;
   text-align: center;
 }
+.detail-container {
+  max-width: 750px;
+  margin: 20px auto;
+  background-color: #3b3b3b;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  min-height: 200px;
+  display: flex;
+  flex-direction:column; /* Coloca los .detail-feature en columnas */
+  gap: 40px; /* Añade espacio entre cada .detail-feature */
+  align-items: center;
+}
+
+.detail-feature {
+  display: flex; /* Organiza el contenido de .detail-feature en filas */
+  justify-content: space-between; /* Separa los elementos a los lados */
+  align-items: center; /* Centra verticalmente el contenido */
+}
+
+.detail-feature p {
+  color: #ffffff;
+  font-size: 1.1em;
+  margin: 0; /* Elimina márgenes para un mejor ajuste */
+}
+
+.detail-feature p span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.detail-feature button {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 10px 20px;
+  background-color: #7289da;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: center; /* Centrar el botón dentro de su .detail-feature */
+  margin: 20; /* Centrar horizontalmente el botón */
+}
+
+.detail-feature button:hover {
+  background-color: #5b6fb6;
+}

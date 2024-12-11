@@ -30,15 +30,13 @@
     //-------------------------------PARA LUNA--------------------------------------------------------
     // Te dejo aquí la clave primaria de la vcn seleccionada
     $pkVCN = $vcn['idVCN'];
-    echo "<pre>";
-    print_r("Primary Key VCN: $pkVCN \n");
-    echo "</pre>";
+
     //------------------------------------------------------------------------------------------------
 ?>
 
 <body>
     <h1 style="text-align: center;"><?= htmlspecialchars($name); ?></h1>
-    <div class="container">
+    <div class="detail-container">
         <div class="feature">
             <p>IP : <?= htmlspecialchars($ip);?> </p>
             <p>Cidr : <?= htmlspecialchars($cidr); ?></p>
@@ -56,6 +54,8 @@
                 </ul>
             <p>Create Subnet: </p>
 
+        </div>
+        <div class="detail-feature">
             <form id="deleteVCNForm" action="classes/deleteVCN.php" method="post" onsubmit="return confirm('Are you sure you want to delete this VCN?');">
                 <input type="hidden" name="idVCN" value="<?= htmlspecialchars($vcndetails['idVCN']); ?>">
                 <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete VCN</button>

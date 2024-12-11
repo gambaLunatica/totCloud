@@ -22,19 +22,15 @@
     //-------------------------------PARA LUNA--------------------------------------------------------
     // Te dejo aquí la clave primaria de la compute instance seleccionada
     $pkCI = $computer['idComputeInstance'];
-    echo "<pre>";
-    print_r("Primary Key Compute Instance: $pkCI \n");
-    echo "</pre>";
     //------------------------------------------------------------------------------------------------
 ?>
 
 <body>
     <h1 style="text-align: center;"><?= htmlspecialchars($computerDetails['name']); ?></h1>
-    <div class="container">
-        <div class="feature">
-        <p style="font-size: 16px; display: flex; align-items: center;"> 
-                <span style="width: 12px; height: 12px; border-radius: 50%; 
-                    margin-right: 8px; 
+    <div class="detail-container">
+        <div class="detail-feature">
+            <p> 
+                <span style=" 
                     background-color: <?= ($statusName === 'Live') ? 'green' : 'red'; ?>;">
                 </span>
 
@@ -43,11 +39,12 @@
             <p> CPU model: <?=htmlspecialchars($model); ?> </p>
             <p> CPU sries: <?=htmlspecialchars($series); ?> </p>
             <p> Download ssh key: <?=htmlspecialchars($computerDetails['sshKey']); ?> </p>
-            <button onclick="navigateTo('editStorageU.php')">Edit</button>
+        </div>
+        <div class="detail-feature">
             <form id="editComputer" action="formComputer.php" method="GET">
                 <input type="hidden" name="idComputeInstance" value="<?= htmlspecialchars($pkCI); ?>">
                 <input type="hidden" name="mode" value="edit">
-                <button type="submit" class="btn btn-primary">Edit VCN</button>
+                <button type="submit" class="btn btn-primary">Edit Virtual Machine</button>
             </form>
         </div>
     </div>
