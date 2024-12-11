@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<script src="functions.js"></script>
 <?php
     include 'head.php';
     include 'classes/user.php';
@@ -68,6 +68,12 @@
             <form id="deleteStorageForm" action="classes/deleteStorage.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Storage?');">
                 <input type="hidden" name="idStorageUnit" value="<?= htmlspecialchars($storage['idStorageUnit']); ?>">
                 <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete Storage Unit</button>
+            </form>
+
+            <form id="editStorageU" action="formStorageU.php" method="GET">
+                <input type="hidden" name="idStorageU" value="<?= htmlspecialchars($pkSU); ?>">
+                <input type="hidden" name="mode" value="edit">
+                <button type="submit" class="btn btn-primary">Edit Unit</button>
             </form>
         </div>
     </div>

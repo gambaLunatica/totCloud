@@ -113,7 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $memoryId = $_POST['memory_capacity'];
     $imageId = $_POST['image_name'];
     $subnetId = $_POST['subnet_name']; // Asegúrate de que el formulario incluya este campo
-
+    $mode = $_POST['mode']; // Por defecto, es 'create'
+    $idComputeInstance = $_POST['idComputeInstance'];
     // Verificar que todos los campos estén completos
     if (empty($vmName) || empty($cpuModel) || empty($memoryId) || empty($imageId) || empty($subnetId)) {
         echo "Por favor, completa todos los campos.";
@@ -124,29 +125,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $creationDate = date("Y-m-d H:i:s"); // Fecha actual
     $sshKey = "exampleSSHKey"; // Cambia esto por una clave SSH real o por un input del usuario
 
-    $queryInsertVM = "
-        INSERT INTO COMPUTEINSTANCE (creationDate, sshKey, name, idSubnet, nameCompany, idMemory, model, idImage)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmtInsert = $dataBase->prepare($queryInsertVM);
-    $stmtInsert->bind_param(
-        "ssssssss",
-        $creationDate,
-        $sshKey,
-        $vmName,
-        $subnetId,
-        $nameCompany,
-        $memoryId,
-        $cpuModel,
-        $imageId
-    );
+    if($mode === 'edit') {
+        // Actualizar la máquina virtual existente
+        $queryUpdateVM = "
+            UPDATE COMPUTEINSTANCE
+            SET creationDate = ?, sshKey = ?, name = ?, idSubnet = ?, nameCompany = ?, idMemory = ?, model = ?, idImage = ?
+            WHERE idComputeInstance = ?";
+        $stmtUpdate = $dataBase->prepare($queryUpdateVM);
+        $stmtUpdate->bind_param(
+            "ssssssssi",
+            $creationDate,
+            $sshKey,
+            $vmName,
+            $subnetId,
+            $nameCompany,
+            $memoryId,
+            $cpuModel,
+            $imageId,
+            $idComputeInstance
+        );
 
-    // Ejecutar el `INSERT`
-    if ($stmtInsert->execute()) {
-        echo "La máquina virtual se ha creado exitosamente.";
-    } else {
-        echo "Error al crear la máquina virtual: " . $stmtInsert->error;
+        // Ejecutar el `UPDATE`
+        if ($stmtUpdate->execute()) {
+            echo "La máquina virtual se ha actualizado exitosamente.";
+        } else {
+            echo "Error al actualizar la máquina virtual: " . $stmtUpdate->error;
+        }
+        $stmtUpdate->close();
+        exit;
+    }else{
+        // Crear una nueva máquina virtual
+        $queryInsertVM = "
+            INSERT INTO COMPUTEINSTANCE (creationDate, sshKey, name, idSubnet, nameCompany, idMemory, model, idImage)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmtInsert = $dataBase->prepare($queryInsertVM);
+        $stmtInsert->bind_param(
+            "ssssssss",
+            $creationDate,
+            $sshKey,
+            $vmName,
+            $subnetId,
+            $nameCompany,
+            $memoryId,
+            $cpuModel,
+            $imageId
+        );
+
+        // Ejecutar el `INSERT`
+        if ($stmtInsert->execute()) {
+            echo "La máquina virtual se ha creado exitosamente.";
+        } else {
+            echo "Error al crear la máquina virtual: " . $stmtInsert->error;
+        }
+        $stmtInsert->close();
     }
-    $stmtInsert->close();
 }
 
 ?>

@@ -2,8 +2,26 @@
 include 'head.php';
 include 'classes/newStorageUnits.php';
 include 'navbar.php';
+
+global $mode;  // Declaramos la variable $mode
+global $idStorageUnit; // Declaramos la variable $idStorageUnit
+
+// Establecemos valores por defecto
+$mode = 'create';  // Valor por defecto
+$idStorageUnit = null;     // Inicializamos $idStorageUnit como null
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // Establecemos el valor de $mode desde el formulario, si está presente
+    $mode = $_GET['mode'] ?? 'create';  // Si no existe, 'create' será el valor por defecto
+    $idStorageUnit = $_GET['idStorageU'] ?? null;    // ID del Storage Unit a editar, si está presente
+}
+
+// Para depuración, mostrar los valores obtenidos
+echo $mode;
+echo $idStorageUnit;
 ?>
 
+<h1><?php echo $mode === 'edit' ? "Edit Storage Unit" : "Create Storage Unit"; ?></h1>
 <div class="create-container">
     <form method="POST" action="classes/newStorageUnits.php"> <!-- Acción del formulario -->
         <div class="form-group">
@@ -72,6 +90,12 @@ include 'navbar.php';
                 </select>
                 <br><br>
             </div>
-        <button type="submit" name="action" value="create" class="btn btn-success">Create Storage Unit</button>
+            <input type="hidden" name="mode" value="<?php echo htmlspecialchars($mode); ?>">
+            <?php if ($mode === 'edit'): ?>
+                <input type="hidden" name="idStorageUnit" value="<?php echo htmlspecialchars($idStorageUnit); ?>">
+                <button type="submit" class="btn btn-primary">Update Storage Unit</button>
+            <?php else: ?>
+                <button type="submit" class="btn btn-success">Create Storage Unit</button>
+            <?php endif; ?>
     </form>
 </div>
