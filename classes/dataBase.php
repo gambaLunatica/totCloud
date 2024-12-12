@@ -3080,18 +3080,29 @@ class MyDataBase
     {
         try
         {
-            $query = $this->db->prepare("DELETE FROM ComputeInstance WHERE idComputeInstance = (SELECT idComputeInstance FROM ComputeInstanceBackup WHERE backupID = ?)");
-            $query->bind_param("i",$idBu);
-            $query->execute();
+            //$query = $this->db->prepare("DELETE FROM ComputeInstance WHERE idComputeInstance = (SELECT idComputeInstance FROM ComputeInstanceBackup WHERE backupID = ?)");
+            //$query->bind_param("i",$idBu);
+            //$query->execute();
 
-            $query = $this->db->prepare("INSERT INTO ComputeInstance 
+            /*$query = $this->db->prepare("INSERT INTO ComputeInstance 
                                         SELECT  cib.idComputeInstance, cib.idSubnet, cid.nameCompany, cib.idMemory, cib.idImage, cib.model, cib.name, cid.creationDate, cib.sshKey
                                         FROM ComputeInstanceBackup as cib
-                                        WHERE backupID = ?");
+                                        WHERE backupID = ?");*/
+
+            $query = $this->db->prepare("UPDATE ComputeInstance as ci
+                                        JOIN ComputeInstanceBackup as cib on ci.idComputeInstance = cib.idComputeInstance
+                                        SET ci.nameCompany = cib.nameCompany,
+                                            ci.idMemory = cib.idMemory,
+                                            ci.idImage = cib.idImage,
+                                            ci.model = cib.model,
+                                            ci.name = cib.name,
+                                            ci.creationDate = cib.creationDate,
+                                            ci.sshKey = cib.sshKey
+                                        WHERE cib.backupID = ?");
             $query->bind_param("i",$idBu);
             $query->execute();
 
-            $query = $this->db->prepare("DELETE FROM ComputerInstanceBackup WHERE backupID != ? AND backupDate > ?");
+            $query = $this->db->prepare("DELETE FROM ComputeInstanceBackup WHERE backupID != ? AND backupDate > ?");
             $query->bind_param("is", $idBu, $backupDate);
             $query->execute();
         }

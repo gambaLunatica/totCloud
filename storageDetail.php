@@ -147,4 +147,3 @@ function deleteAndClose2(event) {
     });
 }
 </script>
-</script>
