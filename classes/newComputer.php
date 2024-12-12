@@ -109,21 +109,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtener los valores enviados por el formulario
     $vmName = $_POST['vm_name'];
     $cpuModel = $_POST['cpu_model'];
-    
+    $sshKey = $_POST['sshKey_name'];
     $memoryId = $_POST['memory_capacity'];
     $imageId = $_POST['image_name'];
     $subnetId = $_POST['subnet_name']; // Asegúrate de que el formulario incluya este campo
     $mode = $_POST['mode']; // Por defecto, es 'create'
     
-    // Verificar que todos los campos estén completos
-    if (empty($vmName) || empty($cpuModel) || empty($memoryId) || empty($imageId) || empty($subnetId)) {
-        echo "Por favor, completa todos los campos.";
-        exit;
-    }
+    
 
     // Insertar la nueva máquina virtual en la base de datos
     $creationDate = date("Y-m-d H:i:s"); // Fecha actual
-    $sshKey = "exampleSSHKey"; // Cambia esto por una clave SSH real o por un input del usuario
 
     if($mode === 'edit') {
         $idComputeInstance = $_POST['idComputeInstance'];
@@ -157,6 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmtUpdate->close();
         exit;
     }else{
+        // Verificar que todos los campos estén completos
+        if (empty($vmName) || empty($cpuModel) || empty($memoryId) || empty($imageId) || empty($subnetId) || empty($sshKey)) {
+            echo "Por favor, completa todos los campos.";
+            exit;
+        }
         // Crear una nueva máquina virtual
         $queryInsertVM = "
             INSERT INTO COMPUTEINSTANCE (creationDate, sshKey, name, idSubnet, nameCompany, idMemory, model, idImage)

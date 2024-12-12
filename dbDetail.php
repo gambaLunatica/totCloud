@@ -53,6 +53,8 @@
                 </span>
                 Status: <?= htmlspecialchars($statusName); ?>
             </p>
+        </div>
+        <div class="detail-feature">
             <p> Release Date: <?= htmlspecialchars($releaseDate);?> </p>
             <?php if ($databasedetails['idDBTypeMySQL'] != null): ?>
                 <p> MySQL Version: <?= htmlspecialchars($var); ?> </p>
@@ -82,11 +84,11 @@
                 <input type="hidden" name="mode" value="edit">
                 <button type="submit" class="btn btn-primary">Edit Database</button>
             </form>
-        </div>
-        <form id="deleteDBForm" action="classes/deleteDatabase.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Database?');">
+            <form id="deleteDBForm" action="classes/deleteDatabase.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Database?');">
                 <input type="hidden" name="idDataBase" value="<?= htmlspecialchars($pkDB); ?>">
                 <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete Database</button>
         </form>
+        </div>
     </div>
 </body>
 

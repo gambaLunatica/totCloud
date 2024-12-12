@@ -42,6 +42,16 @@
 
                 Status: <?= htmlspecialchars($statusName); ?>
             </p>
+        </div>
+            <!-- Barra de Uso -->
+        <div class="usage-bar">
+            <div class="usage-bar-fill" style="
+                width: <?= htmlspecialchars($usagePercentage); ?>%; 
+                background-color: <?= ($usagePercentage > 80) ? 'red' : 'blue'; ?>;">
+                <?= htmlspecialchars(number_format($usagePercentage, 0)); ?>%
+            </div>
+        </div>
+        <div class="detail-feature">
             <p>
                 <span style="color: blue;">
                     <?= htmlspecialchars(number_format($usedSpace, 0)); ?>
@@ -49,17 +59,13 @@
                 /
                 <span style="color: gray;">
                     <?= htmlspecialchars(number_format($totalCapacity, 0)); ?>
-                </span> GB
+                </span> 
             </p>
+            <p>GB</p>
             <p>
                 <?= htmlspecialchars(number_format($remainingSpace, 0)); ?> GB REMAINING
             </p>
         </div>
-            <div class="detail-feature" style="width: 100%; background-color: #e0e0e0; border-radius: 8px; overflow: hidden; margin-top: 20px;">
-                <div style="width: <?= htmlspecialchars($usagePercentage); ?>%; background-color: <?= ($usagePercentage > 80) ? 'red' : 'blue'; ?>; height: 20px; text-align: center; color: white; font-size: 14px; font-weight: bold;">
-                    <?= htmlspecialchars(number_format($usagePercentage, 0)); ?>%
-                </div>
-            </div>
         <div class="detail-feature">
             <form id="deleteStorageForm" action="classes/deleteStorage.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Storage?');">
                 <input type="hidden" name="idStorageUnit" value="<?= htmlspecialchars($storage['idStorageUnit']); ?>">

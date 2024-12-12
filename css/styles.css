@@ -608,12 +608,19 @@ p {
   display: flex; /* Organiza el contenido de .detail-feature en filas */
   justify-content: space-between; /* Separa los elementos a los lados */
   align-items: center; /* Centra verticalmente el contenido */
+  gap: 20px;
 }
 
 .detail-feature p {
   color: #ffffff;
   font-size: 1.1em;
-  margin: 0; /* Elimina márgenes para un mejor ajuste */
+  margin: 10; /* Elimina márgenes para un mejor ajuste */
+  padding: 5px; /* Añade espacio interno */
+  gap: 10px; /* Añade espacio entre el icono y el texto */
+}
+.detail-feature li{
+  color: #37c95b;
+  font-size: 1.1em;
 }
 
 .detail-feature p span {
@@ -641,4 +648,25 @@ p {
 
 .detail-feature button:hover {
   background-color: #5b6fb6;
+}
+
+.usage-bar {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.usage-bar-fill {
+  width: 0;
+  height: 20px;
+  background-color: blue;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

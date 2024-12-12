@@ -108,6 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 <br><br>
             </div>
         <h1>Choose a sshKey Group for your Virtual Machine</h1>
+            <div class="form-group">        
+                <input type="text" id="sshKey_name" name="sshKey_name" placeholder="sshKey name" required>
+            </div>
+            <br><br>
             <div class="form-group">  
                 <input type="hidden" name="mode" value="<?= $mode; ?>"> <!-- Campo oculto para enviar el modo -->
                 <?php if ($mode === 'edit'): ?>

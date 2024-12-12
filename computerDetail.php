@@ -46,11 +46,11 @@
                 <input type="hidden" name="mode" value="edit">
                 <button type="submit" class="btn btn-primary">Edit Virtual Machine</button>
             </form>
-        </div>
-        <form id="deleteCIForm" action="classes/deleteComputer.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Computer Instance?');">
+            <form id="deleteCIForm" action="classes/deleteComputer.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Computer Instance?');">
                 <input type="hidden" name="idComputeInstance" value="<?= htmlspecialchars($computer['idComputeInstance']); ?>">
-                <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete Compute Instance</button>
-        </form>
+                <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete Virtual Machine</button>
+            </form>
+        </div>
     </div>
 </body>
 
