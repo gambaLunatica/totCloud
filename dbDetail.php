@@ -34,8 +34,17 @@
             $releaseDate = $dbpostgrade['releaseDate'];
             $var = $dbpostgrade['build'];
         }
+
+        $queryTables = "SELECT nameTable FROM MyTable WHERE idDataBase = ?";
+        $stmtTables = $dataBase->prepare($queryTables);
+        $stmtTables->bind_param("i", $databasedetails['idDataBase']);
+        $stmtTables->execute();
+        $resultTables = $stmtTables->get_result();
+        $tables = $resultTables->fetch_all(MYSQLI_ASSOC);
+        $stmtTables->close();
     } else {
         $databasedetails = null;
+        $tables = [];
     }
     //-------------------------------PARA LUNA--------------------------------------------------------
     // Te dejo aquí la clave primaria de la base de datos seleccionada
@@ -77,6 +86,22 @@
                     <?php endif; ?>
                 </p>
             <?php endforeach; ?>
+        </div>
+        <div class="detail-feature">
+            <p>Tables in Database:</p>
+            <?php if (!empty($tables)): ?>
+                <ul>
+                    <?php foreach ($tables as $table): ?>
+                        <li><?= htmlspecialchars($table['nameTable']); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p>No tables found in this database.</p>
+            <?php endif; ?>
+            <form id="editTable" action="formTable.php" method="GET">
+                <input type="hidden" name="idDataBase" value="<?= htmlspecialchars($pkDB); ?>">
+                <button type="submit" class="btn btn-primary">Edit Tables</button>
+            </form>
         </div>
         <div class="detail-feature">
             <form id="editDB" action="formDB.php" method="GET">

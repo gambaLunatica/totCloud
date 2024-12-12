@@ -646,6 +646,10 @@ p {
   margin: 20; /* Centrar horizontalmente el botón */
 }
 
+.detail-feature span{
+  color: #ffffff;
+  font-size: 1.1em;
+}
 .detail-feature button:hover {
   background-color: #5b6fb6;
 }
