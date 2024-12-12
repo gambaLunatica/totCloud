@@ -2916,6 +2916,163 @@ class MyDataBase
         }
     }
 
+    public function getBackUpInfo($id, $type): ?array
+    {
+        $tableMap = [
+            'computeInstance' => 'ComputeInstanceBackup',
+            'storage' => 'StorageUnitBackup',
+            'database' => 'MyDataBaseBackup',
+            'vcn' => 'VCNBackup',
+            'subnet' => 'SubnetBackup',
+            'table' => 'MyTableBackup',
+            'setting' => 'SettingBackup'
+        ];
+
+        $relation = $tableMap[$type];
+        $stmt = $this->db->prepare("SELECT * FROM $relation WHERE backupID = ? ORDER BY backupDate DESC");
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+    public function loadBackUpCI ($idBu, $backupDate) : void 
+    {
+        try
+        {
+            $query = $this->db->prepare("DELETE FROM ComputeInstance WHERE idComputeInstance = (SELECT idComputeInstance FROM ComputeInstanceBackup WHERE backupID = ?)");
+            $query->bind_param("i",$idBu);
+            $query->execute();
+
+            $query = $this->db->prepare("INSERT INTO ComputeInstance SELECT * FROM ComputeInstanceBackup WHERE backupID = ?");
+            $query->bind_param("i",$idBu);
+            $query->execute();
+
+            $query = $this->db->prepare("DELETE FROM ComputerInstanceBackup WHERE backupID = ? AND backupDate > ?");
+            $query->bind_param("is", $id, $backupDate);
+            $query->execute();
+        }
+        catch (Exception $e) {
+            $this->db->rollback();
+            throw $e;
+        }
+    }
+
+    public function loadBackUpSU ($idBu, $backupDate) : void 
+    {
+        try
+        {
+            $query = $this->db->prepare("DELETE FROM StorageUnit WHERE idStorageUnit = (SELECT idStorageUnit FROM StorageUnitBackup WHERE backupID = ?)");
+            $query->bind_param("i",$idBu);
+            $query->execute();
+
+            $query = $this->db->prepare("INSERT INTO StorageUnit 
+                                        SELECT sub.idStorageUnit, sub.nameCompany, sub.idSubnet, sub.idComputeInstance, sub.usedSpace, sub.creationDate, sub.nameStorageU, sub.idUserGroup, sub.nameStorage  
+                                        FROM StorageUnitBackup as sub WHERE backupID = ?");
+            $query->bind_param("i",$idBu);
+            $query->execute();
+
+            $query = $this->db->prepare("DELETE FROM StorageUnitBackup WHERE backupID = ? AND backupDate > ?");
+            $query->bind_param("is", $id, $backupDate);
+            $query->execute();
+        }
+        catch (Exception $e) {
+            $this->db->rollback();
+            throw $e;
+        }
+    }
+
+    public function loadBackUpVCN ($idBu, $backupDate) : void 
+    {
+        try
+        {
+            $stmt = $this->db->prepare("DELETE FROM Subnet WHERE idSubnet NOT IN (SELECT idSubnet FROM SubnetBackup WHERE backupDate = ?)");
+            $stmt->bind_param("s", $backupDate);
+            $stmt->execute();
+
+            $query = $this->db->prepare("DELETE FROM VCN WHERE idVCN = (SELECT idVCN FROM VCNBackup WHERE backupID = ?)");
+            $query->bind_param("i",$idBu);
+            $query->execute();
+
+            $stmt = $this->db->prepare("INSERT INTO Subnet SELECT * FROM SubnetBackup WHERE backupDate = ?");
+            $stmt->bind_param("s", $backupDate);
+            $stmt->execute();
+
+            $query = $this->db->prepare("INSERT INTO VCN SELECT * FROM VCNBackup WHERE backupID = ?");
+            $query->bind_param("i",$idBu);
+            $query->execute();
+
+            $query = $this->db->prepare("DELETE FROM VCNBackup WHERE backupID = ? AND backupDate > ?");
+            $query->bind_param("is", $id, $backupDate);
+            $query->execute();
+        }
+        catch (Exception $e) {
+            $this->db->rollback();
+            throw $e;
+        }
+    }
+
+    public function loadBackUpDatabase ($idBu, $backupDate) : void 
+    {
+        try
+        {
+            $query = $this->db->prepare("DELETE FROM Instruction WHERE idInstruction = (SELECT idInstruction FROM InstructionBackup WHERE backupID = ?)");
+            $query->bind_param("i",$idBu);
+            $query->execute();
+
+            $stmt = $this->db->prepare("DELETE FROM MyTable WHERE idTable = (SELECT idTable FROM MyTableBackup WHERE backupID = ?)");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            
+            $stmt = $this->db->prepare("DELETE FROM Setting WHERE nameSetting = (SELECT nameSetting FROM SettingBackup WHERE backupID = ?)");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+
+            $stmt = $this->db->prepare("DELETE FROM MyDataBase WHERE idDataBase = (SELECT idDataBase FROM MyDataBaseBackup WHERE backupID = ?)");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+
+
+            $stmt = $this->db->prepare("INSERT INTO MyDataBase SELECT * FROM MyDataBaseBackup WHERE backupID = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+
+            $stmt = $this->db->prepare("INSERT INTO MyTable SELECT * FROM MyTableBackup WHERE backupDate = ?");
+            $stmt->bind_param("s", $date);
+            $stmt->execute();
+
+            $stmt = $this->db->prepare("INSERT INTO Instruction SELECT * FROM InstructionBackup WHERE backupDate = ?");
+            $stmt->bind_param("s", $date);
+            $stmt->execute();
+
+            $stmt = $this->db->prepare("INSERT INTO Setting SELECT * FROM SettingBackup WHERE backupDate = ?");
+            $stmt->bind_param("s", $date);
+            $stmt->execute();
+
+            $query = $this->db->prepare("DELETE FROM MyDataBaseBackUp WHERE backupID = ? AND backupDate > ?");
+            $query->bind_param("is", $id, $backupDate);
+            $query->execute();
+            $query = $this->db->prepare("DELETE FROM MyTableBackup WHERE backupID = ? AND backupDate > ?");
+            $query->bind_param("is", $id, $backupDate);
+            $query->execute();
+            $query = $this->db->prepare("DELETE FROM InstructionBackup WHERE backupID = ? AND backupDate > ?");
+            $query->bind_param("is", $id, $backupDate);
+            $query->execute();
+            $query = $this->db->prepare("DELETE FROM SettingBackup WHERE backupID = ? AND backupDate > ?");
+            $query->bind_param("is", $id, $backupDate);
+            $query->execute();
+        }
+        catch (Exception $e) {
+            $this->db->rollback();
+            throw $e;
+        }
+    }
+
     // ESTAS SE PUEDEN BORRAR |
     //                        v
     /*public function getStorageData($nameStorage = null)

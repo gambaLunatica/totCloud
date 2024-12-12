@@ -27,8 +27,16 @@
     //-------------------------------PARA LUNA--------------------------------------------------------
     // Te dejo aquí la clave primaria de Storage Unit y la clave primaria del Storage seleccionado
     $pkSU = $storage['idStorageUnit'];
-    $pkS = $storageDetails['nameStorage'];;
+    $pkS = $storageDetails['nameStorage'];
     //------------------------------------------------------------------------------------------------
+    $backups = [];
+    $backups = $dataBase->getBackUpInfo($pkSU, 'storage');
+    if (!empty($backups) && isset($backups['backupID'])) {
+        $backups = [$backups]; // Convertir a un array de arrays si es un único resultado
+    }
+    echo "<pre>";
+    print_r($backups);
+    echo "</pre>";
 ?>
 
 <body>
@@ -78,6 +86,20 @@
                 <button type="submit" class="btn btn-primary">Edit Unit</button>
             </form>
         </div>
+        <div class="detail-feature">
+            <form id="restoreBackupForm" method="POST" action="classes/restoreBackupDatabase.php" onsubmit="return confirm('Are you sure you want to load this backup?');">
+                <label for="backupDate">Select a backup:</label>
+                <select name="backupDate" id="backupDate" required>
+                    <?php foreach ($backups as $backup): ?>
+                        <option value="<?= htmlspecialchars($backup['backupDate']); ?>">
+                            <?= htmlspecialchars($backup['backupDate']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <input type="hidden" name="idStorageUnit" value="<?= htmlspecialchars($pkSU); ?>">
+                <button type="submit" class="btn btn-primary" onclick="deleteAndClose2(event)">Restore Backup</button>
+            </form>
+        </div>
     </div>
 </body>
 
@@ -106,4 +128,29 @@ function deleteAndClose(event) {
         alert();
     });
 }
+function deleteAndClose2(event) {
+    event.preventDefault();
+    const form = document.getElementById('restoreBackupForm');
+    const formData = new FormData(form);
+
+    fetch('classes/restoreBackupDatabase.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert(data);
+        window.close();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert();
+    });
+}
+</script>
 </script>
