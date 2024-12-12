@@ -143,9 +143,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Ejecutar el `UPDATE`
         if ($stmtUpdate->execute()) {
-            echo "Virtual machine updated successfully.";
-            echo "<br>";
-            echo "Please, close this window and refresh the Virtual Machine page.";
+            echo "<script>
+                alert('Virtual machine updated successfully.');
+                window.close();
+              </script>";
         } else {
             echo "Error al actualizar la máquina virtual: " . $stmtUpdate->error;
         }
@@ -176,9 +177,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Ejecutar el `INSERT`
         if ($stmtInsert->execute()) {
-            echo "Virtual machine created successfully.";
-            echo "<br>";
-            echo "Please, close this window and refresh the Virtual Machine page.";
+            echo "<script>
+                alert('Virtual machine created successfully.');
+                window.close();
+              </script>";
         } else {
             echo "Error: " . $stmtInsert->error;
         }

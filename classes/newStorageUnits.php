@@ -89,9 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $dataBase->prepare($query);
         $stmt->bind_param("sssss", $nameSubnet, $nameComputeInstanece, $nameStorage, $nameStorageU, $idStorageU);
         if($stmt->execute()){
-            echo "Storage Unit updated successfully.";
-            echo "<br>";
-            echo "Please, close this window and refresh the Storage Units page.";
+            echo "<script>
+                alert('Storage Unit updated successfully.');
+                window.close();
+            </script>";
         } else {
             echo "Error updating Storage Unit.";
         }
@@ -108,9 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmtStorage = $dataBase->prepare($queryStorage);
         $stmtStorage->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstanece, $usedSpace, $nameStorageU, $idUserGroup, $nameStorage);
         if($stmtStorage->execute()){
-            echo "Storage Unit created successfully.";
-            echo "<br>";
-            echo "Please, close this window and refresh the Storage Units page.";
+            echo "<script>
+                alert('Storage Unit created successfully.');
+                window.close();
+            </script>";
             exit;
         } else {
             echo "Error creating Storage Unit.";

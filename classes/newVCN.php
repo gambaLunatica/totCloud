@@ -87,9 +87,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmtVCN = $dataBase->prepare($queryVCN);
         $stmtVCN->bind_param("ssssssi", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN, $idVCN);
         if($stmtVCN->execute()){
-            echo "VCN updated successfully";
-            echo "<br>";
-            echo "Please, close this window and refresh the VVCN page.";
+            echo "<script>
+                alert('VCN updated successfully');
+                window.close();
+            </script>";
         }else{
             echo "Error updating VCN";
         }
@@ -101,9 +102,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmtVCN->bind_param("ssssss", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN);
 
         if($stmtVCN->execute()){
-            echo "VCN created successfully";
-            echo "<br>";
-            echo "Please, close this window and refresh the VVCN page.";
+            echo "<script>
+                alert('VCN created successfully');
+                window.close();
+            </script>";
         }else{
             echo "Error creating VCN";
         }

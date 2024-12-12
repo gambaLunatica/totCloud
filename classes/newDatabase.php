@@ -94,9 +94,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmt->bind_param("sssssssi", $creationDate, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description, $idDataBase);
 
         if($stmt->execute()){
-            echo "Database updated successfully";
-            echo "<br>";
-            echo "Please, close this window and refresh the Databases page.";
+            echo "<script>
+            alert('Database updated successfully');
+            window.close();
+            </script>";
         }else{
             echo "Error updating database";
         }
@@ -110,9 +111,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmt->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description);
 
         if($stmt->execute()){
-            echo "Database created successfully";
-            echo "<br>";
-            echo "Please, close this window and refresh the Databases page.";
+            echo "<script>
+            alert('Database created successfully');
+            window.close();
+            </script>";
         }else{
             echo "Error creating database";
         }
