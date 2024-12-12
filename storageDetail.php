@@ -30,13 +30,7 @@
     $pkS = $storageDetails['nameStorage'];
     //------------------------------------------------------------------------------------------------
     $backups = [];
-    $backups = $dataBase->getBackUpInfo($pkSU, 'storage');
-    if (!empty($backups) && isset($backups['backupID'])) {
-        $backups = [$backups]; // Convertir a un array de arrays si es un único resultado
-    }
-    echo "<pre>";
-    print_r($backups);
-    echo "</pre>";
+    $backups = $dataBase->getBackUpInfoStorageUnit($pkSU);
 ?>
 
 <body>
@@ -96,7 +90,7 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <input type="hidden" name="idStorageUnit" value="<?= htmlspecialchars($pkSU); ?>">
+                <input type="hidden" name="backupID" value="<?= htmlspecialchars($backup['backupID']); ?>">
                 <button type="submit" class="btn btn-primary" onclick="deleteAndClose2(event)">Restore Backup</button>
             </form>
         </div>

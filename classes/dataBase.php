@@ -2916,20 +2916,10 @@ class MyDataBase
         }
     }
 
-    public function getBackUpInfo($id, $type): ?array
+    public function getBackUpInfoStorageUnit($id)
     {
-        $tableMap = [
-            'computeInstance' => 'ComputeInstanceBackup',
-            'storage' => 'StorageUnitBackup',
-            'database' => 'MyDataBaseBackup',
-            'vcn' => 'VCNBackup',
-            'subnet' => 'SubnetBackup',
-            'table' => 'MyTableBackup',
-            'setting' => 'SettingBackup'
-        ];
 
-        $relation = $tableMap[$type];
-        $stmt = $this->db->prepare("SELECT * FROM $relation WHERE backupID = ? ORDER BY backupDate DESC");
+        $stmt = $this->db->prepare("SELECT * FROM StorageUnitBackup WHERE idStorageUnit = ? ORDER BY backupDate DESC");
         if (!$stmt) {
             throw new Exception("Error preparing statement: " . $this->db->error);
         }
@@ -2938,7 +2928,152 @@ class MyDataBase
         $stmt->execute();
 
         $result = $stmt->get_result();
-        return $result->fetch_assoc();
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getBackUpInfoComputeInstance($id)
+    {
+
+        $stmt = $this->db->prepare("SELECT * FROM ComputeInstanceBackup WHERE idComputeInstance = ? ORDER BY backupDate DESC");
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getBackUpInfoVCN($id)
+    {
+
+        $stmt = $this->db->prepare("SELECT * FROM VCNBackup WHERE idVCN = ? ORDER BY backupDate DESC");
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getBackUpInfoSubnet($id)
+    {
+
+        $stmt = $this->db->prepare("SELECT * FROM SubnetBackup WHERE idSubnet = ? ORDER BY backupDate DESC");
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getBackUpInfoDatabase($id)
+    {
+
+        $stmt = $this->db->prepare("SELECT * FROM MyDataBaseBackup WHERE idDataBase = ? ORDER BY backupDate DESC");
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getBackUpInfoTable($id)
+    {
+
+        $stmt = $this->db->prepare("SELECT * FROM MyTableBackup WHERE idTable = ? ORDER BY backupDate DESC");
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getBackUpInfoInstruction($id)
+    {
+
+        $stmt = $this->db->prepare("SELECT * FROM InstructionBackup WHERE idInstruction = ? ORDER BY backupDate DESC");
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getBackUpInfoSetting($nameSetting)
+    {
+
+        $stmt = $this->db->prepare("SELECT * FROM SettingBackup WHERE nameSetting = ? ORDER BY backupDate DESC");
+        if (!$stmt) {
+            throw new Exception("Error preparing statement: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
     }
 
     public function loadBackUpCI ($idBu, $backupDate) : void 
@@ -2949,12 +3084,15 @@ class MyDataBase
             $query->bind_param("i",$idBu);
             $query->execute();
 
-            $query = $this->db->prepare("INSERT INTO ComputeInstance SELECT * FROM ComputeInstanceBackup WHERE backupID = ?");
+            $query = $this->db->prepare("INSERT INTO ComputeInstance 
+                                        SELECT  cib.idComputeInstance, cib.idSubnet, cid.nameCompany, cib.idMemory, cib.idImage, cib.model, cib.name, cid.creationDate, cib.sshKey
+                                        FROM ComputeInstanceBackup as cib
+                                        WHERE backupID = ?");
             $query->bind_param("i",$idBu);
             $query->execute();
 
-            $query = $this->db->prepare("DELETE FROM ComputerInstanceBackup WHERE backupID = ? AND backupDate > ?");
-            $query->bind_param("is", $id, $backupDate);
+            $query = $this->db->prepare("DELETE FROM ComputerInstanceBackup WHERE backupID != ? AND backupDate > ?");
+            $query->bind_param("is", $idBu, $backupDate);
             $query->execute();
         }
         catch (Exception $e) {
@@ -2973,12 +3111,13 @@ class MyDataBase
 
             $query = $this->db->prepare("INSERT INTO StorageUnit 
                                         SELECT sub.idStorageUnit, sub.nameCompany, sub.idSubnet, sub.idComputeInstance, sub.usedSpace, sub.creationDate, sub.nameStorageU, sub.idUserGroup, sub.nameStorage  
-                                        FROM StorageUnitBackup as sub WHERE backupID = ?");
+                                        FROM StorageUnitBackup as sub 
+                                        WHERE backupID = ?");
             $query->bind_param("i",$idBu);
             $query->execute();
 
-            $query = $this->db->prepare("DELETE FROM StorageUnitBackup WHERE backupID = ? AND backupDate > ?");
-            $query->bind_param("is", $id, $backupDate);
+            $query = $this->db->prepare("DELETE FROM StorageUnitBackup WHERE backupID != ? AND backupDate > ?");
+            $query->bind_param("is", $idBu, $backupDate);
             $query->execute();
         }
         catch (Exception $e) {
