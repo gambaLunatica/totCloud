@@ -602,6 +602,15 @@ CREATE PROCEDURE deleteDatabase(
     IN p_idDataBase INT UNSIGNED
 )
 BEGIN
+
+    DELETE Instruction
+    FROM Instruction
+    JOIN MyTable ON Instruction.idTable = MyTable.idTable
+    WHERE MyTable.idDataBase = p_idDataBase;
+
+    DELETE FROM MyTable
+    WHERE MyTable.idDataBase = p_idDataBase;
+
     -- Delete associated configurations
     DELETE FROM DBConfiguration WHERE idDataBase = p_idDataBase;
 

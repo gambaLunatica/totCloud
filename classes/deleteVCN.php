@@ -6,18 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idVCN = htmlspecialchars($_POST['idVCN']);
     
     try {
-        // Verificar si la VCN tiene subnets asociadas
-        $query = "SELECT COUNT(*) as count FROM Subnet WHERE idVCN = ?";
-        $stmt = $dataBase->prepare($query);
-        $stmt->bind_param("i", $idVCN);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-
-        if ($row['count'] > 0) {
-            echo "VCN has associated subnets and cannot be deleted.";
-            exit();
-        }
 
         // Eliminar la VCN
         $deleteQuery = "DELETE FROM VCN WHERE idVCN = ?";
@@ -29,11 +17,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "VCN deleted successfully.";
         } else {
             throw new Exception("Error deleting VCN: ");
+            exit;
         }
     } catch (Exception $e) {
-        echo $e->getMessage();
+        echo "VCN has associated subnets and cannot be deleted.";
     }
 } else {
     echo "Invalid request method.";
 }
+// Verificar si la VCN tiene subnets asociadas
+        /*$query = "SELECT COUNT(*) as count FROM Subnet WHERE idVCN = ?";
+        $stmt = $dataBase->prepare($query);
+        $stmt->bind_param("i", $idVCN);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        if ($row['count'] > 0) {
+            echo "VCN has associated subnets and cannot be deleted.";
+            exit();
+        }*/
 ?>
