@@ -27,21 +27,16 @@
     //-------------------------------PARA LUNA--------------------------------------------------------
     // Te dejo aquí la clave primaria de Storage Unit y la clave primaria del Storage seleccionado
     $pkSU = $storage['idStorageUnit'];
-    $pkS = $storageDetails['nameStorage'];
-    echo "<pre>";
-    print_r("Primary Key Storage Unit: $pkSU \n");
-    print_r("Primary Key Storage seleccionada: $pkS");
-    echo "</pre>";
+    $pkS = $storageDetails['nameStorage'];;
     //------------------------------------------------------------------------------------------------
 ?>
 
 <body>
     <h1 style="text-align: center;"><?= htmlspecialchars($storage['nameStorageU']); ?></h1>
-    <div class="container">
-        <div class="feature">
-            <p style="font-size: 16px; display: flex; align-items: center;"> 
-                <span style="width: 12px; height: 12px; border-radius: 50%; 
-                    margin-right: 8px; 
+    <div class="detail-container">
+        <div class="detail-feature">
+            <p> 
+                <span style="
                     background-color: <?= ($statusName === 'Live') ? 'green' : 'red'; ?>;">
                 </span>
 
@@ -59,12 +54,13 @@
             <p>
                 <?= htmlspecialchars(number_format($remainingSpace, 0)); ?> GB REMAINING
             </p>
-            <div style="width: 100%; background-color: #e0e0e0; border-radius: 8px; overflow: hidden; margin-top: 20px;">
+        </div>
+            <div class="detail-feature" style="width: 100%; background-color: #e0e0e0; border-radius: 8px; overflow: hidden; margin-top: 20px;">
                 <div style="width: <?= htmlspecialchars($usagePercentage); ?>%; background-color: <?= ($usagePercentage > 80) ? 'red' : 'blue'; ?>; height: 20px; text-align: center; color: white; font-size: 14px; font-weight: bold;">
                     <?= htmlspecialchars(number_format($usagePercentage, 0)); ?>%
                 </div>
             </div>
-
+        <div class="detail-feature">
             <form id="deleteStorageForm" action="classes/deleteStorage.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Storage?');">
                 <input type="hidden" name="idStorageUnit" value="<?= htmlspecialchars($storage['idStorageUnit']); ?>">
                 <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete Storage Unit</button>

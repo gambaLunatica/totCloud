@@ -40,19 +40,15 @@
     //-------------------------------PARA LUNA--------------------------------------------------------
     // Te dejo aquí la clave primaria de la base de datos seleccionada
     $pkDB = $database['idDataBase'];
-    echo "<pre>";
-    print_r("Primary Key Data Base: $pkDB \n");
-    echo "</pre>";
     //------------------------------------------------------------------------------------------------
 ?>
 
 <body>
     <h1 style="text-align: center;"><?= htmlspecialchars($databasedetails['nameDataBase']); ?></h1>
-    <div class="container">
-        <div class="feature">
-            <p style="font-size: 16px; display: flex; align-items: center;"> 
-                <span style="width: 12px; height: 12px; border-radius: 50%; 
-                    margin-right: 8px; 
+    <div class="detail-container">
+        <div class="detail-feature">
+            <p> 
+                <span style="
                     background-color: <?= ($statusName === 'Live') ? 'green' : 'red'; ?>;">
                 </span>
                 Status: <?= htmlspecialchars($statusName); ?>
@@ -79,11 +75,14 @@
                     <?php endif; ?>
                 </p>
             <?php endforeach; ?>
+        </div>
+        <div class="detail-feature">
             <form id="editDB" action="formDB.php" method="GET">
                 <input type="hidden" name="idDataBase" value="<?= htmlspecialchars($pkDB); ?>">
                 <input type="hidden" name="mode" value="edit">
                 <button type="submit" class="btn btn-primary">Edit Database</button>
             </form>
+            
         </div>
     </div>
 </body>

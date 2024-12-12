@@ -80,7 +80,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $nameDatabase = $_POST['db_name'];
     $description = $_POST['description'];
     $mode = $_POST['mode'];
-    $idDataBase = $_POST['idDataBase'];
+    
 
     //Verificar que lso campos estén llenos
     
@@ -88,12 +88,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $creationDate = date("Y-m-d H:i:s");
 
     if($mode === 'edit'){
+        $idDataBase = $_POST['idDataBase'];
         $queryUpdate = "UPDATE MyDataBase SET creationDate = ?, idSubnet = ?, idComputeInstance = ?, idDBTypeMySQL = ?, idDBTypePostgrade = ?, nameDataBase = ?, description = ? WHERE idDataBase = ?";
         $stmt = $dataBase->prepare($queryUpdate);
         $stmt->bind_param("sssssssi", $creationDate, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description, $idDataBase);
 
         if($stmt->execute()){
             echo "Database updated successfully";
+            echo "<br>";
+            echo "Please, close this window and refresh the Databases page.";
         }else{
             echo "Error updating database";
         }
@@ -108,6 +111,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         if($stmt->execute()){
             echo "Database created successfully";
+            echo "<br>";
+            echo "Please, close this window and refresh the Databases page.";
         }else{
             echo "Error creating database";
         }

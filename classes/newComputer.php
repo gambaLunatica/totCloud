@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $imageId = $_POST['image_name'];
     $subnetId = $_POST['subnet_name']; // Asegúrate de que el formulario incluya este campo
     $mode = $_POST['mode']; // Por defecto, es 'create'
-    $idComputeInstance = $_POST['idComputeInstance'];
+    
     // Verificar que todos los campos estén completos
     if (empty($vmName) || empty($cpuModel) || empty($memoryId) || empty($imageId) || empty($subnetId)) {
         echo "Por favor, completa todos los campos.";
@@ -126,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sshKey = "exampleSSHKey"; // Cambia esto por una clave SSH real o por un input del usuario
 
     if($mode === 'edit') {
+        $idComputeInstance = $_POST['idComputeInstance'];
         // Actualizar la máquina virtual existente
         $queryUpdateVM = "
             UPDATE COMPUTEINSTANCE
@@ -147,7 +148,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Ejecutar el `UPDATE`
         if ($stmtUpdate->execute()) {
-            echo "La máquina virtual se ha actualizado exitosamente.";
+            echo "Virtual machine updated successfully.";
+            echo "<br>";
+            echo "Please, close this window and refresh the Virtual Machine page.";
         } else {
             echo "Error al actualizar la máquina virtual: " . $stmtUpdate->error;
         }
@@ -173,9 +176,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Ejecutar el `INSERT`
         if ($stmtInsert->execute()) {
-            echo "La máquina virtual se ha creado exitosamente.";
+            echo "Virtual machine created successfully.";
+            echo "<br>";
+            echo "Please, close this window and refresh the Virtual Machine page.";
         } else {
-            echo "Error al crear la máquina virtual: " . $stmtInsert->error;
+            echo "Error: " . $stmtInsert->error;
         }
         $stmtInsert->close();
     }
