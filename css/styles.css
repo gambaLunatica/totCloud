@@ -200,7 +200,7 @@ input[type="checkbox"]{
 }
 .topDesc {
   display: flex;
-  background-color: #afafaf;
+  background-color: #666;
   box-shadow: 0 2px 4px rgb(0, 0, 0, 0.1);
 }
 .textDesc{
@@ -272,7 +272,7 @@ input[type="checkbox"]{
   flex-direction: column;
 }
 .product{
-  background-color: #afafaf;
+  background-color: #666;
   border-radius: 5px;
   box-shadow: 0 4px 4px rgba(0,0,0,0.1);
   height: 300px;
