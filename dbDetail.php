@@ -82,7 +82,37 @@
                 <input type="hidden" name="mode" value="edit">
                 <button type="submit" class="btn btn-primary">Edit Database</button>
             </form>
-            
         </div>
+        <form id="deleteDBForm" action="classes/deleteDatabase.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Database?');">
+                <input type="hidden" name="idDataBase" value="<?= htmlspecialchars($pkDB); ?>">
+                <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete Database</button>
+        </form>
     </div>
 </body>
+
+<script>
+function deleteAndClose(event) {
+    event.preventDefault();
+    const form = document.getElementById('deleteDBForm');
+    const formData = new FormData(form);
+
+    fetch('classes/deleteDatabase.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert(data);
+        window.close();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert();
+    });
+}
+</script>
