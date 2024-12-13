@@ -5,6 +5,7 @@
     include 'head.php';
     include 'classes/user.php';
     require "classes/dataBase.php";
+    include 'navbar.php';
 
     $vcn = json_decode(urldecode($_GET['vcn']), true);
     $vcndata = $dataBase->getVCN(htmlspecialchars($vcn['idVCN']));

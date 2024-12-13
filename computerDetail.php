@@ -3,6 +3,7 @@
     include 'head.php';
     include 'classes/user.php';
     require "classes/dataBase.php";
+    include 'navbar.php';
 
     $computer = json_decode(urldecode($_GET['computer']), true);
     $computerdata = $dataBase->getComputeInstance(htmlspecialchars($computer['idComputeInstance']));

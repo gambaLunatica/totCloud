@@ -101,11 +101,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         // Insertar el almacenamiento en la base de datos
         $usedSpace = 0;
-        $queryStorage = "INSERT INTO StorageUnit (nameCompany, idSubnet, idComputeInstance, usedSpace, nameStorageU, idUserGroup, nameStorage) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $queryStorage = "INSERT INTO StorageUnit (nameCompany, idSubnet, idComputeInstance, usedSpace, nameStorageU, nameStorage) VALUES (?, ?, ?, ?, ?, ?)";
     
         $stmtStorage = $dataBase->prepare($queryStorage);
-        $stmtStorage->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstanece, $usedSpace, $nameStorageU, $idUserGroup, $nameStorage);
-        
+        $stmtStorage->bind_param("ssssss", $nameCompany, $nameSubnet, $nameComputeInstanece, $usedSpace, $nameStorageU, $nameStorage);
         if($stmtStorage->execute()){
             header("Location: ../storagepage.php");
             $storageUnitID = $stmtStorage->insert_id;

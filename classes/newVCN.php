@@ -87,7 +87,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmtVCN = $dataBase->prepare($queryVCN);
         $stmtVCN->bind_param("ssssssi", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN, $idVCN);
         if($stmtVCN->execute()){
-            hewader("Location: ../VCNpage.php");
+            header("Location: ../VCNpage.php");
         }else{
             echo "Error updating VCN";
         }

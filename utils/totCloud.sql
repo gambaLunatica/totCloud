@@ -241,7 +241,6 @@ create table StorageUnit(
     usedSpace FLOAT UNSIGNED NOT NULL,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     nameStorageU VARCHAR(32) NOT NULL,
-    idUserGroup INT UNSIGNED NOT NULL,
     nameStorage VARCHAR(32) NOT NULL,
 
     PRIMARY KEY(idStorageUnit),
@@ -751,7 +750,6 @@ CREATE TABLE StorageUnitBackup (
     usedSpace FLOAT UNSIGNED NOT NULL,
     creationDate DATETIME NOT NULL,
     nameStorageU VARCHAR(32) NOT NULL,
-    idUserGroup INT UNSIGNED NOT NULL,
     nameStorage VARCHAR(32) NOT NULL,
     PRIMARY KEY (backupID)
 );
