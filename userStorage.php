@@ -38,13 +38,12 @@ $storageServices = $dataBase->getUserStorageUnits();
     // Función para abrir detalles de una unidad de almacenamiento
     function openStorageDetail(storageData) {
         const url = `storageDetail.php?storage=${encodeURIComponent(storageData)}`;
-        //const url = `storageDetail.php?id=${storageId}`;
-        window.open(url, '_blank', 'width=800,height=600');
+        window.location.href = url;
     }
 
     // Función para abrir formulario de nueva unidad de almacenamiento
     function openNewStorageForm() {
         const url = 'formStorageU.php';
-        window.open(url, '_blank', 'width=800,height=600');
+        window.location.href = url;
     }
 </script>
