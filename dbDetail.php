@@ -4,6 +4,7 @@
 <?php
     include 'head.php';
     include 'classes/user.php';
+    include 'navbar.php';
     require "classes/dataBase.php";
 
     $database = json_decode(urldecode($_GET['database']), true);
@@ -52,6 +53,19 @@
     //------------------------------------------------------------------------------------------------
     $backups = [];
     $backups = $dataBase->getBackUpInfoDataBase($pkDB);
+
+    $queryUsage = "SELECT value, creationDate FROM MyUsage WHERE idDataBase = ? ORDER BY creationDate";
+    $stmt = $dataBase->prepare($queryUsage);
+    $stmt->bind_param("i", $pkDB);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $dbUsageData = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $dbUsageData[] = ["x" => strtotime($row['creationDate']) * 1000, "y" => (float)$row['value']];
+    }
+    $stmt->close();
 ?>
 
 <body>
@@ -130,6 +144,7 @@
                 <button type="submit" class="btn btn-primary" onclick="deleteAndClose2(event)">Restore Backup</button>
             </form>
         </div>
+        <div id="databaseUsageChart" style="width:100%; height:400px;"></div>
     </div>
 </body>
 
@@ -182,4 +197,34 @@ function deleteAndClose2(event) {
         alert();
     });
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const dbUsageData = <?php echo json_encode($dbUsageData); ?>;
+
+    Highcharts.chart('databaseUsageChart', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Database Usage Over Time'
+        },
+        xAxis: {
+            type: 'datetime',
+            title: {
+                text: 'Time'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Usage Value'
+            }
+        },
+        series: [
+            {
+                name: 'Database Usage',
+                data: dbUsageData,
+                color: 'purple'
+            }
+        ]
+    });
+});
 </script>

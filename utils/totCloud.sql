@@ -545,9 +545,12 @@ CREATE PROCEDURE createDatabase(
     IN p_idDBTypeMySQL INT UNSIGNED,
     IN p_idDBTypePostgrade INT UNSIGNED,
     IN p_nameDataBase VARCHAR(32),
-    IN p_description VARCHAR(512)
+    IN p_description VARCHAR(512),
+    IN numRows INT
 )
 BEGIN
+	DECLARE i INT DEFAULT 0;
+    DECLARE new_idDataBase INT;
     -- Insert into MyDataBase
     INSERT INTO MyDataBase(
         nameCompany,
@@ -566,7 +569,6 @@ BEGIN
         p_nameDataBase,
         p_description
     );
-
     -- Retrieve the newly inserted idDataBase
     SET @new_idDataBase = LAST_INSERT_ID();
 
@@ -595,6 +597,15 @@ BEGIN
         FROM Setting s
         WHERE s.idDBTypePostgrade = p_idDBTypePostgrade;
     END IF;
+
+    WHILE i < numRows DO
+        INSERT INTO MyUsage (
+            idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value, creationDate
+        ) VALUES (
+            NULL, NULL, NULL, NULL, @new_idDataBase, RAND() * 100, DATE_SUB(NOW(), INTERVAL i HOUR)
+        );
+        SET i = i + 1;
+    END WHILE;
 END$$
 
 -- procedure para elminar una base de datos correctamente
@@ -688,12 +699,12 @@ BEGIN
     END WHILE;
 END$$
 
-CREATE PROCEDURE InsertDatabaseUsage(IN idDatabase INT, IN numRows INT)
+CREATE PROCEDURE InsertDatabaseUsage(IN idDataBase INT, IN numRows INT)
 BEGIN
     DECLARE i INT DEFAULT 0;
     WHILE i < numRows DO
         INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value, creationDate)
-        VALUES (NULL, NULL, NULL, NULL, idDatabase, RAND() * 100, DATE_SUB(NOW(), INTERVAL i HOUR));
+        VALUES (NULL, NULL, NULL, NULL, idDataBase, RAND() * 100, DATE_SUB(NOW(), INTERVAL i HOUR));
         SET i = i + 1;
     END WHILE;
 END$$
