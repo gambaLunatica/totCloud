@@ -1,5 +1,5 @@
-CREATE DATABASE totCloud;
-USE totCloud;
+CREATE DATABASE Syss;
+USE Syss;
 
 create table Privilege(
     namePrivilege VARCHAR(32) NOT NULL,
@@ -339,15 +339,16 @@ create table DBConfiguration(
 );
 
 create table MyUsage(
-    idComputeCPU INT UNSIGNED NOT NULL,
-    idComputeMEM INT UNSIGNED NOT NULL,
-    idStorageUnit INT UNSIGNED NOT NULL,
-    idVCN INT UNSIGNED NOT NULL,
-    idDataBase INT UNSIGNED NOT NULL,
+    idMyUsage INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    idComputeCPU INT UNSIGNED,
+    idComputeMEM INT UNSIGNED,
+    idStorageUnit INT UNSIGNED,
+    idVCN INT UNSIGNED,
+    idDataBase INT UNSIGNED,
     value FLOAT,
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    PRIMARY KEY(idComputeCPU, idComputeMEM, idStorageUnit, idVCN, creationDate),
+    PRIMARY KEY(idMyUsage),
     FOREIGN KEY(idComputeCPU) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(idComputeMem) REFERENCES ComputeInstance(idComputeInstance),
     FOREIGN KEY(idVCN) REFERENCES VCN(idVCN),
@@ -645,6 +646,57 @@ BEGIN
     DELETE FROM UserGroup
     WHERE idUserGroup = p_idUserGroup;
 END$$
+
+CREATE PROCEDURE InsertComputeInstanceCPUUsage(IN idInstance INT, IN numRows INT)
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    WHILE i < numRows DO
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
+        VALUES (idInstance, NULL, NULL, NULL, NULL, RAND() * 100);
+        SET i = i + 1;
+    END WHILE;
+END$$
+
+CREATE PROCEDURE InsertComputeInstanceRAMUsage(IN idInstance INT, IN numRows INT)
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    WHILE i < numRows DO
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
+        VALUES (NULL, idInstance, NULL, NULL, NULL, RAND() * 100);
+        SET i = i + 1;
+    END WHILE;
+END$$
+
+CREATE PROCEDURE InsertStorageUnitUsage(IN idStorage INT, IN numRows INT)
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    WHILE i < numRows DO
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
+        VALUES (NULL, NULL, idStorage, NULL, NULL, RAND() * 100);
+        SET i = i + 1;
+    END WHILE;
+END$$
+
+CREATE PROCEDURE InsertVCNUsage(IN idVCN INT, IN numRows INT)
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    WHILE i < numRows DO
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
+        VALUES (NULL, NULL, NULL, idVCN, NULL, RAND() * 100);
+        SET i = i + 1;
+    END WHILE;
+END$$
+
+CREATE PROCEDURE InsertDatabaseUsage(IN idDatabase INT, IN numRows INT)
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    WHILE i < numRows DO
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
+        VALUES (NULL, NULL, NULL, NULL, idDatabase, RAND() * 100);
+        SET i = i + 1;
+    END WHILE;
+END$$
+
 
 DELIMITER ;
 

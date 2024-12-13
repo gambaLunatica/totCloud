@@ -106,6 +106,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 alert('VCN created successfully');
                 window.close();
             </script>";
+            $VCNID = $stmtVCN->insert_id;
+            $queryUsageFunction = "CALL InsertVCNUsage(?, 5000)";
+            $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
+            $stmtUsageFunction->bind_param("i", $VCNID);
+            $stmtUsageFunction->execute();
+            $stmtUsageFunction->close();
         }else{
             echo "Error creating VCN";
         }
