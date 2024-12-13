@@ -7,6 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     try {
 
+        $deleteQuery = "DELETE FROM MyUsage WHERE idVCN = ?";
+        $deleteStmt = $dataBase->prepare($deleteQuery);
+        $deleteStmt->bind_param("i", $idVCN);
+        $success = $deleteStmt->execute();
+
         // Eliminar la VCN
         $deleteQuery = "DELETE FROM VCN WHERE idVCN = ?";
         $deleteStmt = $dataBase->prepare($deleteQuery);

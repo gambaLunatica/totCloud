@@ -615,6 +615,8 @@ BEGIN
     -- Delete associated configurations
     DELETE FROM DBConfiguration WHERE idDataBase = p_idDataBase;
 
+    DELETE FROM MyUsage WHERE idDataBase = p_idDataBase;
+
     -- Delete the database entry
     DELETE FROM MyDataBase WHERE idDataBase = p_idDataBase;
 END$$

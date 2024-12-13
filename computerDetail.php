@@ -25,6 +25,24 @@
     //------------------------------------------------------------------------------------------------
     $backups = [];
     $backups = $dataBase->getBackUpInfoComputeInstance($pkCI);
+
+    $queryUsage = "SELECT value, creationDate, idComputeCPU, idComputeMEM FROM MyUsage WHERE idComputeCPU = ? OR idComputeMEM = ? ORDER BY creationDate";
+    $stmt = $dataBase->prepare($queryUsage);
+    $stmt->bind_param("ii", $pkCI, $pkCI);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $cpuUsageData = [];
+    $memoryUsageData = [];
+
+    while ($row = $result->fetch_assoc()) {
+        if ($row['idComputeCPU'] == $pkCI) {
+            $cpuUsageData[] = ["x" => strtotime($row['creationDate']) * 1000, "y" => (float)$row['value']];
+        } elseif ($row['idComputeMEM'] == $pkCI) {
+            $memoryUsageData[] = ["x" => strtotime($row['creationDate']) * 1000, "y" => (float)$row['value']];
+        }
+    }
+    $stmt->close();
 ?>
 
 <body>
@@ -67,6 +85,7 @@
                 <button type="submit" class="btn btn-primary" onclick="deleteAndClose2(event)">Restore Backup</button>
             </form>
         </div>
+        <div id="computeUsageChart" style="width:100%; height:400px;"></div>
     </div>
 </body>
 
@@ -120,4 +139,40 @@ function deleteAndClose2(event) {
         alert();
     });
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const cpuUsageData = <?php echo json_encode($cpuUsageData); ?>;
+    const memoryUsageData = <?php echo json_encode($memoryUsageData); ?>;
+
+    Highcharts.chart('computeUsageChart', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'CPU and Memory Usage Over Time'
+        },
+        xAxis: {
+            type: 'datetime',
+            title: {
+                text: 'Time'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Usage Value'
+            }
+        },
+        series: [
+            {
+                name: 'CPU Usage',
+                data: cpuUsageData,
+                color: 'blue'
+            },
+            {
+                name: 'Memory Usage',
+                data: memoryUsageData,
+                color: 'green'
+            }
+        ]
+    });
+});
 </script>
