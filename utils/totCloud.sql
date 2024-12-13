@@ -1,5 +1,5 @@
-CREATE DATABASE Syss;
-USE Syss;
+CREATE DATABASE DBSyss;
+USE DBSyss;
 
 create table Privilege(
     namePrivilege VARCHAR(32) NOT NULL,

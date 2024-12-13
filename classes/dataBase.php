@@ -1,6 +1,6 @@
 <?php
 $con = mysqli_connect("localhost", "root", "") or die("Localhost no disponible");
-$db = mysqli_select_db($con, "Syss") or die("Base de dades no disponible");
+$db = mysqli_select_db($con, "DBSyss") or die("Base de dades no disponible");
 
 if (!isset($_SESSION)) {
     session_start();
