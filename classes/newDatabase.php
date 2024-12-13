@@ -114,7 +114,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
             $stmtUsageFunction->bind_param("i", $databaseID);
             $stmtUsageFunction->execute();
-            $stmtUsageFunction->close();
         }else{
             echo "Error creating database";
         }

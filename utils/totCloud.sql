@@ -651,8 +651,8 @@ CREATE PROCEDURE InsertComputeInstanceCPUUsage(IN idInstance INT, IN numRows INT
 BEGIN
     DECLARE i INT DEFAULT 0;
     WHILE i < numRows DO
-        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
-        VALUES (idInstance, NULL, NULL, NULL, NULL, RAND() * 100);
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value, creationDate)
+        VALUES (idInstance, NULL, NULL, NULL, NULL, RAND() * 100, DATE_SUB(NOW(), INTERVAL i HOUR));
         SET i = i + 1;
     END WHILE;
 END$$
@@ -661,8 +661,8 @@ CREATE PROCEDURE InsertComputeInstanceRAMUsage(IN idInstance INT, IN numRows INT
 BEGIN
     DECLARE i INT DEFAULT 0;
     WHILE i < numRows DO
-        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
-        VALUES (NULL, idInstance, NULL, NULL, NULL, RAND() * 100);
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value, creationDate)
+        VALUES (NULL, idInstance, NULL, NULL, NULL, RAND() * 100, DATE_SUB(NOW(), INTERVAL i HOUR));
         SET i = i + 1;
     END WHILE;
 END$$
@@ -671,8 +671,8 @@ CREATE PROCEDURE InsertStorageUnitUsage(IN idStorage INT, IN numRows INT)
 BEGIN
     DECLARE i INT DEFAULT 0;
     WHILE i < numRows DO
-        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
-        VALUES (NULL, NULL, idStorage, NULL, NULL, RAND() * 100);
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value, creationDate)
+        VALUES (NULL, NULL, idStorage, NULL, NULL, RAND() * 100, DATE_SUB(NOW(), INTERVAL i HOUR));
         SET i = i + 1;
     END WHILE;
 END$$
@@ -681,8 +681,8 @@ CREATE PROCEDURE InsertVCNUsage(IN idVCN INT, IN numRows INT)
 BEGIN
     DECLARE i INT DEFAULT 0;
     WHILE i < numRows DO
-        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
-        VALUES (NULL, NULL, NULL, idVCN, NULL, RAND() * 100);
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value, creationDate)
+        VALUES (NULL, NULL, NULL, idVCN, NULL, RAND() * 100, DATE_SUB(NOW(), INTERVAL i HOUR));
         SET i = i + 1;
     END WHILE;
 END$$
@@ -691,8 +691,8 @@ CREATE PROCEDURE InsertDatabaseUsage(IN idDatabase INT, IN numRows INT)
 BEGIN
     DECLARE i INT DEFAULT 0;
     WHILE i < numRows DO
-        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value)
-        VALUES (NULL, NULL, NULL, NULL, idDatabase, RAND() * 100);
+        INSERT INTO MyUsage (idComputeCPU, idComputeMEM, idStorageUnit, idVCN, idDataBase, value, creationDate)
+        VALUES (NULL, NULL, NULL, NULL, idDatabase, RAND() * 100, DATE_SUB(NOW(), INTERVAL i HOUR));
         SET i = i + 1;
     END WHILE;
 END$$
