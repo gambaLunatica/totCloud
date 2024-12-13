@@ -87,10 +87,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmtVCN = $dataBase->prepare($queryVCN);
         $stmtVCN->bind_param("ssssssi", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN, $idVCN);
         if($stmtVCN->execute()){
-            echo "<script>
-                alert('VCN updated successfully');
-                window.close();
-            </script>";
+            hewader("Location: ../userVCN.php");
         }else{
             echo "Error updating VCN";
         }
@@ -102,10 +99,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmtVCN->bind_param("ssssss", $cidr, $nameCompany, $nameRegion, $privateIP, $creationDate, $nameVCN);
 
         if($stmtVCN->execute()){
-            echo "<script>
-                alert('VCN created successfully');
-                window.close();
-            </script>";
+            header("Location: ../userVCN.php");
             $VCNID = $stmtVCN->insert_id;
             $queryUsageFunction = "CALL InsertVCNUsage(?, 5000)";
             $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
