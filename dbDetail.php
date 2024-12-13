@@ -151,7 +151,7 @@ function deleteAndClose(event) {
     })
     .then(data => {
         alert(data);
-        window.close();
+        window.location.href = "DBpage.php";
     })
     .catch(error => {
         console.error('Error:', error);
