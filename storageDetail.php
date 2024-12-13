@@ -130,7 +130,7 @@ function deleteAndClose(event) {
     })
     .then(data => {
         alert(data);
-        window.close();
+        window.location.href = "Storagepage.php";
     })
     .catch(error => {
         console.error('Error:', error);
