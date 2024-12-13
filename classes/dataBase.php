@@ -3116,14 +3116,22 @@ class MyDataBase
     {
         try
         {
-            $query = $this->db->prepare("DELETE FROM StorageUnit WHERE idStorageUnit = (SELECT idStorageUnit FROM StorageUnitBackup WHERE backupID = ?)");
-            $query->bind_param("i",$idBu);
-            $query->execute();
+            //$query = $this->db->prepare("DELETE FROM StorageUnit WHERE idStorageUnit = (SELECT idStorageUnit FROM StorageUnitBackup WHERE backupID = ?)");
+            //$query->bind_param("i",$idBu);
+            //$query->execute();
 
-            $query = $this->db->prepare("INSERT INTO StorageUnit 
-                                        SELECT sub.idStorageUnit, sub.nameCompany, sub.idSubnet, sub.idComputeInstance, sub.usedSpace, sub.creationDate, sub.nameStorageU, sub.idUserGroup, sub.nameStorage  
-                                        FROM StorageUnitBackup as sub 
-                                        WHERE backupID = ?");
+            $query = $this->db->prepare("UPDATE StorageUnit AS su
+                                        JOIN StorageUnitBackup AS sub ON su.idStorageUnit = sub.idStorageUnit
+                                        SET 
+                                            su.nameCompany = sub.nameCompany,
+                                            su.idSubnet = sub.idSubnet,
+                                            su.idComputeInstance = sub.idComputeInstance,
+                                            su.usedSpace = sub.usedSpace,
+                                            su.creationDate = sub.creationDate,
+                                            su.nameStorageU = sub.nameStorageU,
+                                            su.idUserGroup = sub.idUserGroup,
+                                            su.nameStorage = sub.nameStorage
+                                        WHERE sub.backupID = ?");
             $query->bind_param("i",$idBu);
             $query->execute();
 
@@ -3141,24 +3149,40 @@ class MyDataBase
     {
         try
         {
-            $stmt = $this->db->prepare("DELETE FROM Subnet WHERE idSubnet NOT IN (SELECT idSubnet FROM SubnetBackup WHERE backupDate = ?)");
-            $stmt->bind_param("s", $backupDate);
+            $stmt = $this->db->prepare("DELETE FROM Subnet WHERE idSubnet IN (SELECT idSubnet FROM SubnetBackup WHERE backupID = ?)");
+            $stmt->bind_param("s", $idBu);
             $stmt->execute();
 
-            $query = $this->db->prepare("DELETE FROM VCN WHERE idVCN = (SELECT idVCN FROM VCNBackup WHERE backupID = ?)");
+            //$query = $this->db->prepare("DELETE FROM VCN WHERE idVCN = (SELECT idVCN FROM VCNBackup WHERE backupID = ?)");
+            //$query->bind_param("i",$idBu);
+            //$query->execute();
+
+            /*$query = $this->db->prepare("INSERT INTO VCN SELECT * FROM VCNBackup WHERE backupID = ?");
+            $query->bind_param("i",$idBu);
+            $query->execute();*/
+
+            $query = $this->db->prepare("UPDATE VCN AS vcn
+                                        JOIN VCNBackup AS vcnb ON vcn.idVCN = vcnb.idVCN
+                                        SET
+                                            vcn.nameCompany = vcnb.nameCompany,
+                                            vcn.nameRegion = vcnb.nameRegion,
+                                            vcn.cidr = vcnb.cidr,
+                                            vcn.privateIP = vcnb.privateIP,
+                                            vcn.creationDate = vcnb.creationDate,
+                                            vcn.nameVCN = vcnb.nameVCN
+                                        WHERE vcnb.backupID = ?");
             $query->bind_param("i",$idBu);
             $query->execute();
 
-            $stmt = $this->db->prepare("INSERT INTO Subnet SELECT * FROM SubnetBackup WHERE backupDate = ?");
-            $stmt->bind_param("s", $backupDate);
+            $stmt = $this->db->prepare("INSERT INTO Subnet (idSubnet, idVCN, cidr, IP, nameSubnet, creationDate)
+                                        SELECT sbu.idSubnet,  sbu.idVCN, sbu.cidr, sbu.IP, sbu.nameSubnet, sbu.creationDate
+                                        FROM SubnetBackup AS sbu
+                                        WHERE sbu.backupDate = ? AND sbu.backupID = ?");
+            $stmt->bind_param("si", $backupDate, $idBu);
             $stmt->execute();
-
-            $query = $this->db->prepare("INSERT INTO VCN SELECT * FROM VCNBackup WHERE backupID = ?");
-            $query->bind_param("i",$idBu);
-            $query->execute();
 
             $query = $this->db->prepare("DELETE FROM VCNBackup WHERE backupID = ? AND backupDate > ?");
-            $query->bind_param("is", $id, $backupDate);
+            $query->bind_param("is", $idBu, $backupDate);
             $query->execute();
         }
         catch (Exception $e) {
@@ -3171,50 +3195,73 @@ class MyDataBase
     {
         try
         {
-            $query = $this->db->prepare("DELETE FROM Instruction WHERE idInstruction = (SELECT idInstruction FROM InstructionBackup WHERE backupID = ?)");
+            $query = $this->db->prepare("DELETE FROM Instruction WHERE idInstruction IN (SELECT idInstruction FROM InstructionBackup WHERE backupID = ?)");
             $query->bind_param("i",$idBu);
             $query->execute();
 
-            $stmt = $this->db->prepare("DELETE FROM MyTable WHERE idTable = (SELECT idTable FROM MyTableBackup WHERE backupID = ?)");
-            $stmt->bind_param("i", $id);
+            $stmt = $this->db->prepare("DELETE FROM MyTable WHERE idTable IN (SELECT idTable FROM MyTableBackup WHERE backupID = ?)");
+            $stmt->bind_param("i", $idBu);
             $stmt->execute();
             
-            $stmt = $this->db->prepare("DELETE FROM Setting WHERE nameSetting = (SELECT nameSetting FROM SettingBackup WHERE backupID = ?)");
-            $stmt->bind_param("i", $id);
+            $stmt = $this->db->prepare("DELETE FROM Setting WHERE nameSetting IN (SELECT nameSetting FROM SettingBackup WHERE backupID = ?)");
+            $stmt->bind_param("i", $idBu);
             $stmt->execute();
 
-            $stmt = $this->db->prepare("DELETE FROM MyDataBase WHERE idDataBase = (SELECT idDataBase FROM MyDataBaseBackup WHERE backupID = ?)");
-            $stmt->bind_param("i", $id);
+            $stmt = $this->db->prepare("UPDATE MyDatabase AS md
+                                        JOIN MyDataBaseBackup AS mdb ON md.idDataBase = mdb.idDataBase
+                                        SET
+                                            md.nameCompany = mdb.nameCompany,
+                                            md.idSubnet = mdb.idSubnet,
+                                            md.idComputeInstance = mdb.idComputeInstance,
+                                            md.idDBTypeMySQL = mdb.idDBTypeMySQL,
+                                            md.idDBTypePostgrade = mdb.idDBTypePostgrade,
+                                            md.creationDate = mdb.creationDate,
+                                            md.nameDataBase = mdb.nameDataBase,
+                                            md.description = mdb.description
+                                        WHERE backupID = ?");
+            $stmt->bind_param("i", $idBu);
             $stmt->execute();
 
+            //$stmt = $this->db->prepare("DELETE FROM MyDataBase WHERE idDataBase = (SELECT idDataBase FROM MyDataBaseBackup WHERE backupID = ?)");
+            //$stmt->bind_param("i", $idBu);
+            //$stmt->execute();
 
-            $stmt = $this->db->prepare("INSERT INTO MyDataBase SELECT * FROM MyDataBaseBackup WHERE backupID = ?");
-            $stmt->bind_param("i", $id);
+            //$stmt = $this->db->prepare("INSERT INTO MyDataBase SELECT * FROM MyDataBaseBackup WHERE backupID = ?");
+            //$stmt->bind_param("i", $idBu);
+            //$stmt->execute();
+
+            $stmt = $this->db->prepare("INSERT INTO MyTable (idTable, nameTable, idDataBase)
+                                        SELECT mtb.idTable, mtb.nameTable, mtb.idDataBase
+                                        FROM MyTableBackup As mtb
+                                        WHERE mtb.backupDate = ? AND mtb.backupID = ?");
+            $stmt->bind_param("si", $backupDate, $idBu);
             $stmt->execute();
 
-            $stmt = $this->db->prepare("INSERT INTO MyTable SELECT * FROM MyTableBackup WHERE backupDate = ?");
-            $stmt->bind_param("s", $date);
+            $stmt = $this->db->prepare("INSERT INTO Instruction (idInstruction, idTable, nameInstruction, inputDate)
+                                        SELECT ib.idInstruction, ib.idTable, ib.nameInstruction, ib.inputDate
+                                        FROM InstructionBackup AS ib
+                                        WHERE ib.backupDate = ? AND ib.backupID = ?");
+            $stmt->bind_param("si", $backupDate, $idBu);
             $stmt->execute();
 
-            $stmt = $this->db->prepare("INSERT INTO Instruction SELECT * FROM InstructionBackup WHERE backupDate = ?");
-            $stmt->bind_param("s", $date);
-            $stmt->execute();
-
-            $stmt = $this->db->prepare("INSERT INTO Setting SELECT * FROM SettingBackup WHERE backupDate = ?");
-            $stmt->bind_param("s", $date);
+            $stmt = $this->db->prepare("INSERT INTO Setting (nameSetting, statusName, idDBTypePostgrade, idDBTypeMySQL, booleanValue, decimalValue, stringValue)
+                                        SELECT sb.nameSetting, sb.statusName, sb.idDBTypePostgrade, sb.idDBTypeMySQL, sb.booleanValue, sb.decimalValue, sb.stringValue 
+                                        FROM SettingBackup AS sb
+                                        WHERE sb.backupDate = ? AND sb.backupID = ?");
+            $stmt->bind_param("si", $backupDate, $idBu);
             $stmt->execute();
 
             $query = $this->db->prepare("DELETE FROM MyDataBaseBackUp WHERE backupID = ? AND backupDate > ?");
-            $query->bind_param("is", $id, $backupDate);
+            $query->bind_param("is", $idBu, $backupDate);
             $query->execute();
             $query = $this->db->prepare("DELETE FROM MyTableBackup WHERE backupID = ? AND backupDate > ?");
-            $query->bind_param("is", $id, $backupDate);
+            $query->bind_param("is", $idBu, $backupDate);
             $query->execute();
             $query = $this->db->prepare("DELETE FROM InstructionBackup WHERE backupID = ? AND backupDate > ?");
-            $query->bind_param("is", $id, $backupDate);
+            $query->bind_param("is", $idBu, $backupDate);
             $query->execute();
             $query = $this->db->prepare("DELETE FROM SettingBackup WHERE backupID = ? AND backupDate > ?");
-            $query->bind_param("is", $id, $backupDate);
+            $query->bind_param("is", $idBu, $backupDate);
             $query->execute();
         }
         catch (Exception $e) {

@@ -81,7 +81,7 @@
             </form>
         </div>
         <div class="detail-feature">
-            <form id="restoreBackupForm" method="POST" action="classes/restoreBackupDatabase.php" onsubmit="return confirm('Are you sure you want to load this backup?');">
+            <form id="restoreBackupForm" method="POST" action="classes/restoreBackupStorageUnit.php" onsubmit="return confirm('Are you sure you want to load this backup?');">
                 <label for="backupDate">Select a backup:</label>
                 <select name="backupDate" id="backupDate" required>
                     <?php foreach ($backups as $backup): ?>
@@ -127,7 +127,7 @@ function deleteAndClose2(event) {
     const form = document.getElementById('restoreBackupForm');
     const formData = new FormData(form);
 
-    fetch('classes/restoreBackupDatabase.php', {
+    fetch('classes/restoreBackupStorageUnit.php', {
         method: 'POST',
         body: formData
     })

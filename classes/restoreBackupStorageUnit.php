@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Cargar backup
-        $dataBase->loadBackUpDatabase($backupID, $backupDate);
+        $dataBase->loadBackUpSU($backupID, $backupDate);
 
         // Mensaje de éxito
         echo "Backup restored successfully!";

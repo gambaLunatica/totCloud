@@ -50,6 +50,8 @@
     // Te dejo aquí la clave primaria de la base de datos seleccionada
     $pkDB = $database['idDataBase'];
     //------------------------------------------------------------------------------------------------
+    $backups = [];
+    $backups = $dataBase->getBackUpInfoDataBase($pkDB);
 ?>
 
 <body>
@@ -112,7 +114,21 @@
             <form id="deleteDBForm" action="classes/deleteDatabase.php" method="post" onsubmit="return confirm('Are you sure you want to delete this Database?');">
                 <input type="hidden" name="idDataBase" value="<?= htmlspecialchars($pkDB); ?>">
                 <button type="submit" class="btn btn-danger" onclick="deleteAndClose(event)">Delete Database</button>
-        </form>
+            </form>
+        </div>
+        <div class="detail-feature">
+            <form id="restoreBackupForm" method="POST" action="classes/restoreBackupDatabase.php" onsubmit="return confirm('Are you sure you want to load this Database?');">
+                <label for="backupDate">Select a backup:</label>
+                <select name="backupDate" id="backupDate" required>
+                    <?php foreach ($backups as $backup): ?>
+                        <option value="<?= htmlspecialchars($backup['backupDate']); ?>">
+                            <?= htmlspecialchars($backup['backupDate']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <input type="hidden" name="backupID" value="<?= htmlspecialchars($backup['backupID']); ?>">
+                <button type="submit" class="btn btn-primary" onclick="deleteAndClose2(event)">Restore Backup</button>
+            </form>
         </div>
     </div>
 </body>
@@ -124,6 +140,30 @@ function deleteAndClose(event) {
     const formData = new FormData(form);
 
     fetch('classes/deleteDatabase.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert(data);
+        window.close();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert();
+    });
+}
+function deleteAndClose2(event) {
+    event.preventDefault();
+    const form = document.getElementById('restoreBackupForm');
+    const formData = new FormData(form);
+
+    fetch('classes/restoreBackupDatabase.php', {
         method: 'POST',
         body: formData
     })
