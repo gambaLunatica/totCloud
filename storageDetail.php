@@ -31,6 +31,20 @@
     //------------------------------------------------------------------------------------------------
     $backups = [];
     $backups = $dataBase->getBackUpInfoStorageUnit($pkSU);
+
+    $queryUsage = "SELECT value, creationDate FROM MyUsage WHERE idStorageUnit = ? ORDER BY creationDate";
+    $stmt = $dataBase->prepare($queryUsage);
+    $stmt->bind_param("i", $storage['idStorageUnit']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $usageData = [];
+    while ($row = $result->fetch_assoc()) {
+        $usageData[] = [
+            "x" => strtotime($row['creationDate']) * 1000, 
+            "y" => (float)$row['value']
+        ];
+    }
+    $stmt->close();
 ?>
 
 <body>
@@ -94,6 +108,7 @@
                 <button type="submit" class="btn btn-primary" onclick="deleteAndClose2(event)">Restore Backup</button>
             </form>
         </div>
+        <div id="storageUsageChart" style="width:100%; height:400px;"></div>
     </div>
 </body>
 
@@ -146,4 +161,31 @@ function deleteAndClose2(event) {
         alert();
     });
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const usageData = <?php echo json_encode($usageData); ?>;
+
+    Highcharts.chart('storageUsageChart', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Storage Usage Over Time'
+        },
+        xAxis: {
+            type: 'datetime',
+            title: {
+                text: 'Date'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Value'
+            }
+        },
+        series: [{
+            name: 'Usage',
+            data: usageData
+        }]
+    });
+});
 </script>

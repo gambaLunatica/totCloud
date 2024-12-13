@@ -114,11 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 window.close();
             </script>";
             $storageUnitID = $stmtStorage->insert_id;
-            $queryUsageFunction = "CALL InsertStorageUnitUsage(?, 5000)";
+            $queryUsageFunction = "CALL InsertStorageUnitUsage(?, 100)";
             $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
             $stmtUsageFunction->bind_param("i", $storageUnitID);
             $stmtUsageFunction->execute();
-            $stmtUsageFunction->close();
             exit;
         } else {
             echo "Error creating Storage Unit.";
