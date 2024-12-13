@@ -93,7 +93,7 @@ include "classes/userGroup.php";
             $userGroups = $dataBase->selectUserGroups($dataBase->getCompany());
 
             foreach ($userGroups as $userGroup) {
-                $permissions = $dataBase->getPrivilegesByUserGroupId($userGroup->getId());
+                $permissions = $dataBase->getPrivilegesByUserGroupId($userGroup->getId())??[];
                 ?>
                 <details>
                     <summary class="configurableItemTitle"><?= $userGroup->getName(); ?></summary>
@@ -106,31 +106,31 @@ include "classes/userGroup.php";
                                 <div style="display:flex; flex-wrap: wrap;">
                                         <label for="">
                                         <input type="checkbox" id="viewPayments" name="viewPayments" <?php if (in_array("View Payments", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can view payments
                                         </label>
 
                                         <label for="">
                                             <input type="checkbox" id="editPrivileges" name="editPrivileges" <?php if (in_array("Edit Privilegies", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can edit privileges
                                         </label>
 
                                         <label for="">
                                             <input type="checkbox" id="editUserGroups" name="editUserGroups" <?php if (in_array("Edit User Groups", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can edit user groups
                                         </label>
 
                                         <label for="">
                                             <input type="checkbox" id="editUsers" name="editUsers" <?php if (in_array("Edit Users", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can edit users
                                         </label>
 
                                         <label for="">
                                             <input type="checkbox" id="editCompany" name="editCompany" <?php if (in_array("Edit Company", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can edit the company
                                         </label>
                                     </div>
@@ -139,25 +139,25 @@ include "classes/userGroup.php";
                                     <div style="display:flex; flex-wrap: wrap;">
                                         <label for="">
                                             <input type="checkbox" id="viewDataBases" name="viewDataBases" <?php if (in_array("View Data Bases", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can view data bases
                                         </label>
 
                                         <label for="">
                                             <input type="checkbox" id="viewComputeInstances" name="viewComputeInstances" <?php if (in_array("View Compute Instances", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can view compute instances
                                         </label>
 
                                         <label for="">
                                             <input type="checkbox" id="viewStorages" name="viewStorages" <?php if (in_array("View Storage Units", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can view storages
                                         </label>
 
                                         <label for="">
                                             <input type="checkbox" id="viewVirtualNetworks" name="viewVirtualNetworks" <?php if (in_array("View VCNs", $permissions))
-                                            echo "checked" ?>>
+                                            echo "checked"; ?>>
                                             Can view virtual networks
                                         </label>
                                     </div>

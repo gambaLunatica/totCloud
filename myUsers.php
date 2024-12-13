@@ -97,7 +97,9 @@ $userGroups = $dataBase->selectUserGroups($dataBase->getCompany());
                         <div style="display: flex; justify-content: center; gap: 10px; margin-top:10px;">
                             <button class="goButton" name="action" value="update" type="submit">Update</button>
                             <?php
-                            if ($user->getNameCompany() == null) {
+                            $thisUser = unserialize($_SESSION["user"]);
+
+                            if ($user->getNameCompany() == null && $user->getEmail() !== $thisUser->getEmail()) {
                                 echo '<button class="goButton" name="action" value="remove" type="submit">Remove</button>';
                             }
                             ?>
