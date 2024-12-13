@@ -1492,7 +1492,7 @@ class MyDataBase
         }
 
         if ($stmt = $this->db->prepare($sql)) {
-            $stmt->bind_param("is", $idUserGroup, $value);
+            $stmt->bind_param("ii", $idUserGroup, $value);
             return $stmt->execute();
         }
         return false;
