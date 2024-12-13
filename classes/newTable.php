@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
         $stmtUpdate = $dataBase->prepare($queryUpdate);
         $stmtUpdate->bind_param("si", $nameTable, $idTable);
         if($stmtUpdate->execute()){
-            header("Location: ../dbDetail.php"); 
+            header("Location: ../DBpage.php"); 
         }else{
             echo "Error updating table";
         }
@@ -23,7 +23,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
         $stmtDelete = $dataBase->prepare($queryDelete);
         $stmtDelete->bind_param("i", $idTable);
         if($stmtDelete->execute()){
-            header("Location: userDB.php");
+            header("Location: ../DBpage.php");
         }else{
             echo "Error deleting table";
         }
@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
         $stmtCreate = $dataBase->prepare($queryCreate);
         $stmtCreate->bind_param("si", $nameTable, $idDataBase);
         if($stmtCreate->execute()){
-            header("Location: ../userDB.php");
+            header("Location: ../DBpage.php");
         }else{
             echo "Error creating table";
         }
