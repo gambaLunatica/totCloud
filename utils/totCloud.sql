@@ -1,5 +1,5 @@
-CREATE DATABASE totCloud;
-USE totCloud;
+CREATE DATABASE DBSyss;
+USE DBSyss;
 
 create table Privilege(
     namePrivilege VARCHAR(32) NOT NULL,

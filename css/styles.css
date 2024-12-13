@@ -584,12 +584,6 @@ input[type="checkbox"]{
   background-color: #45a049;
 }
 
-/* Mensajes de error o éxito */
-p {
-  color: #d9534f;
-  font-size: 1.2em;
-  text-align: center;
-}
 .detail-container {
   max-width: 750px;
   margin: 20px auto;
