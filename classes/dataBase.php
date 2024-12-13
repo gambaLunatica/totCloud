@@ -1561,7 +1561,7 @@ class MyDataBase
             if (!empty($privileges)) {
                 return $privileges;
             }
-            return null;
+            return [];
         }
         return null;
     }
