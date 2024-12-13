@@ -247,7 +247,6 @@ create table StorageUnit(
     FOREIGN KEY(nameCompany) REFERENCES Company(nameCompany),
     FOREIGN KEY(idSubnet) REFERENCES Subnet(idSubnet),
     FOREIGN KEY(idComputeInstance) REFERENCES ComputeInstance(idComputeInstance),
-    FOREIGN KEY(idUserGroup) REFERENCES UserGroup(idUserGroup),
     FOREIGN KEY(nameStorage) REFERENCES Storage(nameStorage)
 );
 

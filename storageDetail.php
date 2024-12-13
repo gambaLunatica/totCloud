@@ -5,7 +5,6 @@
     include 'head.php';
     include 'classes/user.php';
     require "classes/dataBase.php";
-    include 'navbar.php';
 
     $storage = json_decode(urldecode($_GET['storage']), true);
     $storagedata = $dataBase ->getStorage(htmlspecialchars($storage['nameStorage']));
@@ -131,7 +130,7 @@ function deleteAndClose(event) {
     })
     .then(data => {
         alert(data);
-        window.location.href = "Storagepage.php";
+        window.close();
     })
     .catch(error => {
         console.error('Error:', error);

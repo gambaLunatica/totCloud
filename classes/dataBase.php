@@ -2743,7 +2743,7 @@ class MyDataBase
         $user = unserialize($_SESSION["user"]);
         $email = $user->getEmail();
         $query = "
-            SELECT s.idStorageUnit, s.nameStorageU, s.usedSpace, s.creationDate, s.nameCompany, s.idSubnet, s.idComputeInstance, s.nameStorage, s.idUserGroup
+            SELECT s.idStorageUnit, s.nameStorageU, s.usedSpace, s.creationDate, s.nameCompany, s.idSubnet, s.idComputeInstance, s.nameStorage
             FROM MYUSER u
             JOIN COMPANY co ON u.nameCompany = co.nameCompany
             LEFT JOIN StorageUnit s ON s.nameCompany = co.nameCompany
@@ -3080,6 +3080,11 @@ class MyDataBase
     {
         try
         {
+            $stmt = $this->db->prepare("DELETE mu FROM MyUsage AS mu
+                                        JOIN ComputeInstance AS ci ON mu.idComputeInstance = ci.idComputeInstance
+                                        WHERE mu.creationDate > ?");
+            $stmt->bind_param("s", $backupDate);
+            $stmt->execute();
 
             $query = $this->db->prepare("UPDATE ComputeInstance as ci
                                         JOIN ComputeInstanceBackup as cib on ci.idComputeInstance = cib.idComputeInstance
@@ -3108,7 +3113,12 @@ class MyDataBase
     {
         try
         {
-
+            $stmt = $this->db->prepare("DELETE mu FROM MyUsage AS mu
+                                        JOIN StorageUnit AS su ON mu.idComputeCPU = su.idStorageUnit OR mu.idComputeMEM = su.idStorageUnit
+                                        WHERE mu.creationDate > ?");
+            $stmt->bind_param("s", $backupDate);
+            $stmt->execute();
+            
             $query = $this->db->prepare("UPDATE StorageUnit AS su
                                         JOIN StorageUnitBackup AS sub ON su.idStorageUnit = sub.idStorageUnit
                                         SET 
@@ -3137,8 +3147,14 @@ class MyDataBase
     {
         try
         {
+            $stmt = $this->db->prepare("DELETE mu FROM MyUsage AS mu
+                                        JOIN VCN AS vcn ON mu.idVCN = vcn.idVCN
+                                        WHERE mu.creationDate > ?");
+            $stmt->bind_param("s", $backupDate);
+            $stmt->execute();
+
             $stmt = $this->db->prepare("DELETE FROM Subnet WHERE idSubnet IN (SELECT idSubnet FROM SubnetBackup WHERE backupID = ?)");
-            $stmt->bind_param("s", $idBu);
+            $stmt->bind_param("i", $idBu);
             $stmt->execute();
 
             //$query = $this->db->prepare("DELETE FROM VCN WHERE idVCN = (SELECT idVCN FROM VCNBackup WHERE backupID = ?)");
@@ -3183,6 +3199,12 @@ class MyDataBase
     {
         try
         {
+            $stmt = $this->db->prepare("DELETE mu FROM MyUsage AS mu
+                                        JOIN MyDatabase AS md ON mu.idDataBase = vcn.idDataBase
+                                        WHERE mu.creationDate > ?");
+            $stmt->bind_param("s", $backupDate);
+            $stmt->execute();
+
             $query = $this->db->prepare("DELETE FROM Instruction WHERE idInstruction IN (SELECT idInstruction FROM InstructionBackup WHERE backupID = ?)");
             $query->bind_param("i",$idBu);
             $query->execute();
@@ -3257,95 +3279,6 @@ class MyDataBase
             throw $e;
         }
     }
-
-    // ESTAS SE PUEDEN BORRAR |
-    //                        v
-    /*public function getStorageData($nameStorage = null)
-    {
-        $user = unserialize($_SESSION["user"]);
-        $email = $user->getEmail();
-        $query = "
-            SELECT st.totalCapacity, st.IOSpeed, st.typeName, st.nameStorage, st.cost, st.statusName, 
-            su.nameStorageU, ci.name as computeInstanceName, sn.nameSubnet as subnetName
-            FROM MYUSER u
-            JOIN COMPANY co ON u.nameCompany = co.nameCompany
-            LEFT JOIN StorageUnit su ON su.nameCompany = co.nameCompany
-            LEFT JOIN Storage st ON su.nameStorage = st.nameStorage
-            LEFT JOIN ComputeInstance ci ON su.idComputeInstance = ci.idComputeInstance
-            LEFT JOIN Subnet sn ON su.idSubnet = sn.idSubnet
-            WHERE u.email = '$email'";
-
-        if ($nameStorage !== null) {
-            $nameStorage = mysqli_real_escape_string($this->db, $nameStorage);
-            $query .= " AND st.nameStorage = '$nameStorage'";
-        }
-
-        $result = mysqli_query($this->db, $query);
-
-        if ($result) {
-            return mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } else {
-            return false;
-        }
-    }*/
-
-    /*public function getDbData($idDataBase = null)
-    {
-        $user = unserialize($_SESSION["user"]);
-        $email = $user->getEmail();
-        $query = "
-            SELECT db.idDataBase, db.nameDataBase, db.description, db.creationDate, db.nameCompany, db.idSubnet, db.idComputeInstance, db.idDBTypeMySQL, db.idDBTypePostgrade,
-            mysql.version AS mysqlVersion, mysql.cost AS mysqlCost,
-            pgsql.build AS postgreBuild, pgsql.cost AS postgreCost
-            FROM MYUSER u
-            JOIN COMPANY co ON u.nameCompany = co.nameCompany
-            LEFT JOIN MyDataBase db ON db.nameCompany = co.nameCompany
-            LEFT JOIN DBTypeMySql mysql ON db.idDBTypeMySQL = mysql.idDBType
-            LEFT JOIN DBTypePostgrade pgsql ON db.idDBTypePostgrade = pgsql.idDBType
-            WHERE u.email = '$email'";
-
-        if ($idDataBase !== null) {
-            $idDataBase = mysqli_real_escape_string($this->db, $idDataBase);
-            $query .= " AND db.idDataBase = '$idDataBase'";
-        }
-
-        $result = mysqli_query($this->db, $query);
-
-        if ($result) {
-            return mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } else {
-            return false;
-        }
-    }*/
-
-    /*public function getComputeData($idComputerInstance = null)
-    {
-        $user = unserialize($_SESSION["user"]);
-        $email = $user->getEmail();
-        $query = "
-            SELECT ci.idComputeInstance, ci.creationDate, ci.sshKey, ci.name, ci.idSubnet, ci.nameCompany, ci.idMemory, ci.model, ci.idImage,
-            cpu.statusName, cpu.series AS cpuSeries,
-            s.nameSubnet AS subnetName, s.IP AS subnetIP
-            FROM MYUSER u
-            JOIN COMPANY co ON u.nameCompany = co.nameCompany
-            LEFT JOIN ComputeInstance ci ON ci.nameCompany = co.nameCompany
-            LEFT JOIN CPU cpu ON ci.model = cpu.model
-            LEFT JOIN Subnet s ON ci.idSubnet = s.idSubnet
-            WHERE u.email = '$email'";
-
-        if ($idComputerInstance !== null) {
-            $idComputerInstance = mysqli_real_escape_string($this->db, $idComputerInstance);
-            $query .= " AND ci.idComputeInstance = '$idComputerInstance'";
-        }
-
-        $result = mysqli_query($this->db, $query);
-
-        if ($result) {
-            return mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } else {
-            return false;
-        }
-    }*/
 }
 
 $dataBase = new MyDataBase($con);
