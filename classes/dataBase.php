@@ -3080,14 +3080,6 @@ class MyDataBase
     {
         try
         {
-            //$query = $this->db->prepare("DELETE FROM ComputeInstance WHERE idComputeInstance = (SELECT idComputeInstance FROM ComputeInstanceBackup WHERE backupID = ?)");
-            //$query->bind_param("i",$idBu);
-            //$query->execute();
-
-            /*$query = $this->db->prepare("INSERT INTO ComputeInstance 
-                                        SELECT  cib.idComputeInstance, cib.idSubnet, cid.nameCompany, cib.idMemory, cib.idImage, cib.model, cib.name, cid.creationDate, cib.sshKey
-                                        FROM ComputeInstanceBackup as cib
-                                        WHERE backupID = ?");*/
 
             $query = $this->db->prepare("UPDATE ComputeInstance as ci
                                         JOIN ComputeInstanceBackup as cib on ci.idComputeInstance = cib.idComputeInstance
@@ -3116,9 +3108,6 @@ class MyDataBase
     {
         try
         {
-            //$query = $this->db->prepare("DELETE FROM StorageUnit WHERE idStorageUnit = (SELECT idStorageUnit FROM StorageUnitBackup WHERE backupID = ?)");
-            //$query->bind_param("i",$idBu);
-            //$query->execute();
 
             $query = $this->db->prepare("UPDATE StorageUnit AS su
                                         JOIN StorageUnitBackup AS sub ON su.idStorageUnit = sub.idStorageUnit
@@ -3129,7 +3118,6 @@ class MyDataBase
                                             su.usedSpace = sub.usedSpace,
                                             su.creationDate = sub.creationDate,
                                             su.nameStorageU = sub.nameStorageU,
-                                            su.idUserGroup = sub.idUserGroup,
                                             su.nameStorage = sub.nameStorage
                                         WHERE sub.backupID = ?");
             $query->bind_param("i",$idBu);

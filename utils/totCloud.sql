@@ -729,7 +729,7 @@ INSERT INTO Speed (IOSpeed) VALUES (0.5);
 INSERT INTO Size (totalCapacity) VALUES (2000);
 INSERT INTO Type (typeName) VALUES ('SSD');
 INSERT INTO Storage (totalCapacity,IOSpeed,typeName,nameStorage,cost,statusName) VALUES (2000, 0.5, 'SSD', '2TB SSD', 78, 'Live');
-insert into storageunit (nameCompany, idSubnet, idComputeInstance, usedSpace, nameStorageU, idUserGroup, nameStorage) values ("TotCloud", 1, 1, 0, "Basic SU", 1, "2TB SSD");
+insert into storageunit (nameCompany, idSubnet, idComputeInstance, usedSpace, nameStorageU, nameStorage) values ("TotCloud", 1, 1, 0, "Basic SU", "2TB SSD");
 
 INSERT INTO DBTypeMySql (statusName,cost,releaseDate,version) VALUES ('Live', 32, '2024-12-06', '1.0.0');
 INSERT INTO DBTypePostgrade (statusName,cost,releaseDate,build)  VALUES ('Live', 40, '2024-12-06', 'dfsgs');
