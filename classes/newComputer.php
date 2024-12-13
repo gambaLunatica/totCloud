@@ -176,15 +176,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($stmtInsert->execute()) {
             header("Location: ../Computerpage.php");
             $computeInstanceID = $stmtInsert->insert_id;
-            $queryUsageFunction = "CALL InsertComputeInstanceCPUUsage(?, 5000)";
+            $queryUsageFunction = "CALL InsertComputeInstanceCPUUsage(?, 100)";
             $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
             $stmtUsageFunction->bind_param("i", $computeInstanceID);
             $stmtUsageFunction->execute();
             
-            $computeInstanceID = $stmtInsert->insert_id;
-            $queryUsageFunction = "CALL InsertComputeInstanceRAMUsage(?, 5000)";
-            $stmtUsageFunction = $dataBase->prepare($computeInstanceID);
-            $stmtUsageFunction->bind_param("i", $memoryId);
+            $queryUsageFunction = "CALL InsertComputeInstanceRAMUsage(?, 100)";
+            $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
+            $stmtUsageFunction->bind_param("i", $computeInstanceID);
             $stmtUsageFunction->execute();
             
             exit;

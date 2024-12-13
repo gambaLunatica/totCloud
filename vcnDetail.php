@@ -27,12 +27,22 @@
     } else {
         $vcndetails = null;
     }
-    //-------------------------------PARA LUNA--------------------------------------------------------
-    // Te dejo aquí la clave primaria de la vcn seleccionada
     $pkVCN = $vcn['idVCN'];
-    //------------------------------------------------------------------------------------------------
     $backups = [];
     $backups = $dataBase->getBackUpInfoVCN($pkVCN);
+
+    $queryUsage = "SELECT value, creationDate FROM MyUsage WHERE idVCN = ? ORDER BY creationDate";
+    $stmt = $dataBase->prepare($queryUsage);
+    $stmt->bind_param("i", $pkVCN);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $vcnUsageData = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $vcnUsageData[] = ["x" => strtotime($row['creationDate']) * 1000, "y" => (float)$row['value']];
+    }
+    $stmt->close();
 ?>
 
 <body>
@@ -82,6 +92,7 @@
                 <button type="submit" class="btn btn-primary" onclick="deleteAndClose2(event)">Restore Backup</button>
             </form>
         </div>
+        <div id="vcnUsageChart" style="width:100%; height:400px;"></div>
     </div>
 </body>
 
@@ -134,4 +145,34 @@ function deleteAndClose2(event) {
         alert();
     });
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const vcnUsageData = <?php echo json_encode($vcnUsageData); ?>;
+
+    Highcharts.chart('vcnUsageChart', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'VCN Usage Over Time'
+        },
+        xAxis: {
+            type: 'datetime',
+            title: {
+                text: 'Time'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Usage Value'
+            }
+        },
+        series: [
+            {
+                name: 'VCN Usage',
+                data: vcnUsageData,
+                color: 'orange'
+            }
+        ]
+    });
+});
 </script>
