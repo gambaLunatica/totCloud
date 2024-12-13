@@ -83,10 +83,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     
 
     //Verificar que lso campos estén llenos
-    
-
     $creationDate = date("Y-m-d H:i:s");
-
     if($mode === 'edit'){
         $idDataBase = $_POST['idDataBase'];
         $queryUpdate = "UPDATE MyDataBase SET creationDate = ?, idSubnet = ?, idComputeInstance = ?, idDBTypeMySQL = ?, idDBTypePostgrade = ?, nameDataBase = ?, description = ? WHERE idDataBase = ?";
@@ -103,17 +100,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             echo "Please fill all the fields";
             exit;
         }
-        $query = "CALL createDatabase(?, ?, ?, ?, ?, ?, ?)";
+        $query = "CALL createDatabase(?, ?, ?, ?, ?, ?, ?, 100)";
         $stmt = $dataBase->prepare($query);
         $stmt->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description);
 
         if($stmt->execute()){
             header("Location: ../DBpage.php");
-            $databaseID = $stmt->insert_id;
-            $queryUsageFunction = "CALL InsertDatabaseUsage(?, 100)";
-            $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
-            $stmtUsageFunction->bind_param("i", $databaseID);
-            $stmtUsageFunction->execute();
+            exit;
         }else{
             echo "Error creating database";
         }

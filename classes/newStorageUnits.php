@@ -105,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
         $stmtStorage = $dataBase->prepare($queryStorage);
         $stmtStorage->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstanece, $usedSpace, $nameStorageU, $idUserGroup, $nameStorage);
+        
         if($stmtStorage->execute()){
             header("Location: ../storagepage.php");
             $storageUnitID = $stmtStorage->insert_id;
