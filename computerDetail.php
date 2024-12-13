@@ -86,9 +86,10 @@ function deleteAndClose(event) {
         }
         return response.text();
     })
+    
     .then(data => {
         alert(data);
-        window.close();
+        window.location.href = "Computerpage.php";
     })
     .catch(error => {
         console.error('Error:', error);

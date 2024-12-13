@@ -89,10 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $dataBase->prepare($query);
         $stmt->bind_param("sssss", $nameSubnet, $nameComputeInstanece, $nameStorage, $nameStorageU, $idStorageU);
         if($stmt->execute()){
-            echo "<script>
-                alert('Storage Unit updated successfully.');
-                window.close();
-            </script>";
+            header("Location: ../userStorage.php");
         } else {
             echo "Error updating Storage Unit.";
         }
@@ -109,10 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmtStorage = $dataBase->prepare($queryStorage);
         $stmtStorage->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstanece, $usedSpace, $nameStorageU, $idUserGroup, $nameStorage);
         if($stmtStorage->execute()){
-            echo "<script>
-                alert('Storage Unit created successfully.');
-                window.close();
-            </script>";
+            header("Location: ../userStorage.php");
             $storageUnitID = $stmtStorage->insert_id;
             $queryUsageFunction = "CALL InsertStorageUnitUsage(?, 100)";
             $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
