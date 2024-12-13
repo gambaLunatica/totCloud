@@ -143,14 +143,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Ejecutar el `UPDATE`
         if ($stmtUpdate->execute()) {
-            echo "<script>
-                alert('Virtual machine updated successfully.');
-                window.close();
-              </script>";
+            header("Location: ../Computerpage.php");
         } else {
             echo "Error al actualizar la máquina virtual: " . $stmtUpdate->error;
         }
-        $stmtUpdate->close();
+        
         exit;
     }else{
         // Verificar que todos los campos estén completos
@@ -177,20 +174,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Ejecutar el `INSERT`
         if ($stmtInsert->execute()) {
-            echo "<script>
-                alert('Virtual machine created successfully.');
-                window.close();
-            </script>";
+            header("Location: ../Computerpage.php");
+            $computeInstanceID = $stmtInsert->insert_id;
             $queryUsageFunction = "CALL InsertComputeInstanceCPUUsage(?, 5000)";
             $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
-            $stmtUsageFunction->bind_param("i", $cpuModel);
+            $stmtUsageFunction->bind_param("i", $computeInstanceID);
             $stmtUsageFunction->execute();
-            $stmtUsageFunction->close();
+            
+            $computeInstanceID = $stmtInsert->insert_id;
             $queryUsageFunction = "CALL InsertComputeInstanceRAMUsage(?, 5000)";
-            $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
+            $stmtUsageFunction = $dataBase->prepare($computeInstanceID);
             $stmtUsageFunction->bind_param("i", $memoryId);
             $stmtUsageFunction->execute();
-            $stmtUsageFunction->close();
+            
             exit;
         } else {
             echo "Error: " . $stmtInsert->error;

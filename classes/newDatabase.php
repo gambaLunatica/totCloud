@@ -94,10 +94,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmt->bind_param("sssssssi", $creationDate, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description, $idDataBase);
 
         if($stmt->execute()){
-            echo "<script>
-            alert('Database updated successfully');
-            window.close();
-            </script>";
+            hewader("Location: ../userDB.php");
         }else{
             echo "Error updating database";
         }
@@ -111,10 +108,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $stmt->bind_param("sssssss", $nameCompany, $nameSubnet, $nameComputeInstance, $mySQl, $postgrade, $nameDatabase, $description);
 
         if($stmt->execute()){
-            echo "<script>
-                alert('Database created successfully');
-                window.close();
-            </script>";
+            header("Location: ../userDB.php");
             $databaseID = $stmtVCN->insert_id;
             $queryUsageFunction = "CALL InsertDatabaseUsage(?, 5000)";
             $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
