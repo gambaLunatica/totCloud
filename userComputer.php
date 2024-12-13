@@ -14,7 +14,7 @@ $computerServices = $dataBase->getUserComputeInstances();
     <h1>Compute Instances</h1>
     <?php if ($computerServices): ?>
         <div class="card-container">
-            <?php foreach ($computerServices as $computer): 
+            <?php foreach ($computerServices as $computer):
                 $memory = $dataBase->selectMemory($computer['idMemory']);
                 $image = $dataBase->selectImage($computer['idImage']);
                 ?>
@@ -46,12 +46,12 @@ $computerServices = $dataBase->getUserComputeInstances();
     // Función para abrir detalles de una unidad de almacenamiento
     function openComputerInstanceDetail(computerData) {
         const url = `computerDetail.php?computer=${encodeURIComponent(computerData)}`;
-        window.open(url, '_blank', 'width=800,height=600');
+        window.location.href = url;
     }
 
     // Función para abrir formulario de nueva unidad de almacenamiento
     function openNewComputerInstance() {
         const url = 'formComputer.php';
-        window.open(url, '_blank', 'width=900,height=700');
+        window.location.href = url;
     }
 </script>

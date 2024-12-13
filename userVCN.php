@@ -40,13 +40,13 @@ $vcnServices = $dataBase->getUserVCN();
 <script>
     // Función para abrir detalles de una vcn
     function openVCNDetail(vcn) {
-        const url = `vcnDetail.php?vcn=${encodeURIComponent(vcn)}`;
-        window.open(url, '_blank', 'width=800,height=600');
-    }
+    const url = `vcnDetail.php?vcn=${encodeURIComponent(vcn)}`;
+    window.location.href = url;
+}
 
-    // Función para abrir formulario de nueva unidad de almacenamiento
-    function openNewVCNForm() {
-        const url = 'formVCN.php';
-        window.open(url, '_blank', 'width=800,height=600');
-    }
+// Función para abrir formulario de nueva unidad de almacenamiento
+function openNewVCNForm() {
+    const url = 'formVCN.php';
+    window.location.href = url;
+}
 </script>

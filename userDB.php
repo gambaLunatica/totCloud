@@ -36,13 +36,13 @@ $databases = $dataBase->getUserDatabases();
 <script>
     // Función para abrir detalles de una base de datos
     function openDBDetail(dbData) {
-        const url = `dbDetail.php?database=${encodeURIComponent(dbData)}`;
-        window.open(url, '_blank', 'width=800,height=600');
-    }
+    const url = `dbDetail.php?database=${encodeURIComponent(dbData)}`;
+    window.location.href = url;
+}
 
-    // Función para abrir formulario de nueva base de datos
-    function openNewDBForm() {
-        const url = 'formDB.php';
-        window.open(url, '_blank', 'width=800,height=600');
-    }
+// Función para abrir formulario de nueva base de datos
+function openNewDBForm() {
+    const url = 'formDB.php';
+    window.location.href = url;
+}
 </script>
