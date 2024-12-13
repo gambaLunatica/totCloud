@@ -180,7 +180,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "<script>
                 alert('Virtual machine created successfully.');
                 window.close();
-              </script>";
+            </script>";
+            $queryUsageFunction = "CALL InsertComputeInstanceCPUUsage(?, 5000)";
+            $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
+            $stmtUsageFunction->bind_param("i", $cpuModel);
+            $stmtUsageFunction->execute();
+            $stmtUsageFunction->close();
+            $queryUsageFunction = "CALL InsertComputeInstanceRAMUsage(?, 5000)";
+            $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
+            $stmtUsageFunction->bind_param("i", $memoryId);
+            $stmtUsageFunction->execute();
+            $stmtUsageFunction->close();
+            exit;
         } else {
             echo "Error: " . $stmtInsert->error;
         }

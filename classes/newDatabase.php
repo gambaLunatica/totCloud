@@ -112,9 +112,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         if($stmt->execute()){
             echo "<script>
-            alert('Database created successfully');
-            window.close();
+                alert('Database created successfully');
+                window.close();
             </script>";
+            $databaseID = $stmtVCN->insert_id;
+            $queryUsageFunction = "CALL InsertDatabaseUsage(?, 5000)";
+            $stmtUsageFunction = $dataBase->prepare($queryUsageFunction);
+            $stmtUsageFunction->bind_param("i", $databaseID);
+            $stmtUsageFunction->execute();
+            $stmtUsageFunction->close();
         }else{
             echo "Error creating database";
         }
