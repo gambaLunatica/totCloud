@@ -5,6 +5,7 @@
     include 'head.php';
     include 'classes/user.php';
     require "classes/dataBase.php";
+    include 'navbar.php';
 
     $storage = json_decode(urldecode($_GET['storage']), true);
     $storagedata = $dataBase ->getStorage(htmlspecialchars($storage['nameStorage']));
