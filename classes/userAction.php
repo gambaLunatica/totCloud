@@ -13,6 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: ../index.php");
             exit;
         }
+
+        $user = unserialize($_SESSION["user"]);
+        $user->setIdUserGroup($_POST['userGroup']);
+        $_SESSION["user"] = serialize($user);
         
         header("Location: ../myAccount.php?page=myUsers.php");
         exit;
